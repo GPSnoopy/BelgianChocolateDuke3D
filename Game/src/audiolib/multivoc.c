@@ -64,7 +64,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "../sounddebugdefs.h"
 
 // for the Mutex
-#include <SDL.h>
+#include <SDL/SDL.h>
 
 #define RoundFixed( fixedval, bits )            \
         (                                       \

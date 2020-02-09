@@ -30,7 +30,7 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 #include "control.h"
 
 #include "filesystem.h"
-#include "SDL.h"
+#include "SDL/SDL.h"
 #include "premap.h"
 #include "display.h"
 

@@ -9,9 +9,6 @@
       <UniqueIdentifier>{0b84d784-d2f4-407e-a4d7-b4a8f30fafc1}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl</Extensions>
     </Filter>
-    <Filter Include="enet">
-      <UniqueIdentifier>{2a81a5d5-612c-4a3f-8486-b84aa46552e4}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Engine.c">
@@ -22,30 +19,6 @@
     </ClCompile>
     <ClCompile Include="src\mmulti_stable.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\enet\host.c">
-      <Filter>enet</Filter>
-    </ClCompile>
-    <ClCompile Include="src\enet\list.c">
-      <Filter>enet</Filter>
-    </ClCompile>
-    <ClCompile Include="src\enet\memory.c">
-      <Filter>enet</Filter>
-    </ClCompile>
-    <ClCompile Include="src\enet\packet.c">
-      <Filter>enet</Filter>
-    </ClCompile>
-    <ClCompile Include="src\enet\peer.c">
-      <Filter>enet</Filter>
-    </ClCompile>
-    <ClCompile Include="src\enet\protocol.c">
-      <Filter>enet</Filter>
-    </ClCompile>
-    <ClCompile Include="src\enet\unix.c">
-      <Filter>enet</Filter>
-    </ClCompile>
-    <ClCompile Include="src\enet\win32.c">
-      <Filter>enet</Filter>
     </ClCompile>
     <ClCompile Include="src\cache.c">
       <Filter>Source Files</Filter>

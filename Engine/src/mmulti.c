@@ -8,7 +8,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <strings.h>
 #include <stdarg.h>
 #include <ctype.h>
 #include <time.h>
@@ -18,7 +17,7 @@
 #if (HAVE_ENET_ENET_H == 1)
 	#include <enet/enet.h>
 #else
-	#include "enet/include/enet.h"
+	#include "enet/enet.h"
 #endif
 
 //STL

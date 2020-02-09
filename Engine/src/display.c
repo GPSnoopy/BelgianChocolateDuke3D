@@ -36,7 +36,7 @@
 #define BUILD_GLDUMP         "BUILD_GLDUMP"
 #define BUILD_SDLJOYSTICK    "BUILD_SDLJOYSTICK"
 
-#include "SDL.h"
+#include "SDL/SDL.h"
 #include "build.h"
 #include "display.h"
 #include "fixedPoint_math.h"

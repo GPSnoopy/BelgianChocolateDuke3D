@@ -12,7 +12,6 @@
 #include "cache.h"
 #include "fixedPoint_math.h"
 #include "../../Game/src/global.h"
-#include <strings.h>
 
 char game_dir[512];
 
