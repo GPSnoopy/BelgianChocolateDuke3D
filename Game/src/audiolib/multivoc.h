@@ -32,7 +32,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define __MULTIVOC_H
 
 //#include <windows.h>
-#include "SDL/SDL.h"
+#include <SDL2/SDL.h>
 
 // forward declare
 //struct SDL_mutex;

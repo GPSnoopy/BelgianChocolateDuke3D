@@ -12,6 +12,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{6D80B050-1DC6-406A-98E3-60C65C3304F3}</ProjectGuid>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -46,10 +47,12 @@
     <OutDir>..\bin\</OutDir>
     <IntDir>.\ReleaseVC7\</IntDir>
     <LinkIncremental>false</LinkIncremental>
+    <TargetName>ChocolateDuke3D</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>..\bin\</OutDir>
     <IntDir>.\DebugVC7\</IntDir>
+    <TargetName>ChocolateDuke3Dd</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Midl>
@@ -77,8 +80,8 @@
     </ResourceCompile>
     <Link>
       <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>dxguid.lib;sdl.lib;winmm.lib;WS2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutDir)ChocolateDuke3D.exe</OutputFile>
+      <AdditionalDependencies>advapi32.lib;dxguid.lib;gdi32.lib;imm32.lib;ole32.lib;oleaut32.lib;setupapi.lib;shell32.lib;user32.lib;version.lib;winmm.lib;WS2_32.lib;enet.lib;sdl2.lib;sdl2_mixer.lib</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName).exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>$(SolutionDir)build\vcpkg.windows\installed\x86-windows-static\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SubSystem>Console</SubSystem>
@@ -108,8 +111,8 @@
     </ResourceCompile>
     <Link>
       <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>dxguid.lib;enet.lib;sdl.lib;winmm.lib;WS2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutDir)ChocolateDuke3Dd.exe</OutputFile>
+      <AdditionalDependencies>advapi32.lib;dxguid.lib;gdi32.lib;imm32.lib;ole32.lib;oleaut32.lib;setupapi.lib;shell32.lib;user32.lib;version.lib;winmm.lib;WS2_32.lib;enet.lib;sdl2d.lib;sdl2_mixer.lib</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName).exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>$(SolutionDir)build\vcpkg.windows\installed\x86-windows-static\debug\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>

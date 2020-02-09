@@ -43,8 +43,6 @@ extern uint8_t  permanentlock;
 
 // defined in the game project:
 extern int32_t BFullScreen;  // defined in Game\src\config.c
-extern int32_t ScreenMode;
-
 
 /* these need to be implemented by YOUR driver. */
 void _platform_init(int argc, char  **argv, const char  *title, const char  *iconName);
@@ -63,8 +61,8 @@ int _joystick_hat(int hat);
 int _joystick_button(int button);
 
 void getvalidvesamodes(void);
-int VBE_getPalette(int32_t start, int32_t num, uint8_t  *dapal);
-int VBE_setPalette(uint8_t  *palettebuffer);
+void VBE_getPalette(int32_t start, int32_t num, uint8_t  *dapal);
+void VBE_setPalette(uint8_t  *palettebuffer);
 
 
 void setvmode(int mode);
@@ -94,7 +92,7 @@ void uninittimer(void);
 void timerhandler(void);
 
 /* resolution inits. sdl_driver.c ... */
-int32_t _setgamemode(uint8_t  davidoption, int32_t daxdim, int32_t daydim);
+int32_t _setgamemode(int32_t daxdim, int32_t daydim);
 
 uint32_t getticks();
 

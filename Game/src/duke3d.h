@@ -79,11 +79,6 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 #include "dukewin.h"
 #endif
 
-#if USE_SDL
-#include "SDL.h"
-#include "SDL_mixer.h"
-#endif
-
 #include "function.h"
 
 //  FIX_00022: Automatically recognize the shareware grp (v1.3) + full version (1.3d) +

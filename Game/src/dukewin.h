@@ -7,10 +7,6 @@ typedef int32_t int32_t __int64;
 
 #pragma warning(disable:4761)
 
-#if USE_SDL
-#include "SDL.h"
-#endif
-
 #ifdef _DEBUG
 #define STUBBED(x) printf("STUB: %s in %s:%d\n", x, __FILE__, __LINE__)
 #else

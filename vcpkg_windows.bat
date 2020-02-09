@@ -7,7 +7,7 @@ call bootstrap-vcpkg.bat || goto :error
 
 vcpkg.exe install ^
 	enet:x86-windows-static ^
-	sdl1:x86-windows-static ^
+	sdl2:x86-windows-static ^
 	sdl2-mixer:x86-windows-static ^
 	|| goto :error
 

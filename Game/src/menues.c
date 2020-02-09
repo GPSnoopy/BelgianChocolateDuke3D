@@ -30,7 +30,7 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 #include "control.h"
 
 #include "filesystem.h"
-#include "SDL/SDL.h"
+#include "SDL2/SDL.h"
 #include "premap.h"
 #include "display.h"
 
@@ -2681,15 +2681,15 @@ else
 
 				case 5:
 
-					if (SDL_WM_GrabInput(SDL_GRAB_QUERY)==SDL_GRAB_ON) 
+					if (SDL_GetRelativeMouseMode() == SDL_TRUE) 
 					{
-						SDL_WM_GrabInput(SDL_GRAB_OFF);
-						SDL_ShowCursor(1);
+                        SDL_SetRelativeMouseMode(SDL_FALSE);
+						//SDL_ShowCursor(1);
 					}
 					else
 					{
-						SDL_WM_GrabInput(SDL_GRAB_ON);
-						SDL_ShowCursor(0);
+                        SDL_SetRelativeMouseMode(SDL_TRUE);
+						//SDL_ShowCursor(0);
 					}
 					break;
 
@@ -2732,7 +2732,7 @@ else
 
 
 			menutext(c,43+16*5,SHX(-7),PHX(-7),"MOUSE CURSOR");
-			if(SDL_WM_GrabInput(SDL_GRAB_QUERY)==SDL_GRAB_ON)
+			if(SDL_GetRelativeMouseMode() == SDL_TRUE)
 				menutext(c+160+40,43+16*5,SHX(-7),PHX(-7),"TAKEN");
 			else
 				menutext(c+160+40,43+16*5,SHX(-7),PHX(-7),"FREE'D");
@@ -3180,7 +3180,7 @@ else
 
 				case 0:
 					if(lastkeysetup)
-						setgamemode(ScreenMode,validmodexdim[current_resolution],validmodeydim[current_resolution]);
+						setgamemode(validmodexdim[current_resolution],validmodeydim[current_resolution]);
 					lastkeysetup = 0; // indicating changes are done
 					break;
 
@@ -3188,7 +3188,7 @@ else
 					BFullScreen = !BFullScreen;
 					SDL_QuitSubSystem(SDL_INIT_VIDEO);
 					_platform_init(0, NULL, "Duke Nukem 3D", "Duke3D");
-					_setgamemode(ScreenMode,validmodexdim[current_resolution],validmodeydim[current_resolution]);
+					_setgamemode(validmodexdim[current_resolution],validmodeydim[current_resolution]);
 					break;
 
                 case 2:

@@ -3613,11 +3613,11 @@ static void loadpalette(void)
 
 
 
-int setgamemode(uint8_t  davidoption, int32_t daxdim, int32_t daydim)
+int setgamemode(int32_t daxdim, int32_t daydim)
 {
     strcpy(kensmessage,"!!!! BUILD engine&tools programmed by Ken Silverman of E.G. RI.  (c) Copyright 1995 Ken Silverman.  Summary:  BUILD = Ken. !!!!");
    
-    return(_setgamemode(davidoption, daxdim, daydim));
+    return(_setgamemode(daxdim, daydim));
 }
 
 
@@ -8262,7 +8262,6 @@ void setbrightness(uint8_t  dabrightness, uint8_t  *dapal)
         newPalette[k++] = 0;
     }
     
-
     VBE_setPalette(newPalette);
 }
 

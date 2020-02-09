@@ -32,7 +32,6 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 
 extern int32 ControllerType;
 extern int32 MouseAiming;
-extern int32 ScreenMode;
 extern int32 ScreenWidth;
 extern int32 ScreenHeight;
 extern int32 BFullScreen;

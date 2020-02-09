@@ -72,7 +72,6 @@ int32 BFullScreen = 0;
 // Screen variables
 //
 
-int32 ScreenMode=2;
 int32 ScreenWidth = 640;
 int32 ScreenHeight = 480;
 

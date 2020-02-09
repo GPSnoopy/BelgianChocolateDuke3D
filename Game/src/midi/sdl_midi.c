@@ -8,9 +8,8 @@
 
 #include <stdio.h>
 #include "../audiolib/music.h"
-#include "SDL/SDL.h"
-//#include "SDL_mixer.h"
-#include "build.h"
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
 
 /*
  Because the music is stored in a GRP file that is never fully loaded in RAM
@@ -27,10 +26,9 @@ char  *MUSIC_ErrorString(int ErrorNumber)
 
 int MUSIC_Init(int SoundCard, int Address)
 {
-	// TODO SDL2
-	//if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024)==-1) {
-	//    printf("Mix_OpenAudio: %s\n", Mix_GetError());
- //   }
+	if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024)==-1) {
+	    printf("Mix_OpenAudio: %s\n", Mix_GetError());
+    }
     
     return MUSIC_Ok;
 }
@@ -47,7 +45,7 @@ void MUSIC_SetMaxFMMidiChannel(int channel)
 
 void MUSIC_SetVolume(int volume)
 {
-    //Mix_VolumeMusic((int)(volume / 2));
+    Mix_VolumeMusic((int)(volume / 2));
 }
 
 void MUSIC_SetMidiChannelVolume(int channel, int volume)
@@ -69,24 +67,24 @@ void MUSIC_SetLoopFlag(int loopflag)
 
 int MUSIC_SongPlaying(void)
 {
-	//return Mix_PlayingMusic();
+	return Mix_PlayingMusic();
 }
 
 void MUSIC_Continue(void)
 {
-    //if (Mix_PausedMusic())
-    //    Mix_ResumeMusic();
+    if (Mix_PausedMusic())
+        Mix_ResumeMusic();
 }
 
 void MUSIC_Pause(void)
 {
-    //Mix_PauseMusic();
+    Mix_PauseMusic();
 }
 
 int MUSIC_StopSong(void)
 {
-	//if ( (Mix_PlayingMusic()) || (Mix_PausedMusic()) )
- //       Mix_HaltMusic();
+	if ( (Mix_PlayingMusic()) || (Mix_PausedMusic()) )
+        Mix_HaltMusic();
     
     return(MUSIC_Ok);
 }
@@ -98,7 +96,7 @@ int MUSIC_PlaySong(char  *songFilename, int loopflag)
     int32_t fd =  0;
     int fileSize;
     SDL_RWops *rw;
-    //Mix_Music* sdlMusic;
+    Mix_Music* sdlMusic;
     
     fd = kopen4load(songFilename,0);
     
@@ -123,9 +121,9 @@ int MUSIC_PlaySong(char  *songFilename, int loopflag)
     //Ok, the file is in memory
     rw = SDL_RWFromMem((void *) musicDataBuffer, fileSize); 
     
-    //sdlMusic = Mix_LoadMUS_RW(rw);
-    //
-    //Mix_PlayMusic(sdlMusic, (loopflag == MUSIC_PlayOnce) ? 0 : -1);
+    sdlMusic = Mix_LoadMUS_RW(rw, SDL_TRUE);
+    
+    Mix_PlayMusic(sdlMusic, (loopflag == MUSIC_PlayOnce) ? 0 : -1);
     
     return 1;
 }

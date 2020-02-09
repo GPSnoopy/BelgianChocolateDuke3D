@@ -36,7 +36,7 @@ void faketimerhandler(void);
  *  information on using these functions that may or may not be accurate. :)
  */
 int initmouse(void);
-int setgamemode(uint8_t  davidoption, int32_t daxdim, int32_t daydim);
+int setgamemode(int32_t daxdim, int32_t daydim);
 int getceilzofslope(int16_t sectnum, int32_t dax, int32_t day);
 int getflorzofslope(int16_t sectnum, int32_t dax, int32_t day);
 void getzsofslope(int16_t sectnum, int32_t dax, int32_t day, int32_t *ceilz, int32_t *florz);

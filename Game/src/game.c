@@ -8330,13 +8330,12 @@ int main(int argc,char  **argv)
        CONTROL_CenterJoystick(CenterCenter,UpperLeft,LowerRight,CenterThrottle,CenterRudder);
         
    puts("Loading palette/lookups.");
-    if( setgamemode(ScreenMode,ScreenWidth,ScreenHeight) < 0 )
+    if( setgamemode(ScreenWidth,ScreenHeight) < 0 )
     {
         printf("\nVESA driver for ( %i * %i ) not found/supported!\n",xdim,ydim);
-        ScreenMode = 2;
         ScreenWidth = 320;
         ScreenHeight = 200;
-        setgamemode(ScreenMode,ScreenWidth,ScreenHeight);
+        setgamemode(ScreenWidth,ScreenHeight);
     }
 
 
