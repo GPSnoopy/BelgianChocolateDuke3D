@@ -61,6 +61,6 @@ void Shutdown(void);
 //int32_t MotoLong (int32_t l);
 //int32_t IntelLong (int32_t l);
 
-void Error (int errorType, char  *error, ...);
+void Error (int errorType, const char *error, ...);
 
 #endif

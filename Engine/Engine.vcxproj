@@ -117,6 +117,7 @@
     <ClInclude Include="src\icon.h" />
     <ClInclude Include="src\network.h" />
     <ClInclude Include="src\platform.h" />
+    <ClInclude Include="src\sdl_util.h" />
     <ClInclude Include="src\tiles.h" />
     <ClInclude Include="src\win32_compat.h" />
   </ItemGroup>

@@ -31,30 +31,17 @@
 #define BUILD_GLDUMP         "BUILD_GLDUMP"
 #define BUILD_SDLJOYSTICK    "BUILD_SDLJOYSTICK"
 
-#include <SDL2/SDL.h>
 #include "build.h"
 #include "display.h"
 #include "fixedPoint_math.h"
 #include "engine.h"
 #include "network.h"
+#include "sdl_util.h"
 
 #include "mmulti_unstable.h"
 #include "mmulti_stable.h"
 #include "network.h"
 #include "icon.h"
-
-// NATIVE TIMER FUNCTION DECLARATION
-/*
- FCS: The timer section sadly uses Native high precision calls to implement timer functions.
- QueryPerformanceFrequency and QueryPerformanceCounter
- it seems SDL precision was not good enough (or rather using unaccurate OS functions) to replicate
- a DOS timer.
- */
-
-int TIMER_GetPlatformTicksInOneSecond(int64_t* t);
-void TIMER_GetPlatformTicks(int64_t* t);
-
-//END // NATIVE TIMER FUNCTION DECLARATION
 
 #include "draw.h"
 #include "cache.h"
@@ -206,13 +193,7 @@ static void go_to_new_vid_mode(int w, int h)
         w, h,
         sdl_flags);
 
-    if (window == NULL)
-    {
-        Error(EXIT_FAILURE,
-            "BUILDSDL: Failed to create %dx%d window!\n"
-            "BUILDSDL: SDL_Error() says [%s].\n",
-            w, h, SDL_GetError());
-    }
+    SDL_CHECK_NOT_NULL(window, "create window");
 
     // don't override higher-res app icon on OS X
 #ifndef PLATFORM_MACOSX
@@ -227,22 +208,12 @@ static void go_to_new_vid_mode(int w, int h)
     SDL_ClearError();
 
     window_surface = SDL_GetWindowSurface(window);
-    if (window_surface == NULL)
-    {
-        Error(EXIT_FAILURE, 
-            "BUILDSDL: Failed to get window surface!\n"
-            "BUILDSDL: SDL_Error() says [%s].\n",
-           SDL_GetError());
-    }
+	
+    SDL_CHECK_NOT_NULL(window_surface, "get window surface");
 
     surface = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, 8, 0, 0, 0, 0);
-    if (surface == NULL)
-    {
-        Error(EXIT_FAILURE,
-            "BUILDSDL: Failed to create palettized surface!\n"
-            "BUILDSDL: SDL_Error() says [%s].\n",
-            SDL_GetError());
-    }
+
+    SDL_CHECK_NOT_NULL(surface, "create palettized surface");
 
     init_new_res_vars();
 }
@@ -389,35 +360,34 @@ static int sdl_key_filter(const SDL_Event *event)
   
         if (SDL_GetRelativeMouseMode() == SDL_TRUE) 
 		{
-            SDL_SetRelativeMouseMode(SDL_FALSE);
-			//SDL_ShowCursor(1);
+            SDL_CHECK_SUCCESS( SDL_SetRelativeMouseMode(SDL_FALSE) );
 		}
         else
         {
-            SDL_SetRelativeMouseMode(SDL_TRUE);
-            //SDL_ShowCursor(0);
+            SDL_CHECK_SUCCESS( SDL_SetRelativeMouseMode(SDL_TRUE) );
         }
 
         return(0);
     }
 
-    else if ( ( (event->key.keysym.sym == SDLK_RETURN) ||
-                (event->key.keysym.sym == SDLK_KP_ENTER) ) &&
-              (event->key.state == SDL_PRESSED) &&
-              (event->key.keysym.mod & KMOD_ALT) )
-    {	fullscreen_toggle_and_change_driver();
+    if (((event->key.keysym.sym == SDLK_RETURN) ||
+        (event->key.keysym.sym == SDLK_KP_ENTER)) &&
+        (event->key.state == SDL_PRESSED) &&
+        (event->key.keysym.mod & KMOD_ALT))
+    {
+        fullscreen_toggle_and_change_driver();
 
-		// hack to discard the ALT key...
-		lastkey=scancodes[SDL_SCANCODE_RALT]>>8; // extended
-		keyhandler();
-		lastkey=(scancodes[SDL_SCANCODE_RALT]&0xff)+0x80; // Simulating Key up
-		keyhandler();
-		lastkey=(scancodes[SDL_SCANCODE_LALT]&0xff)+0x80; // Simulating Key up (not extended)
-		keyhandler();
-		SDL_SetModState(KMOD_NONE); // SDL doesnt see we are releasing the ALT-ENTER keys
-        
-		return(0);					
-    }								
+        // hack to discard the ALT key...
+        lastkey = scancodes[SDL_SCANCODE_RALT] >> 8; // extended
+        keyhandler();
+        lastkey = (scancodes[SDL_SCANCODE_RALT] & 0xff) + 0x80; // Simulating Key up
+        keyhandler();
+        lastkey = (scancodes[SDL_SCANCODE_LALT] & 0xff) + 0x80; // Simulating Key up (not extended)
+        keyhandler();
+        SDL_SetModState(KMOD_NONE); // SDL doesnt see we are releasing the ALT-ENTER keys
+
+        return(0);
+    }
 
     if (!handle_keypad_enter_hack(event))
         lastkey = scancodes[event->key.keysym.scancode];
@@ -651,7 +621,7 @@ void _platform_init(int argc, char  **argv, const char  *title, const char  *ico
 	int64_t timeElapsed;
 
 	// FIX_00061: "ERROR: Two players have the same random ID" too frequent cuz of internet windows times
-    TIMER_GetPlatformTicks(&timeElapsed);
+    timeElapsed = SDL_GetTicks();
 	srand(timeElapsed&0xFFFFFFFF);
 
 	Setup_UnstableNetworking();
@@ -676,9 +646,7 @@ void _platform_init(int argc, char  **argv, const char  *title, const char  *ico
     SDL_putenv("SDL_VIDEODRIVER=Quartz");
 #endif  	
 
-    if (SDL_Init(SDL_INIT_VIDEO) == -1){
-        Error(EXIT_FAILURE, "BUILDSDL: SDL_Init() failed!\nBUILDSDL: SDL_GetError() says \"%s\".\n", SDL_GetError());
-    }     
+    SDL_CHECK_SUCCESS( SDL_Init(SDL_INIT_VIDEO) );
 	
     if (title == NULL)
         title = "BUILD";
@@ -688,110 +656,7 @@ void _platform_init(int argc, char  **argv, const char  *title, const char  *ico
 
     titleName = string_dupe(title);
     sdl_flags = BFullScreen ? SDL_WINDOW_FULLSCREEN : 0;
-    memset(scancodes, '\0', sizeof (scancodes));
-    scancodes[SDL_SCANCODE_ESCAPE]          = 0x01;
-    scancodes[SDL_SCANCODE_1]               = 0x02;
-    scancodes[SDL_SCANCODE_2]               = 0x03;
-    scancodes[SDL_SCANCODE_3]               = 0x04;
-    scancodes[SDL_SCANCODE_4]               = 0x05;
-    scancodes[SDL_SCANCODE_5]               = 0x06;
-    scancodes[SDL_SCANCODE_6]               = 0x07;
-    scancodes[SDL_SCANCODE_7]               = 0x08;
-    scancodes[SDL_SCANCODE_8]               = 0x09;
-    scancodes[SDL_SCANCODE_9]               = 0x0A;
-    scancodes[SDL_SCANCODE_0]               = 0x0B;
-    scancodes[SDL_SCANCODE_MINUS]           = 0x0C; /* was 0x4A */
-    scancodes[SDL_SCANCODE_EQUALS]          = 0x0D; /* was 0x4E */
-    scancodes[SDL_SCANCODE_BACKSPACE]       = 0x0E;
-    scancodes[SDL_SCANCODE_TAB]             = 0x0F;
-    scancodes[SDL_SCANCODE_Q]               = 0x10;
-    scancodes[SDL_SCANCODE_W]               = 0x11;
-    scancodes[SDL_SCANCODE_E]               = 0x12;
-    scancodes[SDL_SCANCODE_R]               = 0x13;
-    scancodes[SDL_SCANCODE_T]               = 0x14;
-    scancodes[SDL_SCANCODE_Y]               = 0x15;
-    scancodes[SDL_SCANCODE_U]               = 0x16;
-    scancodes[SDL_SCANCODE_I]               = 0x17;
-    scancodes[SDL_SCANCODE_O]               = 0x18;
-    scancodes[SDL_SCANCODE_P]               = 0x19;
-    scancodes[SDL_SCANCODE_LEFTBRACKET]     = 0x1A;
-    scancodes[SDL_SCANCODE_RIGHTBRACKET]    = 0x1B;
-    scancodes[SDL_SCANCODE_RETURN]          = 0x1C;
-    scancodes[SDL_SCANCODE_LCTRL]           = 0x1D;
-    scancodes[SDL_SCANCODE_A]               = 0x1E;
-    scancodes[SDL_SCANCODE_S]               = 0x1F;
-    scancodes[SDL_SCANCODE_D]               = 0x20;
-    scancodes[SDL_SCANCODE_F]               = 0x21;
-    scancodes[SDL_SCANCODE_G]               = 0x22;
-    scancodes[SDL_SCANCODE_H]               = 0x23;
-    scancodes[SDL_SCANCODE_J]               = 0x24;
-    scancodes[SDL_SCANCODE_K]               = 0x25;
-    scancodes[SDL_SCANCODE_L]               = 0x26;
-    scancodes[SDL_SCANCODE_SEMICOLON]       = 0x27;
-    scancodes[SDL_SCANCODE_APOSTROPHE]      = 0x28;
-    scancodes[SDL_SCANCODE_GRAVE]           = 0x29;
-    scancodes[SDL_SCANCODE_LSHIFT]          = 0x2A;
-    scancodes[SDL_SCANCODE_BACKSLASH]       = 0x2B;
-    scancodes[SDL_SCANCODE_Z]               = 0x2C;
-    scancodes[SDL_SCANCODE_X]               = 0x2D;
-    scancodes[SDL_SCANCODE_C]               = 0x2E;
-    scancodes[SDL_SCANCODE_V]               = 0x2F;
-    scancodes[SDL_SCANCODE_B]               = 0x30;
-    scancodes[SDL_SCANCODE_N]               = 0x31;
-    scancodes[SDL_SCANCODE_M]               = 0x32;
-    scancodes[SDL_SCANCODE_COMMA]           = 0x33;
-    scancodes[SDL_SCANCODE_PERIOD]          = 0x34;
-    scancodes[SDL_SCANCODE_SLASH]           = 0x35;
-    scancodes[SDL_SCANCODE_RSHIFT]          = 0x36;
-    scancodes[SDL_SCANCODE_KP_MULTIPLY]     = 0x37;
-    scancodes[SDL_SCANCODE_LALT]            = 0x38;
-    scancodes[SDL_SCANCODE_SPACE]           = 0x39;
-    scancodes[SDL_SCANCODE_CAPSLOCK]        = 0x3A;
-    scancodes[SDL_SCANCODE_F1]              = 0x3B;
-    scancodes[SDL_SCANCODE_F2]              = 0x3C;
-    scancodes[SDL_SCANCODE_F3]              = 0x3D;
-    scancodes[SDL_SCANCODE_F4]              = 0x3E;
-    scancodes[SDL_SCANCODE_F5]              = 0x3F;
-    scancodes[SDL_SCANCODE_F6]              = 0x40;
-    scancodes[SDL_SCANCODE_F7]              = 0x41;
-    scancodes[SDL_SCANCODE_F8]              = 0x42;
-    scancodes[SDL_SCANCODE_F9]              = 0x43;
-    scancodes[SDL_SCANCODE_F10]             = 0x44;
-    scancodes[SDL_SCANCODE_NUMLOCKCLEAR]    = 0x45;
-    scancodes[SDL_SCANCODE_SCROLLLOCK]      = 0x46;
-    scancodes[SDL_SCANCODE_KP_7]            = 0x47;
-    scancodes[SDL_SCANCODE_KP_8]            = 0x48;
-    scancodes[SDL_SCANCODE_KP_9]            = 0x49;
-    scancodes[SDL_SCANCODE_KP_MINUS]        = 0x4A;
-    scancodes[SDL_SCANCODE_KP_4]            = 0x4B;
-    scancodes[SDL_SCANCODE_KP_5]            = 0x4C;
-    scancodes[SDL_SCANCODE_KP_6]            = 0x4D;
-    scancodes[SDL_SCANCODE_KP_PLUS]         = 0x4E;
-    scancodes[SDL_SCANCODE_KP_1]            = 0x4F;
-    scancodes[SDL_SCANCODE_KP_2]            = 0x50;
-    scancodes[SDL_SCANCODE_KP_3]            = 0x51;
-    scancodes[SDL_SCANCODE_KP_0]            = 0x52;
-    scancodes[SDL_SCANCODE_KP_PERIOD]       = 0x53;
-    scancodes[SDL_SCANCODE_F11]             = 0x57;
-    scancodes[SDL_SCANCODE_F12]             = 0x58;
-    scancodes[SDL_SCANCODE_PAUSE]           = 0x59; /* SBF - technically incorrect */
-
-    scancodes[SDL_SCANCODE_KP_ENTER]        = 0xE01C;
-    scancodes[SDL_SCANCODE_RCTRL]           = 0xE01D;
-    scancodes[SDL_SCANCODE_KP_DIVIDE]       = 0xE035;
-    scancodes[SDL_SCANCODE_PRINTSCREEN]     = 0xE037; /* SBF - technically incorrect */
-    scancodes[SDL_SCANCODE_SYSREQ]          = 0xE037; /* SBF - for windows... */
-    scancodes[SDL_SCANCODE_RALT]            = 0xE038;
-    scancodes[SDL_SCANCODE_HOME]            = 0xE047;
-    scancodes[SDL_SCANCODE_UP]              = 0xE048;
-    scancodes[SDL_SCANCODE_PAGEUP]          = 0xE049;
-    scancodes[SDL_SCANCODE_LEFT]            = 0xE04B;
-    scancodes[SDL_SCANCODE_RIGHT]           = 0xE04D;
-    scancodes[SDL_SCANCODE_END]             = 0xE04F;
-    scancodes[SDL_SCANCODE_DOWN]            = 0xE050;
-    scancodes[SDL_SCANCODE_PAGEDOWN]        = 0xE051;
-    scancodes[SDL_SCANCODE_INSERT]          = 0xE052;
-    scancodes[SDL_SCANCODE_DELETE]          = 0xE053;
+    set_sdl_scancodes(scancodes, sizeof(scancodes) / sizeof(scancodes[0]));
     
     output_sdl_versions();
 
@@ -1079,13 +944,7 @@ void getvalidvesamodes(void)
 	for (i = 0; i < numModes; ++i)
 	{
         SDL_DisplayMode mode;
-		if (SDL_GetDisplayMode(displayIndex, i, &mode))
-		{
-            Error(EXIT_FAILURE,
-                "BUILDSDL: Failed to get display mode!\n"
-                "BUILDSDL: SDL_Error() says [%s].\n",
-                SDL_GetError());
-		}
+        SDL_CHECK_SUCCESS( SDL_GetDisplayMode(displayIndex, i, &mode) );
 
         add_vesa_mode("physical", mode.w, mode.h);
 	}
@@ -1101,8 +960,8 @@ void getvalidvesamodes(void)
 } 
 
 uint8_t lastPalette[768];
-void WriteTranslucToFile(void){
-    
+void WriteTranslucToFile(void)
+{
     uint8_t buffer[65535*4];
     uint8_t tga_header[18];
     uint8_t* transPointer = transluc;
@@ -1125,8 +984,6 @@ void WriteTranslucToFile(void){
         bufferPointer+=4;
     }
     
-    
-    
     file = fopen("transluc.tga", "w");
     
     memset(tga_header, 0, 18);
@@ -1142,8 +999,8 @@ void WriteTranslucToFile(void){
     fclose(file);
 }
 
-void WritePaletteToFile(uint8_t* palette,const char* filename,int width, int height){
-    
+void WritePaletteToFile(uint8_t* palette,const char* filename,int width, int height)
+{    
     uint8_t tga_header[18];
     uint8_t* buffer;
     uint8_t* palettePointer = palette;
@@ -1151,8 +1008,7 @@ void WritePaletteToFile(uint8_t* palette,const char* filename,int width, int hei
     int i;
     
     FILE* file = fopen(filename, "w");
-    
-    
+
     memset(tga_header, 0, 18);
     tga_header[2] = 2;
     tga_header[12] = (width & 0x00FF);
@@ -1183,7 +1039,8 @@ void WritePaletteToFile(uint8_t* palette,const char* filename,int width, int hei
 }
 
 
-void WriteLastPaletteToFile(){
+void WriteLastPaletteToFile()
+{
     WritePaletteToFile(lastPalette,"lastPalette.tga",16,16);
 }
 
@@ -1227,23 +1084,10 @@ void VBE_setPalette(uint8_t  *palettebuffer)
         sdlp++;
     }
 
-    if (SDL_SetPaletteColors(surface->format->palette, fmt_swap, 0, 256))
-    {
-        Error(EXIT_FAILURE,
-            "BUILDSDL: Failed to set palette colors!\n"
-            "BUILDSDL: SDL_Error() says [%s].\n",
-            SDL_GetError());
-    }
-
-    if (SDL_BlitSurface(surface, NULL, window_surface, NULL))
-    {
-        Error(EXIT_FAILURE,
-            "BUILDSDL: Failed to update surface rectangle!\n"
-            "BUILDSDL: SDL_Error() says [%s].\n",
-            SDL_GetError());
-    }
-	
-    SDL_UpdateWindowSurface(window);
+	// tanguyf: updating the palette is not immediate with a buffered surface, screen needs updating as well.
+    SDL_CHECK_SUCCESS( SDL_SetPaletteColors(surface->format->palette, fmt_swap, 0, 256) );
+    SDL_CHECK_SUCCESS( SDL_BlitSurface(surface, NULL, window_surface, NULL) );
+    SDL_CHECK_SUCCESS( SDL_UpdateWindowSurface(window) );
 }
 
 void VBE_getPalette(int32_t start, int32_t num, uint8_t  *palettebuffer)
@@ -1275,15 +1119,14 @@ int setupmouse(void)
     if (surface == NULL)
         return(0);
 
-    SDL_SetRelativeMouseMode(SDL_TRUE);
-    //SDL_ShowCursor(0);
+    SDL_CHECK_SUCCESS( SDL_SetRelativeMouseMode(SDL_TRUE) );
 
     mouse_relative_x = mouse_relative_y = 0;
 
-        /*
-         * this global usually gets set by BUILD, but it's a one-shot
-         *  deal, and we may not have an SDL surface at that point. --ryan.
-         */
+    /*
+     * this global usually gets set by BUILD, but it's a one-shot
+     *  deal, and we may not have an SDL surface at that point. --ryan.
+     */
     moustat = 1;
 
 	// FIX_00063: Duke's angle changing or incorrect when using toggle fullscreen/window mode
@@ -1322,39 +1165,22 @@ void readmousebstatus(short *bstatus)
 
 void _updateScreenRect(int32_t x, int32_t y, int32_t w, int32_t h)
 {
-	//// TODO
     SDL_Rect rect = { x, y, w, h };
-    //if (SDL_BlitSurface(surface, &rect, window_surface, &rect))
-    //if (SDL_BlitSurface(surface, NULL, window_surface, NULL))
-    //{
-    //    Error(EXIT_FAILURE,
-    //        "BUILDSDL: Failed to update surface rectangle!\n"
-    //        "BUILDSDL: SDL_Error() says [%s].\n",
-    //        SDL_GetError());
-    //}
-    //SDL_UpdateWindowSurface(window);
-
-    //SDL_UpdateRect(surface, x, y, w, h);
+	
+    SDL_CHECK_SUCCESS( SDL_BlitSurface(surface, &rect, window_surface, &rect) );
+    SDL_CHECK_SUCCESS( SDL_UpdateWindowSurface(window) );
 }
 
 //int counter= 0 ;
 //char bmpName[256];
 void _nextpage(void)
-
 {
     Uint32 ticks;
 
     _handle_events();
 
-    if (SDL_BlitSurface(surface, NULL, window_surface, NULL))
-    {
-        Error(EXIT_FAILURE,
-            "BUILDSDL: Failed to update surface rectangle!\n"
-            "BUILDSDL: SDL_Error() says [%s].\n",
-            SDL_GetError());
-    }
-    SDL_UpdateWindowSurface(window);
-    //SDL_UpdateRect(surface, 0, 0, 0, 0);
+    SDL_CHECK_SUCCESS( SDL_BlitSurface(surface, NULL, window_surface, NULL) );
+    SDL_CHECK_SUCCESS( SDL_UpdateWindowSurface(window) );
     
     //sprintf(bmpName,"%d.bmp",counter++);
     //SDL_SaveBMP(surface,bmpName);
@@ -1372,13 +1198,12 @@ void _nextpage(void)
     total_rendered_frames++;
 } 
 
-
-uint8_t  readpixel(uint8_t  * offset)
+uint8_t  readpixel(uint8_t* offset)
 {
     return *offset;
 } 
 
-void drawpixel(uint8_t  * location, uint8_t  pixel)
+void drawpixel(uint8_t* location, uint8_t pixel)
 {
     *location = pixel;
 }
@@ -1699,23 +1524,15 @@ void (*installusertimercallback(void (*callback)(void)))(void)
 
 int inittimer(int tickspersecond)
 {
-	int64_t t;
-	
+	int64_t t;	
     
 	if (timerfreq) return 0;	// already installed
 
 	//printf("Initialising timer, with tickPerSecond=%d\n",tickspersecond);
 
-	// OpenWatcom seems to want us to query the value into a local variable
-	// instead of the global 'timerfreq' or else it gets pissed with an
-	// access violation
-	if (!TIMER_GetPlatformTicksInOneSecond(&t)) {
-		printf("Failed fetching timer frequency\n");
-		return -1;
-	}
-	timerfreq = t;
+	timerfreq = 1000;
 	timerticspersec = tickspersecond;
-	TIMER_GetPlatformTicks(&t);
+    t = SDL_GetTicks();
 	timerlastsample = (int32_t)(t*timerticspersec / timerfreq);
 
 	usertimercallback = NULL;
@@ -1744,8 +1561,7 @@ void sampletimer(void)
 	
 	if (!timerfreq) return;
 
-	TIMER_GetPlatformTicks(&i);
-    
+    i = SDL_GetTicks();    
     
 	n = (int32_t)(i*timerticspersec / timerfreq) - timerlastsample;
 	if (n>0) {
@@ -1756,7 +1572,6 @@ void sampletimer(void)
 	if (usertimercallback) for (; n>0; n--) usertimercallback();
 }
 
-
 /*
    getticks() -- returns the windows ticks count
    FCS: This seeems to be only used in the multiplayer code
@@ -1764,10 +1579,9 @@ void sampletimer(void)
 uint32_t getticks(void)
 {
 	int64_t i;
-	TIMER_GetPlatformTicks(&i);
+    i = SDL_GetTicks();
 	return (uint32_t)(i*(int32_t)(1000)/timerfreq);
 }
-
 
 //
 // gettimerfreq() -- returns the number of ticks per second the timer is configured to generate
@@ -1775,39 +1589,4 @@ uint32_t getticks(void)
 int gettimerfreq(void)
 {
 	return timerticspersec;
-}
-
-
-
-void initkeys(void)
-{
-    /* does nothing in SDL. Key input handling is set up elsewhere. */
-    /* !!! why not here? */
-}
-
-void uninitkeys(void)
-{
-    /* does nothing in SDL. Key input handling is set up elsewhere. */
-}
-
-
-//unsigned int32_t getticks(void)
-//{
-//    return(SDL_GetTicks());
-//} /* getticks */
-
-
-//Timer on windows 98 used to be really poor but now it is very accurate
-// We can just use what SDL uses, no need for QueryPerformanceFrequency or QueryPerformanceCounter
-// (which I bet SDL is using anyway).
-//FCS: Let's try to use SDL again: Maybe SDL library is accurate enough now.
-int TIMER_GetPlatformTicksInOneSecond(int64_t* t)
-{
-    *t = 1000;
-    return 1;
-}
-    
-void TIMER_GetPlatformTicks(int64_t* t)
-{
-    *t = SDL_GetTicks();
 }

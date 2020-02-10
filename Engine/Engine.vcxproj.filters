@@ -79,5 +79,8 @@
     <ClInclude Include="src\fixedPoint_math.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\sdl_util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

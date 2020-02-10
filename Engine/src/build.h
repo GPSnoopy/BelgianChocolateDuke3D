@@ -306,7 +306,7 @@ OTHER VARIABLES:
 #define PORTSIG  "Port by Ryan C. Gordon, Andrew Henderson, Dan Olson, Fabien Sanglard and a cast of thousands."
 
 //Global.c
-void Error (int errorType, char  *error, ...);
+void Error (int errorType, const char *error, ...);
 int FindDistance2D(int ix, int iy);
 
 #endif  /* defined _INCLUDE_BUILD_H_ */

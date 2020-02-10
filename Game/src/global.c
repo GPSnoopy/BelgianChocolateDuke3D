@@ -486,7 +486,7 @@ int FindDistance3D(int ix, int iy, int iz)
    return (ix - (ix>>4) + (t>>2) + (t>>3));
 }
 #include "SDL2/SDL.h"
-void Error (int errorType, char  *error, ...)
+void Error (int errorType, const char *error, ...)
 {
    va_list argptr;
 
