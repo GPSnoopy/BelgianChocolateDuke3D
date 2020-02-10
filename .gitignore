@@ -1,5 +1,7 @@
+.vs
 *.sdf
 *.suo
+_ReSharper.Caches
 _UpgradeReport_Files
 UpgradeLog.*
 DerivedData
@@ -11,6 +13,7 @@ SDL-1.2.9
 *.opensdf
 DebugVC7
 bin
+build
 */ReleaseVC7
 *vcxproj.user
 DUKE3D.GRP
