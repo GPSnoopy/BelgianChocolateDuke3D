@@ -105,9 +105,9 @@ int32_t initgroupfile(const char  *filename)
     archive->numFiles = BUILDSWAP_INTEL32(*((int32_t *)&buf[12]));
     
     
-    archive->gfilelist = kmalloc(archive->numFiles * sizeof(grpIndexEntry_t));
-    archive->fileOffsets = kmalloc(archive->numFiles * sizeof(int32_t));
-    archive->filesizes = kmalloc(archive->numFiles * sizeof(int32_t));
+    archive->gfilelist = malloc(archive->numFiles * sizeof(grpIndexEntry_t));
+    archive->fileOffsets = malloc(archive->numFiles * sizeof(int32_t));
+    archive->filesizes = malloc(archive->numFiles * sizeof(int32_t));
     
     // Load the full index 16 bytes per file (12bytes for name + 4 bytes for the size).
     read(archive->fileDescriptor,archive->gfilelist, archive->numFiles * 16);

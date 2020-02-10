@@ -595,7 +595,7 @@ void deinit_network_transport(gcomtype *gcom)
 
 #elif UDP_NETWORKING
 
-#if PLATFORM_WIN32
+#if WIN32
 #  include <winsock.h>
 #  define EAGAIN WSAEWOULDBLOCK
 #  define EWOULDBLOCK WSAEWOULDBLOCK
@@ -656,7 +656,7 @@ static void siginthandler(int sigint)
     ctrlc_pressed = 1;
 }
 
-#if PLATFORM_WIN32
+#if WIN32
 /*
  * Figure out what the last failing Win32 API call was, and
  *  generate a human-readable string for the error message.
@@ -764,7 +764,7 @@ static int get_udp_packet(int *ip, short *_port, void *pkt, size_t pktsize)
 	if (rc == -1)
         err = neterrno();
 
-#if !PLATFORM_WIN32
+#if !WIN32
 	/* !!! FIXME: Linux specific? */
     if (rc == -1)  /* fill in the addr structure on error... */
     {
@@ -939,7 +939,7 @@ static int set_socket_blockmode(int onOrOff)
 
     /* set socket to be (non-)blocking. */
 
-#if PLATFORM_WIN32
+#if WIN32
     flags = (onOrOff) ? 0 : 1;
     rc = (ioctlsocket(udpsocket, FIONBIO, &flags) == 0);
 #else
@@ -998,7 +998,7 @@ static int open_udp_socket(int ip, int port)
     if (!set_socket_blockmode(0))
         return(0);
 
-    #if !PLATFORM_WIN32
+    #if !WIN32
     {
         /* !!! FIXME: Might be Linux (not Unix, not BSD, not WinSock) specific. */
         int flags = 1;
@@ -1382,7 +1382,7 @@ static int parse_interface(char *str, int *ip, short *udpport)
 
 static int initialize_sockets(void)
 {
-#if PLATFORM_WIN32
+#if WIN32
     int rc;
     WSADATA data;
     printf("initializing WinSock...\n");
@@ -1410,7 +1410,7 @@ static int initialize_sockets(void)
 
 static void deinitialize_sockets(void)
 {
-#if PLATFORM_WIN32
+#if WIN32
     WSACleanup();
 #endif
 }

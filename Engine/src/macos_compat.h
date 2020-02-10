@@ -9,14 +9,7 @@
 #ifndef Duke3D_macos_compat_h
 #define Duke3D_macos_compat_h
 
-#define PLATFORM_SUPPORTS_SDL
-
 #include <stdlib.h>
-
-#define kmalloc(x) malloc(x)
-#define kkmalloc(x) malloc(x)
-#define kfree(x) free(x)
-#define kkfree(x) free(x)
 
 #ifdef FP_OFF
 #undef FP_OFF

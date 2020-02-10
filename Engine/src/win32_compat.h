@@ -14,17 +14,9 @@
  * See the included license file "BUILDLIC.TXT" for license info.
  * This file IS NOT A PART OF Ken Silverman's original release
  */
-
-
   
 #ifndef _INCLUDE_WIN32_COMPAT_H_
 #define _INCLUDE_WIN32_COMPAT_H_
-
-#if (!defined PLATFORM_WIN32)
-#error PLATFORM_WIN32 is not defined.
-#endif
-
-#define PLATFORM_SUPPORTS_SDL
 
 #include <stdio.h>
 
@@ -42,11 +34,6 @@
 #include <dos.h>
 #include <assert.h>
 #include <string.h>
-
-#define kmalloc(x) malloc(x)
-#define kkmalloc(x) malloc(x)
-#define kfree(x) free(x)
-#define kkfree(x) free(x)
 
 #ifdef FP_OFF
 #undef FP_OFF
@@ -66,17 +53,7 @@
 #define min(x, y)  (((x) < (y)) ? (x) : (y))
 #endif
 
-#if (defined __WATCOMC__)
-#define inline
-#pragma intrinsic(min);
-#pragma intrinsic(max);
-#define __int64 long long
-#endif
-
 #if (defined _MSC_VER)
-#if ((!defined _INTEGRAL_MAX_BITS) || (_INTEGRAL_MAX_BITS < 64))
-#error __int64 type not supported
-#endif
 
 #define open _open
 #define O_BINARY _O_BINARY
@@ -94,13 +71,8 @@
 
 #define strncasecmp strnicmp
 
-//Damn you Microsoft, how hard would it REALLY be to support C99 ?!??!?!
-#define inline 
-#include "windows/inttypes.h"
+#include <inttypes.h>
 
 #endif
 
 /* end of win32_compat.h ... */
-
-
-

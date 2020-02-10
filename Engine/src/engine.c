@@ -276,7 +276,7 @@ uint16_t mapCRC;
 
 #include "draw.h"
 
-static __inline int32_t nsqrtasm(uint32_t  param)
+static inline int32_t nsqrtasm(uint32_t  param)
 {
     uint16_t *shlookup_a = (uint16_t*)shlookup;
     uint16_t *sqrtable_a = (uint16_t*)sqrtable;
@@ -294,7 +294,7 @@ static __inline int32_t nsqrtasm(uint32_t  param)
     return param;
 }
 
-static __inline int32_t krecipasm(int32_t i)
+static inline int32_t krecipasm(int32_t i)
 {   // Ken did this
     float f = (float)i;
     i = *(int32_t *)&f;
@@ -303,7 +303,7 @@ static __inline int32_t krecipasm(int32_t i)
 
 
 
-static __inline int32_t getclipmask(int32_t a, int32_t b, int32_t c, int32_t d)
+static inline int32_t getclipmask(int32_t a, int32_t b, int32_t c, int32_t d)
 {   // Ken did this
     d = ((a<0)*8) + ((b<0)*4) + ((c<0)*2) + (d<0);
     return(((d<<4)^0xf0)|d);
@@ -3349,7 +3349,7 @@ int saveboard(char  *filename, int32_t *daposx, int32_t *daposy,
     walltype *w;
     sectortype *sect;
 
-#if ((defined PLATFORM_DOS) || (defined PLATFORM_WIN32))
+#if ((defined PLATFORM_DOS) || (defined WIN32))
     permissions = S_IWRITE;
 #elif (defined PLATFORM_UNIX)
     permissions = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
@@ -3581,11 +3581,11 @@ static void loadpalette(void)
     //CODE EXPLORATION
     //printf("Num palettes lookup: %d.\n",numpalookups);
     
-    if ((palookup[0] = (uint8_t  *)kkmalloc(numpalookups<<8)) == NULL)
+    if ((palookup[0] = (uint8_t  *)malloc(numpalookups<<8)) == NULL)
         allocache(&palookup[0],numpalookups<<8,&permanentlock);
     
     //Transluctent pallete is 65KB.
-    if ((transluc = (uint8_t  *)kkmalloc(65536)) == NULL)
+    if ((transluc = (uint8_t  *)malloc(65536)) == NULL)
         allocache(&transluc,65536,&permanentlock);
 
     globalpalwritten = palookup[0];
@@ -3670,11 +3670,11 @@ void initengine(void)
 void uninitengine(void)
 {
     if (transluc != NULL) {
-        kkfree(transluc);
+        free(transluc);
         transluc = NULL;
     }
     if (pic != NULL) {
-        kkfree(pic);
+        free(pic);
         pic = NULL;
     }
     if (artfil != -1) kclose(artfil);
@@ -8206,7 +8206,7 @@ void makepalookup(int32_t palnum, uint8_t  *remapbuf, int8_t r,
     if (palookup[palnum] == NULL)
     {
         /* Allocate palookup buffer */
-        if ((palookup[palnum] = (uint8_t  *)kkmalloc(numpalookups<<8)) == NULL)
+        if ((palookup[palnum] = (uint8_t  *)malloc(numpalookups<<8)) == NULL)
             allocache((int32_t *)&palookup[palnum],numpalookups<<8,&permanentlock);
     }
 

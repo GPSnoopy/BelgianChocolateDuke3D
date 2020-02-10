@@ -10,19 +10,19 @@
 
 #include "platform.h" 
 
-static __inline void swapchar(uint8_t  *p1, uint8_t  *p2)
+static inline void swapchar(uint8_t  *p1, uint8_t  *p2)
 { uint8_t  tmp = *p1; *p1 = *p2; *p2 = tmp; }
-static __inline void swapshort(short *p1, short *p2)
+static inline void swapshort(short *p1, short *p2)
 { short tmp = *p1; *p1 = *p2; *p2 = tmp; }
-static __inline void swaplong(int32_t *p1, int32_t *p2)
+static inline void swaplong(int32_t *p1, int32_t *p2)
 { int32_t tmp = *p1; *p1 = *p2; *p2 = tmp; }
-static __inline void swapchar2(uint8_t  *p1, uint8_t  *p2, int xsiz)
+static inline void swapchar2(uint8_t  *p1, uint8_t  *p2, int xsiz)
 {
     swapchar(p1, p2);
     swapchar(p1 + 1, p2 + xsiz);
 }
 
-static __inline int32_t msqrtasm(uint32_t input)
+static inline int32_t msqrtasm(uint32_t input)
 {
 	uint32_t a,b;
 
@@ -113,25 +113,25 @@ DEFFUN(31)\
 DEFFUN(32)
 
 #define DEFFUN(N) \
-static __inline int32_t mulscale##N(int32_t input1, int32_t input2) \
+static inline int32_t mulscale##N(int32_t input1, int32_t input2) \
 { return mulscale(input1,input2,N); }
 DEFFUNCS
 #undef DEFFUN
 
 #define DEFFUN(N) \
-static __inline int32_t dmulscale##N(int32_t input1, int32_t input2,int32_t input3,int32_t input4) \
+static inline int32_t dmulscale##N(int32_t input1, int32_t input2,int32_t input3,int32_t input4) \
 { return dmulscale(input1,input2,input3,input4,N); }
 DEFFUNCS
 #undef DEFFUN
 
 #define DEFFUN(N) \
-static __inline int32_t tmulscale##N(int32_t i1, int32_t i2,int32_t i3,int32_t i4,int32_t i5,int32_t i6) \
+static inline int32_t tmulscale##N(int32_t i1, int32_t i2,int32_t i3,int32_t i4,int32_t i5,int32_t i6) \
 { return tmulscale(i1,i2,i3,i4,i5,i6,N); }
 DEFFUNCS
 #undef DEFFUN
 
 #define DEFFUN(N) \
-static __inline int32_t divscale##N(int32_t input1, int32_t input2) \
+static inline int32_t divscale##N(int32_t input1, int32_t input2) \
 { return divscale(input1,input2,N); }
 DEFFUNCS
 #undef DEFFUN

@@ -268,7 +268,7 @@ int loadpics(char  *filename, char * gamedir)
     /* try dpmi_DETERMINEMAXREALALLOC! */
     
     cachesize = max(artsize,1048576);
-    while ((pic = (uint8_t  *)kkmalloc(cachesize)) == NULL)
+    while ((pic = (uint8_t  *)malloc(cachesize)) == NULL)
     {
         cachesize -= 65536L;
         if (cachesize < 65536) return(-1);

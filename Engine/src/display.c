@@ -20,11 +20,6 @@
 #include <string.h>
 #include "platform.h"
 
-#if (!defined PLATFORM_SUPPORTS_SDL)
-#error This platform apparently does not use SDL. Do not compile this.
-#endif
-
-
 #define BUILD_NOMOUSEGRAB    "BUILD_NOMOUSEGRAB"
 #define BUILD_WINDOWED       "BUILD_WINDOWED"
 #define BUILD_SDLDEBUG       "BUILD_SDLDEBUG"
@@ -60,11 +55,6 @@ int TIMER_GetPlatformTicksInOneSecond(int64_t* t);
 void TIMER_GetPlatformTicks(int64_t* t);
 
 //END // NATIVE TIMER FUNCTION DECLARATION
-
-
-#if ((defined PLATFORM_WIN32))
-#include <windows.h>
-#endif
 
 #include "draw.h"
 #include "cache.h"
@@ -155,7 +145,7 @@ static void init_new_res_vars()
 
   	if (screen != NULL)
    	{
-       	if (screenalloctype == 0) kkfree((void *)screen);
+       	if (screenalloctype == 0) free((void *)screen);
    	    if (screenalloctype == 1) suckcache((int32_t *)screen);
    		screen = NULL;
    	} /* if */
@@ -257,7 +247,7 @@ static void go_to_new_vid_mode(int w, int h)
     init_new_res_vars();
 }
 
-static __inline int sdl_mouse_button_filter(SDL_MouseButtonEvent const *event)
+static inline int sdl_mouse_button_filter(SDL_MouseButtonEvent const *event)
 {
         /*
          * What bits BUILD expects:
@@ -334,7 +324,7 @@ static int sdl_mouse_motion_filter(SDL_Event const *event)
      *  which we check for explicitly, and give the engine a keypad enter
      *  enter event.
      */
-static __inline int handle_keypad_enter_hack(const SDL_Event *event)
+static inline int handle_keypad_enter_hack(const SDL_Event *event)
 {
     static int kp_enter_hack = 0;
     int retval = 0;
@@ -902,7 +892,7 @@ static int get_dimensions_from_str(const char  *str, int32_t *_w, int32_t *_h)
 } /* get_dimensions_from_str */
 
 
-static __inline void get_max_screen_res(int32_t *max_w, int32_t *max_h)
+static inline void get_max_screen_res(int32_t *max_w, int32_t *max_h)
 {
     int32_t w = DEFAULT_MAXRESWIDTH;
     int32_t h = DEFAULT_MAXRESHEIGHT;
@@ -937,7 +927,7 @@ static void add_vesa_mode(const char  *typestr, int w, int h)
 
 
 /* Let the user specify a specific mode via environment variable. */
-static __inline void add_user_defined_resolution(void)
+static inline void add_user_defined_resolution(void)
 {
     int32_t w;
     int32_t h;
@@ -970,7 +960,7 @@ static void remove_vesa_mode(int index, const char  *reason)
 } /* remove_vesa_mode */
 
 
-static __inline void cull_large_vesa_modes(void)
+static inline void cull_large_vesa_modes(void)
 {
     int32_t max_w;
     int32_t max_h;
@@ -990,7 +980,7 @@ static __inline void cull_large_vesa_modes(void)
 } /* cull_large_vesa_modes */
 
 
-static __inline void cull_duplicate_vesa_modes(void)
+static inline void cull_duplicate_vesa_modes(void)
 {
     int i;
     int j;
@@ -1009,7 +999,7 @@ static __inline void cull_duplicate_vesa_modes(void)
 #define swap_macro(tmp, x, y) { tmp = x; x = y; y = tmp; }
 
 /* be sure to call cull_duplicate_vesa_modes() before calling this. */
-static __inline void sort_vesa_modelist(void)
+static inline void sort_vesa_modelist(void)
 {
     int i;
     int sorted;
@@ -1033,7 +1023,7 @@ static __inline void sort_vesa_modelist(void)
 } /* sort_vesa_modelist */
 
 
-static __inline void cleanup_vesa_modelist(void)
+static inline void cleanup_vesa_modelist(void)
 {
     cull_large_vesa_modes();
     cull_duplicate_vesa_modes();
@@ -1041,7 +1031,7 @@ static __inline void cleanup_vesa_modelist(void)
 } /* cleanup_vesa_modelist */
 
 
-static __inline void output_vesa_modelist(void)
+static inline void output_vesa_modelist(void)
 {
     char  buffer[256];
     char  numbuf[20];
@@ -1442,7 +1432,7 @@ void fillscreen16(int32_t offset, int32_t color, int32_t blocksize)
 
 /* Most of this line code is taken from Abrash's "Graphics Programming Blackbook".
 Remember, sharing code is A Good Thing. AH */
-static __inline void DrawHorizontalRun (uint8_t  **ScreenPtr, int XAdvance, int RunLength, uint8_t  Color)
+static inline void DrawHorizontalRun (uint8_t  **ScreenPtr, int XAdvance, int RunLength, uint8_t  Color)
 {
     int i;
     uint8_t  *WorkingScreenPtr = *ScreenPtr;
@@ -1456,7 +1446,7 @@ static __inline void DrawHorizontalRun (uint8_t  **ScreenPtr, int XAdvance, int 
     *ScreenPtr = WorkingScreenPtr;
 }
 
-static __inline void DrawVerticalRun (uint8_t  **ScreenPtr, int XAdvance, int RunLength, uint8_t  Color)
+static inline void DrawVerticalRun (uint8_t  **ScreenPtr, int XAdvance, int RunLength, uint8_t  Color)
 {
     int i;
     uint8_t  *WorkingScreenPtr = *ScreenPtr;
@@ -1810,18 +1800,6 @@ void uninitkeys(void)
 //Timer on windows 98 used to be really poor but now it is very accurate
 // We can just use what SDL uses, no need for QueryPerformanceFrequency or QueryPerformanceCounter
 // (which I bet SDL is using anyway).
-#if 0//PLATFORM_WIN32 
-int TIMER_GetPlatformTicksInOneSecond(int64_t* t)
-{
-    QueryPerformanceFrequency((LARGE_INTEGER*)t);
-    return 1;
-}
-
-void TIMER_GetPlatformTicks(int64_t* t)
-{
-    QueryPerformanceCounter((LARGE_INTEGER*)t);
-}
-#else
 //FCS: Let's try to use SDL again: Maybe SDL library is accurate enough now.
 int TIMER_GetPlatformTicksInOneSecond(int64_t* t)
 {
@@ -1833,6 +1811,3 @@ void TIMER_GetPlatformTicks(int64_t* t)
 {
     *t = SDL_GetTicks();
 }
-#endif
-/* end of sdl_driver.c ... */
-
