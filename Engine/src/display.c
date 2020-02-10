@@ -186,6 +186,12 @@ static void init_new_res_vars()
 
 static void go_to_new_vid_mode(int w, int h)
 {
+    if (window != NULL)
+    {
+        SDL_FreeSurface(surface);
+        SDL_DestroyWindow(window);
+    }
+	
     window = SDL_CreateWindow(
         titleName,
         SDL_WINDOWPOS_CENTERED,
