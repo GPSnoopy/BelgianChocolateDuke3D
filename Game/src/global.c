@@ -76,11 +76,6 @@ int32_t gc,neartaghitdist,lockclock,max_player_health,max_armour_amount,max_ammo
 struct weaponhit hittype[MAXSPRITES];
 short spriteq[1024],spriteqloc,spriteqamount=64;
 
-// ported build engine has this, too.  --ryan.
-#if PLATFORM_DOS
-short moustat = 0;
-#endif
-
 struct animwalltype animwall[MAXANIMWALLS];
 short numanimwalls;
 int32_t *animateptr[MAXANIMATES], animategoal[MAXANIMATES], animatevel[MAXANIMATES], animatecnt;
@@ -301,11 +296,7 @@ void FixFilePath(char  *filename)
 #endif
 }
 
-
-#if PLATFORM_DOS
- /* no-op. */
-
-#elif PLATFORM_WIN32
+#if WIN32
 int _dos_findfirst(uint8_t  *filename, int x, struct find_t *f)
 {
     int32_t rc = _findfirst(filename, &f->data);
@@ -430,8 +421,6 @@ int _dos_findnext(struct find_t *f)
 #error please define for your platform.
 #endif
 
-
-#if !PLATFORM_DOS
 void _dos_getdate(struct dosdate_t *date)
 {
 	time_t curtime = time(NULL);
@@ -450,8 +439,6 @@ void _dos_getdate(struct dosdate_t *date)
 		date->dayofweek = tm->tm_wday + 1;
 	}
 }
-#endif
-
 
 int FindDistance2D(int ix, int iy)
 {
@@ -557,7 +544,7 @@ int32 SafeOpenAppend (const char  *_filename, int32 filetype)
     filename[sizeof (filename) - 1] = '\0';
     FixFilePath(filename);
 
-#if (defined PLATFORM_WIN32)
+#if (defined WIN32)
     handle = open(filename,O_RDWR | O_BINARY | O_CREAT | O_APPEND );
 #else
 	handle = open(filename,O_RDWR | O_BINARY | O_CREAT | O_APPEND , S_IREAD | S_IWRITE);
@@ -576,8 +563,8 @@ boolean SafeFileExists ( const char  * _filename )
     filename[sizeof (filename) - 1] = '\0';
     FixFilePath(filename);
 
-#if( defined PLATFORM_WIN32)
-        return(access(filename, 6) == 0);
+#if( defined WIN32)
+    return(access(filename, 6) == 0);
 #else
     return(access(filename, F_OK) == 0);
 #endif
@@ -592,7 +579,7 @@ int32 SafeOpenWrite (const char  *_filename, int32 filetype)
     filename[sizeof (filename) - 1] = '\0';
     FixFilePath(filename);
 
-#if (defined PLATFORM_WIN32)
+#if (defined WIN32)
     handle = open(filename,O_RDWR | O_BINARY | O_CREAT | O_TRUNC );
 #else
 	handle = open(filename,O_RDWR | O_BINARY | O_CREAT | O_TRUNC

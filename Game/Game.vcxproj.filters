@@ -184,6 +184,9 @@
     <ClInclude Include="src\cvars.h">
       <Filter>Console Headers</Filter>
     </ClInclude>
+    <ClInclude Include="src\global.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="chocolateDukeResources.rc" />

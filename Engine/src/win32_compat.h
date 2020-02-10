@@ -24,7 +24,7 @@
 	#include <unistd.h>
 #else
 	#include <fcntl.h>
-    #include <SYS\STAT.H>
+    #include <sys/stat.h>
 #endif
 
 #include <stdlib.h>
@@ -39,11 +39,9 @@
 #undef FP_OFF
 #endif
 
-#define FP_OFF(x) ((long) (x))
-
-/* !!! This might be temporary. */
-#define printext16 printext256
-#define printext16_noupdate printext256_noupdate
+// Horrible horrible macro: Watcom allowed memory pointer to be cast
+// to a 32bits integer. The code is unfortunately stuffed with this :( !
+#define FP_OFF(x) ((int32_t) (x))
 
 #ifndef max
 #define max(x, y)  (((x) > (y)) ? (x) : (y))
@@ -68,7 +66,6 @@
 #endif /* defined _MSC_VER */
 
 #define snprintf _snprintf
-
 #define strncasecmp strnicmp
 
 #include <inttypes.h>

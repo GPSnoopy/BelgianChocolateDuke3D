@@ -27,7 +27,7 @@ void Shutdown(void);
     #endif
 #endif
 
-#if PLATFORM_WIN32
+#if WIN32
 #ifndef BYTE_ORDER
 #define BYTE_ORDER LITTLE_ENDIAN
 #endif

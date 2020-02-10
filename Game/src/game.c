@@ -116,38 +116,12 @@ void pitch_test( void );
 uint8_t  restorepalette,screencapt,nomorelogohack;
 int sendmessagecommand = -1;
 
-#if PLATFORM_DOS
-task *TimerPtr=NULL;
-#endif
-
 extern int32_t lastvisinc;
 
-// Build Engine port implements this.  --ryan.
-#if PLATFORM_DOS
-static void timerhandler(task *unused)
-{
-    totalclock++;
-}
-
-void inittimer()
-{
-    TimerPtr = TS_ScheduleTask( timerhandler,TICRATE, 1, NULL );
-    TS_Dispatch();
-}
-
-void uninittimer(void)
-{
-   if (TimerPtr)
-      TS_Terminate( TimerPtr );
-   TimerPtr = NULL;
-   TS_Shutdown();
-}
-#else
 void timerhandler(void)
 {
     totalclock++;
 }
-#endif
 
 int gametext(int x,int y,char  *t,uint8_t  s,short dabits)
 {
@@ -2471,11 +2445,7 @@ void gameexit(char  *msg)
         if(true)
         {
             if(*t == ' ' && *(t+1) == 0) *t = 0;
-            #if PLATFORM_DOS   // Is there a good reason for this? --ryan.
-            printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-            #else
             printf("\n%s\n",t);
-            #endif
         }
 // CTW END - MODIFICATION        
     }
@@ -7783,18 +7753,11 @@ void Startup(void)
    if(networkmode == 255)
        networkmode = 1;
 
-#ifdef PLATFORM_DOS
-   puts("Checking music inits.");
-   MusicStartup();
-   puts("Checking sound inits.");
-   SoundStartup();
-#else
    /* SBF - wasn't sure if swapping them would harm anything. */
    puts("Checking sound inits.");
    SoundStartup();
    puts("Checking music inits.");
    MusicStartup();
-#endif
 
    // AutoAim
 	if(nHostForceDisableAutoaim)
@@ -8008,7 +7971,7 @@ void findGRPToUse(uint8_t * groupfilefullpath)
 	else
 		sprintf(groupfilefullpath, "%s", baseDir);
     
-	printf("Searching '%d':\n\n",groupfilefullpath);
+	printf("Searching '%s':\n\n",groupfilefullpath);
 	hFind = FindFirstFile(groupfilefullpath,&FindFileData);
     
 	if ( hFind==INVALID_HANDLE_VALUE )

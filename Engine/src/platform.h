@@ -5,8 +5,6 @@
     #include "win32_compat.h"
 #elif (defined PLATFORM_UNIX)
     #include "unix_compat.h"
-#elif (defined PLATFORM_DOS)
-    #include "doscmpat.h"
 #elif (defined __APPLE__)
     #include "macos_compat.h"
 #else

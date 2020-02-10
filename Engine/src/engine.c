@@ -3349,9 +3349,9 @@ int saveboard(char  *filename, int32_t *daposx, int32_t *daposy,
     walltype *w;
     sectortype *sect;
 
-#if ((defined PLATFORM_DOS) || (defined WIN32))
+#ifdef WIN32
     permissions = S_IWRITE;
-#elif (defined PLATFORM_UNIX)
+#elif
     permissions = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
 #endif
 

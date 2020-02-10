@@ -2,10 +2,6 @@
 #include <commctrl.h>
 #include <richedit.h>
 
-
-
-
-
 //
 // Icon resources
 //
