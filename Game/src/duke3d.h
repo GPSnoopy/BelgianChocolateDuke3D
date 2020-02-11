@@ -525,10 +525,10 @@ extern SOUNDOWNER SoundOwner[NUM_SOUNDS][4];
 extern uint8_t  playerreadyflag[MAXPLAYERS],playerquitflag[MAXPLAYERS];
 extern char  sounds[NUM_SOUNDS][14];
 
-extern int32_t script[MAXSCRIPTSIZE],*scriptptr,*insptr,*labelcode,labelcnt;
+extern intptr_t script[MAXSCRIPTSIZE],*scriptptr,*insptr,*labelcode,labelcnt;
 extern char  *label,*textptr,error,warning;
 extern uint8_t killit_flag;
-extern int32_t *actorscrptr[MAXTILES],*parsing_actor;
+extern intptr_t*actorscrptr[MAXTILES],*parsing_actor;
 extern uint8_t  actortype[MAXTILES];
 extern uint8_t  *music_pointer;
 
@@ -550,7 +550,7 @@ struct weaponhit
     short tempang,actorstayput,dispicnum;
     short timetosleep;
     int32_t floorz,ceilingz,lastvx,lastvy,bposx,bposy,bposz;
-    int32_t temp_data[6];
+    intptr_t temp_data[6];
 };
 
 extern struct weaponhit hittype[MAXSPRITES];

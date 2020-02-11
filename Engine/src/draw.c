@@ -114,9 +114,6 @@ void rhlineasm4(int32_t i1, uint8_t* texture, int32_t i3, uint32_t i4, uint32_t 
 
     numPixels = i1;
     do {
-		
-		
-
 	    i3 = ((i3&0xffffff00)|(*texture));
 	    i4 -= rmach_eax;
 	    ebp = (((i4+rmach_eax) < i4) ? -1 : 0);
@@ -141,9 +138,9 @@ void rhlineasm4(int32_t i1, uint8_t* texture, int32_t i3, uint32_t i4, uint32_t 
 static int32_t rmmach_eax;
 static int32_t rmmach_ebx;
 static int32_t rmmach_ecx;
-static int32_t rmmach_edx;
+static uint8_t* rmmach_edx;
 static int32_t setupTileHeight;
-void setuprmhlineasm4(int32_t i1, int32_t i2, int32_t i3, int32_t i4, int32_t tileHeight, int32_t i6)
+void setuprmhlineasm4(int32_t i1, int32_t i2, int32_t i3, uint8_t* i4, int32_t tileHeight, int32_t i6)
 {
     rmmach_eax = i1;
     rmmach_ebx = i2;
@@ -154,20 +151,18 @@ void setuprmhlineasm4(int32_t i1, int32_t i2, int32_t i3, int32_t i4, int32_t ti
 
 
 //FCS: ????
-void rmhlineasm4(int32_t i1, intptr_t shade, int32_t colorIndex, int32_t i4, int32_t i5, int32_t dest)
+void rmhlineasm4(int32_t i1, uint8_t* shade, int32_t colorIndex, int32_t i4, int32_t i5, uint8_t* dest)
 {
     uint32_t ebp = dest - i1;
     uint32_t rmach6b = ebp-1;
     int32_t numPixels;
+	int32_t offset = i1 + 1;
     
     if (i1 <= 0)
         return;
 
     numPixels = i1;
     do {
-
-	
-
 	    colorIndex = ((colorIndex&0xffffff00)|(*((uint8_t *)shade)));
 	    i4 -= rmmach_eax;
 	    ebp = (((i4+rmmach_eax) < i4) ? -1 : 0);
@@ -184,8 +179,8 @@ void rmhlineasm4(int32_t i1, intptr_t shade, int32_t colorIndex, int32_t i4, int
 	    if ((colorIndex&0xff) != 255) {
 			if (pixelsAllowed-- > 0)
 			{
-				i1 = ((i1&0xffffff00)|(((uint8_t  *)colorIndex)[rmmach_edx]));
-				((uint8_t  *)rmach6b)[numPixels] = (i1&0xff);
+				i1 = ((i1&0xffffff00)|rmmach_edx[colorIndex]);
+				dest[numPixels - offset] = (i1 & 0xff);
 			}
 	    }
         
@@ -297,9 +292,9 @@ int32_t tvlineasm1(int32_t i1, uint8_t  * texture, int32_t numPixels, int32_t i4
 
 
 static uint8_t  tran2shr;
-static uint32_t tran2pal_ebx;
-static uint32_t tran2pal_ecx;
-void setuptvlineasm2(int32_t i1, int32_t i2, int32_t i3)
+static uint8_t* tran2pal_ebx;
+static uint8_t* tran2pal_ecx;
+void setuptvlineasm2(int32_t i1, uint8_t* i2, uint8_t* i3)
 {
 	tran2shr = (i1&0x1f);
 	tran2pal_ebx = i2;
@@ -330,7 +325,7 @@ void tvlineasm2(uint32_t i1, uint32_t i2, uintptr_t i3, uintptr_t i4, uint32_t i
 		if (i3 == 255) { // skipdraw1
 			if (i4 != 255) { // skipdraw3
 				uint16_t val;
-				val = ((uint8_t  *)tran2pal_ecx)[i4];
+				val = tran2pal_ecx[i4];
 				val |= (((uint8_t  *)i6)[tran2edi1]<<8);
 
 				if (transrev) 
@@ -341,7 +336,7 @@ void tvlineasm2(uint32_t i1, uint32_t i2, uintptr_t i3, uintptr_t i4, uint32_t i
 			}
 		} else if (i4 == 255) { // skipdraw2
 			uint16_t val;
-			val = ((uint8_t  *)tran2pal_ebx)[i3];
+			val = tran2pal_ebx[i3];
 			val |= (((uint8_t  *)i6)[tran2edi]<<8);
 
 			if (transrev) 
@@ -352,8 +347,8 @@ void tvlineasm2(uint32_t i1, uint32_t i2, uintptr_t i3, uintptr_t i4, uint32_t i
 		} else {
 			uint16_t l = ((uint8_t  *)i6)[tran2edi]<<8;
 			uint16_t r = ((uint8_t  *)i6)[tran2edi1]<<8;
-			l |= ((uint8_t  *)tran2pal_ebx)[i3];
-			r |= ((uint8_t  *)tran2pal_ecx)[i4];
+			l |= tran2pal_ebx[i3];
+			r |= tran2pal_ecx[i4];
 			if (transrev) {
 				l = ((l>>8)|(l<<8));
 				r = ((r>>8)|(r<<8));
@@ -850,10 +845,11 @@ extern int32_t fpuasm;
 #define high32(a) ((int)(((__int64)a&(__int64)0xffffffff00000000)>>32))
 
 //FCS: Render RENDER_SLOPPED_CEILING_AND_FLOOR
-void slopevlin(intptr_t i1, uint32_t i2, int32_t i3, int32_t i4, int32_t i5, int32_t i6)
+void slopevlin(intptr_t i1, uint32_t i2, intptr_t* i3, uint32_t index, int32_t i4, int32_t i5, int32_t i6)
 {
     bitwisef2i c;
-    uint32_t ecx,eax,ebx,edx,esi,edi;
+	uintptr_t ecx, eax, ebx, edx, esi;
+	uint32_t edi;
 //This is so bad to cast asm3 to int then float :( !!!
     float a = (float)(int32_t) asm3 + asm2_f;
     i1 -= slopemach_ecx;
@@ -899,11 +895,11 @@ void slopevlin(intptr_t i1, uint32_t i2, int32_t i3, int32_t i4, int32_t i5, int
 		    ebx &= slopemach_edx;
 		    edi += eax;
 		    i1 += slopemach_ecx;
-		    edx = ((edx&0xffffff00)|((((uint8_t  *)(ebx+edx))[slopemach_ebx])));
-		    ebx = *((uint32_t*)i3); // register trickery
-		    i3 -= 4;
-		    eax = ((eax&0xffffff00)|(*((uint8_t  *)(ebx+edx))));
-		    ebx = esi;
+		    edx = ((edx&0xffffff00)|((((uint8_t *)(ebx+edx))[slopemach_ebx])));
+			ebx = i3[index];
+			index--;
+			eax = ((eax & 0xffffff00) | (*((uint8_t*)(ebx + edx))));
+			ebx = esi;
 
 			if (pixelsAllowed-- > 0)
 				*((uint8_t  *)i1) = (eax&0xff);
