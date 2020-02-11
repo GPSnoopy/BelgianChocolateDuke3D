@@ -14,6 +14,7 @@ SDL-1.2.9
 DebugVC7
 bin
 build
+x64
 */ReleaseVC7
 *vcxproj.user
 DUKE3D.GRP

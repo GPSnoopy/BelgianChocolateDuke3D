@@ -10,6 +10,12 @@ vcpkg.exe install ^
 	sdl2:x86-windows-static ^
 	sdl2-mixer:x86-windows-static ^
 	|| goto :error
+	
+vcpkg.exe install ^
+	enet:x64-windows-static ^
+	sdl2:x64-windows-static ^
+	sdl2-mixer:x64-windows-static ^
+	|| goto :error
 
 cd ..
 cd ..
