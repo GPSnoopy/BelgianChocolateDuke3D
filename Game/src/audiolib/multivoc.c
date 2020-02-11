@@ -114,7 +114,7 @@ static int MV_BuffShift;
 static int MV_TotalMemory;
 static int MV_FooMemory;
 
-static int   MV_BufferDescriptor;
+static void* MV_BufferDescriptor;
 static int   MV_BufferEmpty[ NumberOfBuffers ];
 char *MV_MixBuffer[ NumberOfBuffers + 1 ];
 double *MV_FooBuffer = NULL;
@@ -2967,8 +2967,7 @@ int MV_Init
       }
 
    // Allocate mix buffer within 1st megabyte
-   status = DPMI_GetDOSMemory( ( void ** )&ptr, &MV_BufferDescriptor,
-      2 * TotalBufferSize);
+   status = DPMI_GetDOSMemory( ( void ** )&ptr, &MV_BufferDescriptor, 2 * TotalBufferSize);
 
    if ( status )
       {

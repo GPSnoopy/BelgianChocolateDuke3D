@@ -147,20 +147,19 @@ int DPMI_UnlockMemoryRegion
    return( status );
    }
 
-int DPMI_GetDOSMemory( void **ptr, int *descriptor, unsigned length )
+int DPMI_GetDOSMemory( void **ptr, void **descriptor, unsigned length )
 {
 	/* Lovely... */
 	
-	*ptr = (void *)malloc(length);
-	
-	*descriptor = (int) *ptr;
+    *ptr = (void*)malloc(length);
+	*descriptor = *ptr;
 	
 	return (descriptor == 0) ? DPMI_Error : DPMI_Ok;
 }
 
-int DPMI_FreeDOSMemory( int descriptor )
+int DPMI_FreeDOSMemory( void* descriptor )
 {
-	free((void *)descriptor);
+	free(descriptor);
 	
 	return (descriptor == 0) ? DPMI_Error : DPMI_Ok;
 }
