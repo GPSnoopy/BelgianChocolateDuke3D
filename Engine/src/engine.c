@@ -3104,8 +3104,8 @@ static void transmaskvline2 (int32_t x)
         return;
     }
 
-    palookupoffse[0] = (int32_t)FP_OFF(palookup[globalpal]) + (getpalookup((int32_t)mulscale16(swall[x],globvis),globalshade)<<8);
-    palookupoffse[1] = (int32_t)FP_OFF(palookup[globalpal]) + (getpalookup((int32_t)mulscale16(swall[x2],globvis),globalshade)<<8);
+    palookupoffse[0] = palookup[globalpal] + (getpalookup((int32_t)mulscale16(swall[x],globvis),globalshade)<<8);
+    palookupoffse[1] = palookup[globalpal] + (getpalookup((int32_t)mulscale16(swall[x2],globvis),globalshade)<<8);
 
     setuptvlineasm2(globalshiftval,palookupoffse[0],palookupoffse[1]);
 
@@ -3534,8 +3534,8 @@ static void initfastcolorlookup(int32_t rscale, int32_t gscale, int32_t bscale)
         j += 129-(i<<1);
     }
 
-    clearbufbyte((void *)FP_OFF(colhere),sizeof(colhere),0L);
-    clearbufbyte((void *)FP_OFF(colhead),sizeof(colhead),0L);
+    clearbufbyte(colhere, sizeof(colhere), 0L);
+    clearbufbyte(colhead, sizeof(colhead), 0L);
 
     pal1 = &palette[768-3];
     for(i=255; i>=0; i--,pal1-=3)
@@ -8217,8 +8217,8 @@ void makepalookup(int32_t palnum, uint8_t  *remapbuf, int8_t r,
     {
         for(i=0; i<256; i++)
         {
-            ptr = (uint8_t  *)(FP_OFF(palookup[0])+remapbuf[i]);
-            ptr2 = (uint8_t  *)(FP_OFF(palookup[palnum])+i);
+            ptr = palookup[0] + remapbuf[i];
+            ptr2 = palookup[palnum] + i;
             for(j=0; j<numpalookups; j++)
             {
                 *ptr2 = *ptr;
@@ -8229,7 +8229,7 @@ void makepalookup(int32_t palnum, uint8_t  *remapbuf, int8_t r,
     }
     else
     {
-        ptr2 = (uint8_t  *)FP_OFF(palookup[palnum]);
+        ptr2 = palookup[palnum];
         for(i=0; i<numpalookups; i++)
         {
             palscale = divscale16(i,numpalookups);
@@ -8993,7 +8993,8 @@ void drawmapview(int32_t dax, int32_t day, int32_t zoome, short ang)
 
 void clearview(int32_t dacol)
 {
-    int32_t p, y, dx;
+    int32_t y, dx;
+    uint8_t* p;
 
     if (qsetmode != 200) return;
 
@@ -9004,7 +9005,7 @@ void clearview(int32_t dacol)
     p = frameplace+ylookup[windowy1]+windowx1;
     for(y=windowy1; y<=windowy2; y++)
     {
-        clearbufbyte((void *)p,dx,dacol);
+        clearbufbyte(p, dx, dacol);
         p += ylookup[1];
     }
     faketimerhandler();
