@@ -97,7 +97,7 @@ void allocache (uint8_t** newhandle, int32_t newbytes, uint8_t  *newlockptr)
 	if ((uint32_t)newbytes > (uint32_t)cachesize)
 	{
 		printf("Cachesize: %d\n",cachesize);
-		printf("*Newhandle: 0x%x, Newbytes: %d, *Newlock: %d\n",(unsigned int)newhandle,newbytes,*newlockptr);
+		printf("*Newhandle: 0x%p, Newbytes: %d, *Newlock: %d\n",newhandle,newbytes,*newlockptr);
 		reportandexit("BUFFER TOO BIG TO FIT IN CACHE!\n");
 	}
 
@@ -172,7 +172,7 @@ void suckcache (int32_t *suckptr)
 
 		/* Can't exit early, because invalid pointer might be same even though lock = 0 */
 	for(i=0;i<cacnum;i++)
-		if ((int32_t )(*cac[i].hand) == (int32_t )suckptr)
+		if ((intptr_t)(*cac[i].hand) == (intptr_t)suckptr)
 		{
 			if (*cac[i].lock) *cac[i].hand = 0;
 			cac[i].lock = &zerochar;

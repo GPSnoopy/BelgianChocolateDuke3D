@@ -45,7 +45,7 @@ extern  int32    _argc;
 extern  char  **  _argv;
 
 void RegisterShutdownFunction( void (* shutdown) (void) );
-void   Error (int errorType, char  *error, ...);
+void   Error (int errorType, const char  *error, ...);
 
 uint8_t    CheckParm (char  *check);
 

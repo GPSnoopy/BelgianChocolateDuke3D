@@ -2038,7 +2038,7 @@ void parseifelse(int32_t condition)
     }
     else
     {
-        insptr = (int32_t *) *(insptr+1);
+        insptr = (intptr_t *) *(insptr+1);
         if(*insptr == 10)
         {
             insptr+=2;

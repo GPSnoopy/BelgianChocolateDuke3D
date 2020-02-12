@@ -173,7 +173,7 @@ void MUSIC_StopFade(void)
 {
 }
 
-void MUSIC_RerouteMidiChannel(int channel, int cdecl function( int event, int c1, int c2 ))
+void MUSIC_RerouteMidiChannel(int channel, int cdecl (*function)( int event, int c1, int c2 ))
 {
 }
 
