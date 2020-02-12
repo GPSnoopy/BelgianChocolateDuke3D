@@ -7993,7 +7993,7 @@ void findGRPToUse(uint8_t * groupfilefullpath)
 			kbdKey = getch();
 		while(kbdKey < '1' || kbdKey > ('0' + i));
 		printf("%c\n", kbdKey);
-		grpID =  groupfile[kbdKey-'1'];
+		grpID = kbdKey-'1';
 		
 	}
 	
