@@ -17,9 +17,9 @@ jobs:
     # Comedy bonus: GitHub is now owned by Microsoft.
     - name: Setup MSBuild
       uses: warrenbuckley/Setup-MSBuild@v1
-    - name: Compile x86
+    - name: Compile Duke3D x86
       run: build_windows_x86.bat
       shell: cmd
-    - name: Compile x64
+    - name: Compile Duke3D x64
       run: build_windows_x64.bat
       shell: cmd
