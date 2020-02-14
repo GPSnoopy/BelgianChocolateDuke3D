@@ -3,7 +3,7 @@
 
 #if (defined WIN32)
     #include "win32_compat.h"
-#elif (defined PLATFORM_UNIX)
+#elif (defined UNIX)
     #include "unix_compat.h"
 #elif (defined __APPLE__)
     #include "macos_compat.h"

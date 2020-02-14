@@ -26,9 +26,6 @@
 
 #define O_BINARY 0
 
-#define UDP_NETWORKING 1
-
-#define PLATFORM_UNIX 1
 
 /*
 #define SOL_IP SOL_SOCKET

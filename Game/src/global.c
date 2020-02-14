@@ -223,7 +223,7 @@ int32_t *curipos[MAXINTERPOLATIONS];
 
 void FixFilePath(char  *filename)
 {
-#if PLATFORM_UNIX
+#if UNIX
     uint8_t  *ptr;
     uint8_t  *lastsep = filename;
 
@@ -329,7 +329,7 @@ int _dos_findnext(struct find_t *f)
     return(0);
 }
 
-#elif defined(PLATFORM_UNIX) || defined(PLATFORM_MACOSX)
+#elif defined(UNIX) || defined(PLATFORM_MACOSX)
 int _dos_findfirst(char  *filename, int x, struct find_t *f)
 {
     char  *ptr;
@@ -767,7 +767,7 @@ void SwapIntelShortArray(short *s, int num)
   Stolen for Duke3D, too.
  */
  
-#if PLATFORM_UNIX
+#if UNIX
 uint8_t  *strlwr(uint8_t  *s)
 {
 	uint8_t  *p = s;
@@ -848,7 +848,7 @@ char  ApogeePath[256];
 
 int setup_homedir (void)
 {
-#if PLATFORM_UNIX
+#if UNIX
 	int err;
 
 	snprintf (ApogeePath, sizeof (ApogeePath), "%s/.duke3d/", getenv ("HOME"));

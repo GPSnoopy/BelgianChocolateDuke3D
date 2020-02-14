@@ -1156,7 +1156,7 @@ uint8_t  parsecommand(int readfromGRP)
                     break;
                 }
             }
-#ifdef PLATFORM_UNIX
+#ifdef UNIX
             volume_names[j][i] = '\0';
 #else
             volume_names[j][i-1] = '\0';
@@ -1183,7 +1183,7 @@ uint8_t  parsecommand(int readfromGRP)
                     break;
                 }
             }
-#ifdef PLATFORM_UNIX
+#ifdef UNIX
             skill_names[j][i] = '\0';
 #else
             skill_names[j][i-1] = '\0';
@@ -1213,7 +1213,7 @@ uint8_t  parsecommand(int readfromGRP)
                     break;
                 }
             }
-#ifdef PLATFORM_UNIX
+#ifdef UNIX
             level_names[j*11+k][i] = '\0';
 #else
             level_names[j*11+k][i-1] = '\0';
@@ -1249,7 +1249,7 @@ uint8_t  parsecommand(int readfromGRP)
                     break;
                 }
             }
-#ifdef PLATFORM_UNIX
+#ifdef UNIX
             level_names[j*11+k][i] = '\0';
 #else
             level_names[j*11+k][i-1] = '\0';
@@ -1569,7 +1569,7 @@ void loadefs(char  *filenam, char  *mptr, int readfromGRP)
 		ud.conCRC[0] = crc32_update((uint8_t  *)textptr, fs, ud.conCRC[0]);
     }
 
-#ifdef PLATFORM_UNIX
+#ifdef UNIX
     textptr[fs - 1] = 0;
 #else
     textptr[fs - 2] = 0;
