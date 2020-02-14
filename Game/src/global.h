@@ -9,6 +9,8 @@
 #ifndef Duke3D_global_h
 #define Duke3D_global_h
 
+#include <stdint.h>
+
 void FixFilePath(char  *filename);
 int FindDistance3D(int ix, int iy, int iz);
 void Shutdown(void);
@@ -58,8 +60,8 @@ void Shutdown(void);
 #define Swapint32_t IntelLong
 #endif
 
-//int32_t MotoLong (int32_t l);
-//int32_t IntelLong (int32_t l);
+int32_t MotoLong (int32_t l);
+int32_t IntelLong (int32_t l);
 
 void Error (int errorType, const char *error, ...);
 
