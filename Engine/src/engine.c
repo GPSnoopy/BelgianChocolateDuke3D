@@ -3353,7 +3353,7 @@ int saveboard(char  *filename, int32_t *daposx, int32_t *daposy,
 
 #ifdef WIN32
     permissions = S_IWRITE;
-#elif
+#else
     permissions = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
 #endif
 
