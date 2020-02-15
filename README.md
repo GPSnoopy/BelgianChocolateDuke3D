@@ -22,7 +22,7 @@ After reading both Fabien Sanglard's Game Engine Black Books on [Wolfenstein 3D]
 ### Known Issues
 
 * 64-bit: Save games do not work.
-* Linux: MIDI does not play (vcpkg does need configure sdl2-mixer for it).
+* Linux: MIDI does not play (vcpkg does not configure sdl2-mixer for it).
 * Engine: Leaning left/right falls back to low-res rendering.
 
 ## Requirements
