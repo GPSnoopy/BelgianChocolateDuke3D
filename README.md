@@ -48,7 +48,7 @@ _Not yet supported._
 * **64-bit Port:** [Rohit Nirmal](https://github.com/rohit-n)
 * **Belgian Chocolate fork:** [Tanguy Fautre](https://github.com/GPSnoopy/)
 
-##More Information
+## More Information
 
 * **[Review of the Duke 3D source code](http://fabiensanglard.net/duke3d/)**
 * [Simple DirectMedia Layer](https://wiki.libsdl.org/FrontPage), [SDL_Mixer](http://www.libsdl.org/projects/SDL_mixer/)
