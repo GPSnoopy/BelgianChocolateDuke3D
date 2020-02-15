@@ -15,7 +15,7 @@ This is a fork of Fabien Sanglard's project [Chocolate Duke Nukem 3D](https://gi
 After reading both Fabien Sanglard's Game Engine Black Books on [Wolfenstein 3D](https://github.com/fabiensanglard/gebbwolf3) and [Doom](https://github.com/fabiensanglard/gebbdoom), I slowly got curious on how Duke 3D would perform on a modern computer (an Intel Core i9-9900K) with a modern Operating System (Windows 10 and Ubuntu 18.04). After cloning his Chocolate Duke 3D git repository, I had to spend a bit of time getting the project up and running. while doing that, I've been keeping on adding some improvements.
 
 * Ported from SDL to SDL2.
-* Replaced disparate build systems with CMake.
+* Consolidated build systems with CMake.
 * Added a proper continuous integration system (via GitHub Actions)
 * Added many fixes for 64-bit support (thanks to Rohit Nirmal's own fork as a source of inspiration).
 * Many minor fixes too small to be listed here.
