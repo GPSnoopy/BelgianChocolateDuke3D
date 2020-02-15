@@ -53,8 +53,8 @@
  */
 
 
-#define DEFAULT_MAXRESWIDTH  1600
-#define DEFAULT_MAXRESHEIGHT 1200
+#define DEFAULT_MAXRESWIDTH  MAXXDIM
+#define DEFAULT_MAXRESHEIGHT MAXYDIM
 
 
 #define UNLOCK_SURFACE_AND_RETURN  if (SDL_MUSTLOCK(surface)) SDL_UnlockSurface(surface); return;
@@ -904,7 +904,7 @@ static inline void cleanup_vesa_modelist(void)
 
 static inline void output_vesa_modelist(void)
 {
-    char  buffer[256];
+    char  buffer[512];
     char  numbuf[20];
     int i;
 
@@ -929,7 +929,7 @@ void getvalidvesamodes(void)
     static int already_checked = 0;
     int i;
     int stdres[][2] = {
-	    {320, 200}, {640, 350}, {640, 480},
+	    {320, 240}, {640, 480},
 	    {800, 600}, {1024, 768}
     };
 
