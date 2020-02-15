@@ -1,5 +1,4 @@
-Chocolate Duke3D
-================
+# Chocolate Duke3D
 
 Chocolate Duke Nukem 3D is the equivalent of [Chocolate Doom](http://www.chocolate-doom.org/wiki/index.php/Chocolate_Doom).
 
@@ -9,33 +8,47 @@ A **port** that:
 2. Portable and compiling in one click on Windows, OS X and Linux.
 3. Aimed at education, with lots of comments and documentation added in order to help programmers to understand and learn.
 
+## Belgian Chocolate Duke3D
 
-Requirements
-============
+This is a fork of Fabien Sanglard's project [Chocolate Duke Nukem 3D](https://github.com/fabiensanglard/chocolate_duke3D). As of January 2020, Fabien has archived his git repository.
 
-[SDL](http://libsdl.org) and [SDL_mixer](http://www.libsdl.org/projects/SDL_mixer) to compile and run the code.
+After reading both Fabien Sanglard's Game Engine Black Books on [Wolfenstein 3D](https://github.com/fabiensanglard/gebbwolf3) and [Doom](https://github.com/fabiensanglard/gebbdoom), I slowly got curious on how Duke 3D would perform on a modern computer (an Intel Core i9-9900K) with a modern Operating System (Windows 10 and Ubuntu 18.04). After cloning his Chocolate Duke 3D git repository, I had to spend a bit of time getting the project up and running. while doing that, I've been keeping on adding some improvements.
+
+* Ported from SDL to SDL2.
+* Replaced disparate build systems with CMake.
+* Added a proper continuous integration system (via GitHub Actions)
+* Added many fixes for 64-bit support (thanks to Rohit Nirmal's own fork as a source of inspiration).
+* Many minor fixes too small to be listed here.
+
+## Requirements
 
 An original copy of [Duke Nukem 3D](https://3drealms.com/catalog/duke-nukem-3d_27/) (specifically the DUKE3D.GRP file from the original CD in binary working directory (and with rw permissions?)).
 
-Build
-=====
+## Build
 
-* **Linux**: Use [Autoconf/Automake](https://www.gnu.org/software/autoconf/manual/autoconf.html#Basic-Installation)
-* **Windows**: Use Visual Studio 2005 or Visual Studio 2012 or [Autoconf/Automake](https://www.gnu.org/software/autoconf/manual/autoconf.html#Basic-Installation)
-* **OS X**: Use Xcode 4.0
+**Windows (Visual Studio 2019 x64 solution)** [![Windows CI Status](https://github.com/GPSnoopy/chocolate_duke3D/workflows/Windows%20CI/badge.svg)](https://github.com/GPSnoopy/chocolate_duke3D/actions?query=workflow%3A%22Windows+CI%22)
+```
+> vcpkg_windows.bat
+> build_windows.bat
+```
 
+**Linux (GCC Makefile)** [![Linux CI Status](https://github.com/GPSnoopy/chocolate_duke3D/workflows/Linux%20CI/badge.svg)](https://github.com/GPSnoopy/chocolate_duke3D/actions?query=workflow%3A%22Linux+CI%22)
+```
+> ./vcpkg_linux.sh
+> ./build_linux.sh
+```
 
-Contributors
-============
+**MacOS**
+_Not yet supported._
+
+## Contributors
 
 * **Project Initiator:** [Fabien Sanglard](https://github.com/fabiensanglard)
 * **Linux Integration:** [Juan Manuel Borges Caño](https://github.com/juanmabc)
-* **Autoconf/Automake Build System:** [darealshinji](https://github.com/darealshinji)
 * **64-bit Port:** [Rohit Nirmal](https://github.com/rohit-n)
+* **Belgian Chocolate fork:** [Tanguy Fautre](https://github.com/GPSnoopy/)
 
-
-More Information
-================
+##More Information
 
 * **[Review of the Duke 3D source code](http://fabiensanglard.net/duke3d/)**
 * [Simple DirectMedia Layer](https://wiki.libsdl.org/FrontPage), [SDL_Mixer](http://www.libsdl.org/projects/SDL_mixer/)
