@@ -295,13 +295,22 @@ static inline int32_t nsqrtasm(uint32_t  param)
 }
 
 static inline int32_t krecipasm(int32_t i)
-{   // Ken did this
-    float f = (float)i;
-    i = *(int32_t *)&f;
-    return((reciptable[(i>>12)&2047]>>(((i-0x3f800000)>>23)&31))^(i>>31));
+{
+    // tanguyf: fix strict aliasing rules.
+    union
+    {
+        float f;
+        int32_t i;
+    } value;
+
+    // Ken did this
+ //   float f = (float)i;
+ //   i = *(int32_t *)&f;
+
+    value.f = (float)i;
+    i = value.i;
+    return((reciptable[(i >> 12) & 2047] >> (((i - 0x3f800000) >> 23) & 31)) ^ (i >> 31));
 }
-
-
 
 static inline int32_t getclipmask(int32_t a, int32_t b, int32_t c, int32_t d)
 {   // Ken did this
