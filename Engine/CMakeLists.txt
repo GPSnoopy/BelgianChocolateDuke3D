@@ -11,7 +11,6 @@ set(src_files
 	src/display.h
 	src/draw.c
 	src/draw.h
-	src/dummy_multi.c
 	src/engine.c
 	src/engine.h
 	src/filesystem.c
