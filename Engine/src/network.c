@@ -8,6 +8,7 @@
 
 #include "network.h"
 #include "mmulti_stable.h"
+#include "mmulti_unstable.h"
 
 int nNetMode = 0;
 
@@ -32,9 +33,9 @@ void callcommit(void)
 #ifndef USER_DUMMY_NETWORK
 	switch(nNetMode)
 	{
-        //case 0:		
-        //    unstable_callcommit();
-        //    break;
+        case 0:		
+            unstable_callcommit();
+            break;
         case 1:
             stable_callcommit();
             break;		
@@ -46,9 +47,9 @@ void initcrc(void)
 #ifndef USER_DUMMY_NETWORK
 	switch(nNetMode)
 	{
-        //case 0:	
-        //    unstable_initcrc();
-        //    break;
+        case 0:	
+            unstable_initcrc();
+            break;
         case 1:	
             stable_initcrc();
             break;
@@ -60,8 +61,8 @@ int32_t getcrc(uint8_t  *buffer, short bufleng)
 #ifndef USER_DUMMY_NETWORK
 	switch(nNetMode)
 	{
-        //case 0:
-        //    return unstable_getcrc(buffer, bufleng);
+        case 0:
+            return unstable_getcrc(buffer, bufleng);
         case 1:
             return stable_getcrc(buffer, bufleng);
 	}
@@ -73,9 +74,9 @@ void initmultiplayers(uint8_t  damultioption, uint8_t  dacomrateoption, uint8_t 
 #ifndef USER_DUMMY_NETWORK
 	switch(nNetMode)
 	{
-        //case 0:
-        //    unstable_initmultiplayers(damultioption, dacomrateoption, dapriority);
-        //    break;
+        case 0:
+            unstable_initmultiplayers(damultioption, dacomrateoption, dapriority);
+            break;
         case 1:
             stable_initmultiplayers(damultioption, dacomrateoption, dapriority);
             break;
@@ -87,9 +88,9 @@ void sendpacket(int32_t other, uint8_t  *bufptr, int32_t messleng)
 #ifndef USER_DUMMY_NETWORK
 	switch(nNetMode)
 	{
-        //case 0:
-        //    unstable_sendpacket(other, bufptr, messleng);
-        //    break;
+        case 0:
+            unstable_sendpacket(other, bufptr, messleng);
+            break;
         case 1:
             stable_sendpacket(other, bufptr, messleng);
             break;
@@ -101,9 +102,9 @@ void setpackettimeout(int32_t datimeoutcount, int32_t daresendagaincount)
 #ifndef USER_DUMMY_NETWORK
 	switch(nNetMode)
 	{
-        //case 0:
-        //    unstable_setpackettimeout(datimeoutcount, daresendagaincount);
-        //    break;
+        case 0:
+            unstable_setpackettimeout(datimeoutcount, daresendagaincount);
+            break;
         case 1:
             stable_setpackettimeout(datimeoutcount, daresendagaincount);
             break;
@@ -115,9 +116,9 @@ void uninitmultiplayers(void)
 #ifndef USER_DUMMY_NETWORK
 	switch(nNetMode)
 	{
-        //case 0:
-        //    unstable_uninitmultiplayers();
-        //    break;
+        case 0:
+            unstable_uninitmultiplayers();
+            break;
         case 1:
             stable_uninitmultiplayers();
             break;
@@ -129,9 +130,9 @@ void sendlogon(void)
 #ifndef USER_DUMMY_NETWORK
 	switch(nNetMode)
 	{
-        //case 0:
-        //    unstable_sendlogon();
-        //    break;
+        case 0:
+            unstable_sendlogon();
+            break;
         case 1:
             stable_sendlogon();
             break;
@@ -143,9 +144,9 @@ void sendlogoff(void)
 #ifndef USER_DUMMY_NETWORK
 	switch(nNetMode)
 	{
-        //case 0:
-        //    unstable_sendlogoff();
-        //    break;
+        case 0:
+            unstable_sendlogoff();
+            break;
         case 1:
             stable_sendlogoff();
             break;
@@ -157,8 +158,8 @@ int  getoutputcirclesize(void)
 #ifndef USER_DUMMY_NETWORK
 	switch(nNetMode)
 	{
-        //case 0:
-        //    return unstable_getoutputcirclesize();
+        case 0:
+            return unstable_getoutputcirclesize();
         case 1:
             return stable_getoutputcirclesize();		
 	}
@@ -170,9 +171,9 @@ void setsocket(short newsocket)
 #ifndef USER_DUMMY_NETWORK
 	switch(nNetMode)
 	{
-        //case 0:
-        //    unstable_setsocket(newsocket);
-        //    break;
+        case 0:
+            unstable_setsocket(newsocket);
+            break;
         case 1:
             stable_setsocket(newsocket);
             break;
@@ -184,8 +185,8 @@ short getpacket(short *other, uint8_t  *bufptr)
 #ifndef USER_DUMMY_NETWORK
 	switch(nNetMode)
 	{
-        //case 0:
-        //    return unstable_getpacket(other, bufptr); // default
+        case 0:
+            return unstable_getpacket(other, bufptr); // default
         case 1:
             return stable_getpacket(other, bufptr);
 	}
@@ -197,9 +198,9 @@ void flushpackets(void)
 #ifndef USER_DUMMY_NETWORK
 	switch(nNetMode)
 	{
-        //case 0:
-        //    unstable_flushpackets();
-        //    break;
+        case 0:
+            unstable_flushpackets();
+            break;
         case 1:
             stable_flushpackets();
             break;
@@ -211,9 +212,9 @@ void genericmultifunction(int32_t other, char  *bufptr, int32_t messleng, int32_
 #ifndef USER_DUMMY_NETWORK
 	switch(nNetMode)
 	{
-        //case 0:
-        //    unstable_genericmultifunction(other, bufptr, messleng, command);
-        //    break;
+        case 0:
+            unstable_genericmultifunction(other, bufptr, messleng, command);
+            break;
         case 1:
             stable_genericmultifunction(other, bufptr, messleng, command);
             break;

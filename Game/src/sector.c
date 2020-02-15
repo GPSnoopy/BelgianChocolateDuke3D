@@ -341,7 +341,7 @@ int32_t getanimationgoal(int32_t *animptr)
 
 	j = -1;
     for(i=animatecnt-1;i>=0;i--)
-        if (animptr == (int32_t *)animateptr[i])
+        if (animptr == animateptr[i])
 		{
 			j = i;
 			break;

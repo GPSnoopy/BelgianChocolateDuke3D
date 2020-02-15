@@ -219,560 +219,563 @@ int loadpheader(uint8_t  spot,int32 *vn,int32 *ln,int32 *psk,int32 *nump)
 
 int loadplayer(int8_t spot)
 {
-     short k,music_changed;
-     char  fn[] = "game0.sav";
-     char  mpfn[] = "gameA_00.sav";
-     char  *fnptr, scriptptrs[MAXSCRIPTSIZE];
-     int32_t fil, bv, i, j, x;
-     int32 nump;
+    short k, music_changed;
+    char  fn[] = "game0.sav";
+    char  mpfn[] = "gameA_00.sav";
+    char* fnptr, scriptptrs[MAXSCRIPTSIZE];
+    int32_t fil, bv, i, x;
+    intptr_t j;
+    int32 nump;
 
-     if(spot < 0)
-     {
+    if (spot < 0)
+    {
         multiflag = 1;
         multiwhat = 0;
-        multipos = -spot-1;
+        multipos = -spot - 1;
         return -1;
-     }
-
-     if( multiflag == 2 && multiwho != myconnectindex )
-     {
-         fnptr = mpfn;
-         mpfn[4] = spot + 'A';
-
-         if(ud.multimode > 9)
-         {
-             mpfn[6] = (multiwho/10) + '0';
-             mpfn[7] = (multiwho%10) + '0';
-         }
-         else mpfn[7] = multiwho + '0';
-     }
-     else
-     {
-        fnptr = fn;
-        fn[4] = spot + '0';
-     }
-
-     if ((fil = TCkopen4load(fnptr,0)) == -1) return(-1);
-
-	 if(ud.recstat != 2)
-		ready2send = 0;
-
-     kdfread(&bv,4,1,fil);
-     if(bv != BYTEVERSION)
-     {
-        FTA(114,&ps[myconnectindex],1);
-        kclose(fil);
-		if(ud.recstat != 2)
-		{	
-			// FIX_00084: Various bugs in the load game (single player) option if ESC is hit or if wrong version 
-			ototalclock = totalclock;
-			ready2send = 1;
-		}
-        return 1;
-     }
-
-     kdfread(&nump,sizeof(nump),1,fil);
-     if(nump != numplayers)
-     {
-        kclose(fil);
-		if(ud.recstat != 2)
-		{
-			// FIX_00084: Various bugs in the load game (single player) option if ESC is hit or if wrong version 
-	        ototalclock = totalclock;
-	        ready2send = 1;
-		}
-        FTA(124,&ps[myconnectindex],1);
-        return 1;
-     }
-
-     if(numplayers > 1)
-     {
-         pub = NUMPAGES;
-         pus = NUMPAGES;
-         vscrn();
-         drawbackground();
-         menutext(160,100,0,0,"LOADING...");
-         nextpage();
     }
 
-     waitforeverybody();
+    if (multiflag == 2 && multiwho != myconnectindex)
+    {
+        fnptr = mpfn;
+        mpfn[4] = spot + 'A';
 
-         FX_StopAllSounds();
-     clearsoundlocks();
-         MUSIC_StopSong();
-
-     if(numplayers > 1)
-         kdfread(&buf,19,1,fil);
-     else
-         kdfread(&ud.savegame[spot][0],19,1,fil);
-
-     music_changed = (music_select != (ud.volume_number*11) + ud.level_number);
-
-         kdfread(&ud.volume_number,sizeof(ud.volume_number),1,fil);
-         kdfread(&ud.level_number,sizeof(ud.level_number),1,fil);
-         kdfread(&ud.player_skill,sizeof(ud.player_skill),1,fil);
-
-         ud.m_level_number = ud.level_number;
-         ud.m_volume_number = ud.volume_number;
-         ud.m_player_skill = ud.player_skill;
-
-                 //Fake read because lseek won't work with compression
-     tiles[MAXTILES-3].lock = 1;
-    
-     if (tiles[MAXTILES-3].data == NULL)
-         allocache(&tiles[MAXTILES-3].data,160*100,&tiles[MAXTILES-3].lock);
-    
-     tiles[MAXTILES-3].dim.width = 100;
-    tiles[MAXTILES-3].dim.height = 160;
-    
-     kdfread(tiles[MAXTILES-3].data,160,100,fil);
-
-         kdfread(&numwalls,2,1,fil);
-     kdfread(&wall[0],sizeof(walltype),MAXWALLS,fil);
-         kdfread(&numsectors,2,1,fil);
-     kdfread(&sector[0],sizeof(sectortype),MAXSECTORS,fil);
-         kdfread(&sprite[0],sizeof(spritetype),MAXSPRITES,fil);
-         kdfread(&headspritesect[0],2,MAXSECTORS+1,fil);
-         kdfread(&prevspritesect[0],2,MAXSPRITES,fil);
-         kdfread(&nextspritesect[0],2,MAXSPRITES,fil);
-         kdfread(&headspritestat[0],2,MAXSTATUS+1,fil);
-         kdfread(&prevspritestat[0],2,MAXSPRITES,fil);
-         kdfread(&nextspritestat[0],2,MAXSPRITES,fil);
-         kdfread(&numcyclers,sizeof(numcyclers),1,fil);
-         kdfread(&cyclers[0][0],12,MAXCYCLERS,fil);
-     kdfread(ps,sizeof(ps),1,fil);
-     kdfread(po,sizeof(po),1,fil);
-         kdfread(&numanimwalls,sizeof(numanimwalls),1,fil);
-         kdfread(&animwall,sizeof(animwall),1,fil);
-         kdfread(&msx[0],sizeof(int32_t),sizeof(msx)/sizeof(int32_t),fil);
-         kdfread(&msy[0],sizeof(int32_t),sizeof(msy)/sizeof(int32_t),fil);
-     kdfread((short *)&spriteqloc,sizeof(short),1,fil);
-     kdfread((short *)&spriteqamount,sizeof(short),1,fil);
-     kdfread((short *)&spriteq[0],sizeof(short),spriteqamount,fil);
-         kdfread(&mirrorcnt,sizeof(short),1,fil);
-         kdfread(&mirrorwall[0],sizeof(short),64,fil);
-     kdfread(&mirrorsector[0],sizeof(short),64,fil);
-     kdfread(&show2dsector[0],sizeof(uint8_t ),MAXSECTORS>>3,fil);
-     kdfread(&actortype[0],sizeof(uint8_t ),MAXTILES,fil);
-     kdfread(&boardfilename[0],sizeof(boardfilename),1,fil);
-
-     kdfread(&numclouds,sizeof(numclouds),1,fil);
-     kdfread(&clouds[0],sizeof(short)<<7,1,fil);
-     kdfread(&cloudx[0],sizeof(short)<<7,1,fil);
-     kdfread(&cloudy[0],sizeof(short)<<7,1,fil);
-
-     kdfread(&scriptptrs[0],1,MAXSCRIPTSIZE,fil);
-     kdfread(&script[0],4,MAXSCRIPTSIZE,fil);
-     for(i=0;i<MAXSCRIPTSIZE;i++)
-        if( scriptptrs[i] )
-     {
-         j = (int32_t)script[i]+(int32_t)&script[0];
-         script[i] = j;
-     }
-
-     kdfread(&actorscrptr[0],4,MAXTILES,fil);
-     for(i=0;i<MAXTILES;i++)
-         if(actorscrptr[i])
-     {
-        j = (int32_t)actorscrptr[i]+(int32_t)&script[0];
-        actorscrptr[i] = (int32_t *)j;
-     }
-
-     kdfread(&scriptptrs[0],1,MAXSPRITES,fil);
-     kdfread(&hittype[0],sizeof(struct weaponhit),MAXSPRITES,fil);
-
-     for(i=0;i<MAXSPRITES;i++)
-     {
-        j = (int32_t)(&script[0]);
-        if( scriptptrs[i]&1 ) T2 += j;
-        if( scriptptrs[i]&2 ) T5 += j;
-        if( scriptptrs[i]&4 ) T6 += j;
-     }
-
-         kdfread(&lockclock,sizeof(lockclock),1,fil);
-     kdfread(&pskybits,sizeof(pskybits),1,fil);
-     kdfread(&pskyoff[0],sizeof(pskyoff[0]),MAXPSKYTILES,fil);
-
-         kdfread(&animatecnt,sizeof(animatecnt),1,fil);
-         kdfread(&animatesect[0],2,MAXANIMATES,fil);
-         kdfread(&animateptr[0],4,MAXANIMATES,fil);
-     for(i = animatecnt-1;i>=0;i--) animateptr[i] = (int32_t *)((int32_t)animateptr[i]+(int32_t)(&sector[0]));
-         kdfread(&animategoal[0],4,MAXANIMATES,fil);
-         kdfread(&animatevel[0],4,MAXANIMATES,fil);
-
-         kdfread(&earthquaketime,sizeof(earthquaketime),1,fil);
-     kdfread(&ud.from_bonus,sizeof(ud.from_bonus),1,fil);
-     kdfread(&ud.secretlevel,sizeof(ud.secretlevel),1,fil);
-     kdfread(&ud.respawn_monsters,sizeof(ud.respawn_monsters),1,fil);
-     ud.m_respawn_monsters = ud.respawn_monsters;
-     kdfread(&ud.respawn_items,sizeof(ud.respawn_items),1,fil);
-     ud.m_respawn_items = ud.respawn_items;
-     kdfread(&ud.respawn_inventory,sizeof(ud.respawn_inventory),1,fil);
-     ud.m_respawn_inventory = ud.respawn_inventory;
-
-     kdfread(&ud.god,sizeof(ud.god),1,fil);
-     kdfread(&ud.auto_run,sizeof(ud.auto_run),1,fil);
-     kdfread(&ud.crosshair,sizeof(ud.crosshair),1,fil);
-     kdfread(&ud.monsters_off,sizeof(ud.monsters_off),1,fil);
-     ud.m_monsters_off = ud.monsters_off;
-     kdfread(&ud.last_level,sizeof(ud.last_level),1,fil);
-     kdfread(&ud.eog,sizeof(ud.eog),1,fil);
-
-     kdfread(&ud.coop,sizeof(ud.coop),1,fil);
-     ud.m_coop = ud.coop;
-     kdfread(&ud.marker,sizeof(ud.marker),1,fil);
-     ud.m_marker = ud.marker;
-     kdfread(&ud.ffire,sizeof(ud.ffire),1,fil);
-     ud.m_ffire = ud.ffire;
-
-     kdfread(&camsprite,sizeof(camsprite),1,fil);
-     kdfread(&connecthead,sizeof(connecthead),1,fil);
-     kdfread(connectpoint2,sizeof(connectpoint2),1,fil);
-     kdfread(&numplayersprites,sizeof(numplayersprites),1,fil);
-     kdfread((short *)&frags[0][0],sizeof(frags),1,fil);
-
-     kdfread(&randomseed,sizeof(randomseed),1,fil);
-     kdfread(&global_random,sizeof(global_random),1,fil);
-     kdfread(&parallaxyscale,sizeof(parallaxyscale),1,fil);
-
-     kclose(fil);
-
-     if(ps[myconnectindex].over_shoulder_on != 0)
-     {
-         cameradist = 0;
-         cameraclock = 0;
-         ps[myconnectindex].over_shoulder_on = 1;
-     }
-
-     screenpeek = myconnectindex;
-
-     clearbufbyte(gotpic,sizeof(gotpic),0L);
-     clearsoundlocks();
-         cacheit();
-     docacheit();
-
-     if(music_changed == 0)
-        music_select = (ud.volume_number*11) + ud.level_number;
-     playmusic(&music_fn[0][music_select][0]);
-
-     ps[myconnectindex].gm = MODE_GAME;
-         ud.recstat = 0;
-
-     if(ps[myconnectindex].jetpack_on)
-         spritesound(DUKE_JETPACK_IDLE,ps[myconnectindex].i);
-
-     restorepalette = 1;
-     setpal(&ps[myconnectindex]);
-     vscrn();
-
-     FX_SetReverb(0);
-
-     if(ud.lockout == 0)
-     {
-         for(x=0;x<numanimwalls;x++)
-             if( wall[animwall[x].wallnum].extra >= 0 )
-                 wall[animwall[x].wallnum].picnum = wall[animwall[x].wallnum].extra;
-     }
-     else
-     {
-         for(x=0;x<numanimwalls;x++)
-             switch(wall[animwall[x].wallnum].picnum)
-         {
-             case FEMPIC1:
-                 wall[animwall[x].wallnum].picnum = BLANKSCREEN;
-                 break;
-             case FEMPIC2:
-             case FEMPIC3:
-                 wall[animwall[x].wallnum].picnum = SCREENBREAK6;
-                 break;
-         }
-     }
-
-     numinterpolations = 0;
-     startofdynamicinterpolations = 0;
-
-     k = headspritestat[3];
-     while(k >= 0)
-     {
-        switch(sprite[k].lotag)
+        if (ud.multimode > 9)
         {
-            case 31:
-                setinterpolation(&sector[sprite[k].sectnum].floorz);
+            mpfn[6] = (multiwho / 10) + '0';
+            mpfn[7] = (multiwho % 10) + '0';
+        }
+        else mpfn[7] = multiwho + '0';
+    }
+    else
+    {
+        fnptr = fn;
+        fn[4] = spot + '0';
+    }
+
+    if ((fil = TCkopen4load(fnptr, 0)) == -1)
+        return(-1);
+
+    if (ud.recstat != 2)
+        ready2send = 0;
+
+    kdfread(&bv, 4, 1, fil);
+    if (bv != BYTEVERSION)
+    {
+        FTA(114, &ps[myconnectindex], 1);
+        kclose(fil);
+        if (ud.recstat != 2)
+        {
+            // FIX_00084: Various bugs in the load game (single player) option if ESC is hit or if wrong version 
+            ototalclock = totalclock;
+            ready2send = 1;
+        }
+        return 1;
+    }
+
+    kdfread(&nump, sizeof(nump), 1, fil);
+    if (nump != numplayers)
+    {
+        kclose(fil);
+        if (ud.recstat != 2)
+        {
+            // FIX_00084: Various bugs in the load game (single player) option if ESC is hit or if wrong version 
+            ototalclock = totalclock;
+            ready2send = 1;
+        }
+        FTA(124, &ps[myconnectindex], 1);
+        return 1;
+    }
+
+    if (numplayers > 1)
+    {
+        pub = NUMPAGES;
+        pus = NUMPAGES;
+        vscrn();
+        drawbackground();
+        menutext(160, 100, 0, 0, "LOADING...");
+        nextpage();
+    }
+
+    waitforeverybody();
+
+    FX_StopAllSounds();
+    clearsoundlocks();
+    MUSIC_StopSong();
+
+    if (numplayers > 1)
+        kdfread(&buf, 19, 1, fil);
+    else
+        kdfread(&ud.savegame[spot][0], 19, 1, fil);
+
+    music_changed = (music_select != (ud.volume_number * 11) + ud.level_number);
+
+    kdfread(&ud.volume_number, sizeof(ud.volume_number), 1, fil);
+    kdfread(&ud.level_number, sizeof(ud.level_number), 1, fil);
+    kdfread(&ud.player_skill, sizeof(ud.player_skill), 1, fil);
+
+    ud.m_level_number = ud.level_number;
+    ud.m_volume_number = ud.volume_number;
+    ud.m_player_skill = ud.player_skill;
+
+    //Fake read because lseek won't work with compression
+    tiles[MAXTILES - 3].lock = 1;
+
+    if (tiles[MAXTILES - 3].data == NULL)
+        allocache(&tiles[MAXTILES - 3].data, 160 * 100, &tiles[MAXTILES - 3].lock);
+
+    tiles[MAXTILES - 3].dim.width = 100;
+    tiles[MAXTILES - 3].dim.height = 160;
+
+    kdfread(tiles[MAXTILES - 3].data, 160, 100, fil);
+
+    kdfread(&numwalls, 2, 1, fil);
+    kdfread(&wall[0], sizeof(walltype), MAXWALLS, fil);
+    kdfread(&numsectors, 2, 1, fil);
+    kdfread(&sector[0], sizeof(sectortype), MAXSECTORS, fil);
+    kdfread(&sprite[0], sizeof(spritetype), MAXSPRITES, fil);
+    kdfread(&headspritesect[0], 2, MAXSECTORS + 1, fil);
+    kdfread(&prevspritesect[0], 2, MAXSPRITES, fil);
+    kdfread(&nextspritesect[0], 2, MAXSPRITES, fil);
+    kdfread(&headspritestat[0], 2, MAXSTATUS + 1, fil);
+    kdfread(&prevspritestat[0], 2, MAXSPRITES, fil);
+    kdfread(&nextspritestat[0], 2, MAXSPRITES, fil);
+    kdfread(&numcyclers, sizeof(numcyclers), 1, fil);
+    kdfread(&cyclers[0][0], 12, MAXCYCLERS, fil);
+    kdfread(ps, sizeof(ps), 1, fil);
+    kdfread(po, sizeof(po), 1, fil);
+    kdfread(&numanimwalls, sizeof(numanimwalls), 1, fil);
+    kdfread(&animwall, sizeof(animwall), 1, fil);
+    kdfread(&msx[0], sizeof(int32_t), sizeof(msx) / sizeof(int32_t), fil);
+    kdfread(&msy[0], sizeof(int32_t), sizeof(msy) / sizeof(int32_t), fil);
+    kdfread((short*)&spriteqloc, sizeof(short), 1, fil);
+    kdfread((short*)&spriteqamount, sizeof(short), 1, fil);
+    kdfread((short*)&spriteq[0], sizeof(short), spriteqamount, fil);
+    kdfread(&mirrorcnt, sizeof(short), 1, fil);
+    kdfread(&mirrorwall[0], sizeof(short), 64, fil);
+    kdfread(&mirrorsector[0], sizeof(short), 64, fil);
+    kdfread(&show2dsector[0], sizeof(uint8_t), MAXSECTORS >> 3, fil);
+    kdfread(&actortype[0], sizeof(uint8_t), MAXTILES, fil);
+    kdfread(&boardfilename[0], sizeof(boardfilename), 1, fil);
+
+    kdfread(&numclouds, sizeof(numclouds), 1, fil);
+    kdfread(&clouds[0], sizeof(short) << 7, 1, fil);
+    kdfread(&cloudx[0], sizeof(short) << 7, 1, fil);
+    kdfread(&cloudy[0], sizeof(short) << 7, 1, fil);
+
+    kdfread(&scriptptrs[0], 1, MAXSCRIPTSIZE, fil);
+    kdfread(&script[0], 4, MAXSCRIPTSIZE, fil);
+    for (i = 0; i < MAXSCRIPTSIZE; i++)
+        if (scriptptrs[i])
+        {
+            j = (intptr_t)script[i] + (intptr_t)&script[0];
+            script[i] = j;
+        }
+
+    kdfread(&actorscrptr[0], 4, MAXTILES, fil);
+    for (i = 0; i < MAXTILES; i++)
+        if (actorscrptr[i])
+        {
+            j = (intptr_t)actorscrptr[i] + (intptr_t)&script[0];
+            actorscrptr[i] = (intptr_t*)j;
+        }
+
+    kdfread(&scriptptrs[0], 1, MAXSPRITES, fil);
+    kdfread(&hittype[0], sizeof(struct weaponhit), MAXSPRITES, fil);
+
+    for (i = 0; i < MAXSPRITES; i++)
+    {
+        j = (intptr_t)(&script[0]);
+        if (scriptptrs[i] & 1) T2 += j;
+        if (scriptptrs[i] & 2) T5 += j;
+        if (scriptptrs[i] & 4) T6 += j;
+    }
+
+    kdfread(&lockclock, sizeof(lockclock), 1, fil);
+    kdfread(&pskybits, sizeof(pskybits), 1, fil);
+    kdfread(&pskyoff[0], sizeof(pskyoff[0]), MAXPSKYTILES, fil);
+
+    kdfread(&animatecnt, sizeof(animatecnt), 1, fil);
+    kdfread(&animatesect[0], 2, MAXANIMATES, fil);
+    kdfread(&animateptr[0], 4, MAXANIMATES, fil);
+    for (i = animatecnt - 1; i >= 0; i--) animateptr[i] = (int32_t*)((intptr_t)animateptr[i] + (intptr_t)(&sector[0]));
+    kdfread(&animategoal[0], 4, MAXANIMATES, fil);
+    kdfread(&animatevel[0], 4, MAXANIMATES, fil);
+
+    kdfread(&earthquaketime, sizeof(earthquaketime), 1, fil);
+    kdfread(&ud.from_bonus, sizeof(ud.from_bonus), 1, fil);
+    kdfread(&ud.secretlevel, sizeof(ud.secretlevel), 1, fil);
+    kdfread(&ud.respawn_monsters, sizeof(ud.respawn_monsters), 1, fil);
+    ud.m_respawn_monsters = ud.respawn_monsters;
+    kdfread(&ud.respawn_items, sizeof(ud.respawn_items), 1, fil);
+    ud.m_respawn_items = ud.respawn_items;
+    kdfread(&ud.respawn_inventory, sizeof(ud.respawn_inventory), 1, fil);
+    ud.m_respawn_inventory = ud.respawn_inventory;
+
+    kdfread(&ud.god, sizeof(ud.god), 1, fil);
+    kdfread(&ud.auto_run, sizeof(ud.auto_run), 1, fil);
+    kdfread(&ud.crosshair, sizeof(ud.crosshair), 1, fil);
+    kdfread(&ud.monsters_off, sizeof(ud.monsters_off), 1, fil);
+    ud.m_monsters_off = ud.monsters_off;
+    kdfread(&ud.last_level, sizeof(ud.last_level), 1, fil);
+    kdfread(&ud.eog, sizeof(ud.eog), 1, fil);
+
+    kdfread(&ud.coop, sizeof(ud.coop), 1, fil);
+    ud.m_coop = ud.coop;
+    kdfread(&ud.marker, sizeof(ud.marker), 1, fil);
+    ud.m_marker = ud.marker;
+    kdfread(&ud.ffire, sizeof(ud.ffire), 1, fil);
+    ud.m_ffire = ud.ffire;
+
+    kdfread(&camsprite, sizeof(camsprite), 1, fil);
+    kdfread(&connecthead, sizeof(connecthead), 1, fil);
+    kdfread(connectpoint2, sizeof(connectpoint2), 1, fil);
+    kdfread(&numplayersprites, sizeof(numplayersprites), 1, fil);
+    kdfread((short*)&frags[0][0], sizeof(frags), 1, fil);
+
+    kdfread(&randomseed, sizeof(randomseed), 1, fil);
+    kdfread(&global_random, sizeof(global_random), 1, fil);
+    kdfread(&parallaxyscale, sizeof(parallaxyscale), 1, fil);
+
+    kclose(fil);
+
+    if (ps[myconnectindex].over_shoulder_on != 0)
+    {
+        cameradist = 0;
+        cameraclock = 0;
+        ps[myconnectindex].over_shoulder_on = 1;
+    }
+
+    screenpeek = myconnectindex;
+
+    clearbufbyte(gotpic, sizeof(gotpic), 0L);
+    clearsoundlocks();
+    cacheit();
+    docacheit();
+
+    if (music_changed == 0)
+        music_select = (ud.volume_number * 11) + ud.level_number;
+    playmusic(&music_fn[0][music_select][0]);
+
+    ps[myconnectindex].gm = MODE_GAME;
+    ud.recstat = 0;
+
+    if (ps[myconnectindex].jetpack_on)
+        spritesound(DUKE_JETPACK_IDLE, ps[myconnectindex].i);
+
+    restorepalette = 1;
+    setpal(&ps[myconnectindex]);
+    vscrn();
+
+    FX_SetReverb(0);
+
+    if (ud.lockout == 0)
+    {
+        for (x = 0; x < numanimwalls; x++)
+            if (wall[animwall[x].wallnum].extra >= 0)
+                wall[animwall[x].wallnum].picnum = wall[animwall[x].wallnum].extra;
+    }
+    else
+    {
+        for (x = 0; x < numanimwalls; x++)
+            switch (wall[animwall[x].wallnum].picnum)
+            {
+            case FEMPIC1:
+                wall[animwall[x].wallnum].picnum = BLANKSCREEN;
                 break;
-            case 32:
-                setinterpolation(&sector[sprite[k].sectnum].ceilingz);
+            case FEMPIC2:
+            case FEMPIC3:
+                wall[animwall[x].wallnum].picnum = SCREENBREAK6;
                 break;
-            case 25:
-                setinterpolation(&sector[sprite[k].sectnum].floorz);
-                setinterpolation(&sector[sprite[k].sectnum].ceilingz);
-                break;
-            case 17:
-                setinterpolation(&sector[sprite[k].sectnum].floorz);
-                setinterpolation(&sector[sprite[k].sectnum].ceilingz);
-                break;
-            case 0:
-            case 5:
-            case 6:
-            case 11:
-            case 14:
-            case 15:
-            case 16:
-            case 26:
-            case 30:
-                setsectinterpolate(k);
-                break;
+            }
+    }
+
+    numinterpolations = 0;
+    startofdynamicinterpolations = 0;
+
+    k = headspritestat[3];
+    while (k >= 0)
+    {
+        switch (sprite[k].lotag)
+        {
+        case 31:
+            setinterpolation(&sector[sprite[k].sectnum].floorz);
+            break;
+        case 32:
+            setinterpolation(&sector[sprite[k].sectnum].ceilingz);
+            break;
+        case 25:
+            setinterpolation(&sector[sprite[k].sectnum].floorz);
+            setinterpolation(&sector[sprite[k].sectnum].ceilingz);
+            break;
+        case 17:
+            setinterpolation(&sector[sprite[k].sectnum].floorz);
+            setinterpolation(&sector[sprite[k].sectnum].ceilingz);
+            break;
+        case 0:
+        case 5:
+        case 6:
+        case 11:
+        case 14:
+        case 15:
+        case 16:
+        case 26:
+        case 30:
+            setsectinterpolate(k);
+            break;
         }
 
         k = nextspritestat[k];
-     }
+    }
 
-     for(i=numinterpolations-1;i>=0;i--) bakipos[i] = *curipos[i];
-     for(i = animatecnt-1;i>=0;i--)
-         setinterpolation(animateptr[i]);
+    for (i = numinterpolations - 1; i >= 0; i--) bakipos[i] = *curipos[i];
+    for (i = animatecnt - 1; i >= 0; i--)
+        setinterpolation(animateptr[i]);
 
-     show_shareware = 0;
-     everyothertime = 0;
+    show_shareware = 0;
+    everyothertime = 0;
 
-     clearbufbyte(playerquitflag,MAXPLAYERS,0x01010101);
+    clearbufbyte(playerquitflag, MAXPLAYERS, 0x01010101);
 
-     resetmys();
+    resetmys();
 
-     ready2send = 1;
+    ready2send = 1;
 
-     flushpackets();
-     clearfifo();
-     waitforeverybody();
+    flushpackets();
+    clearfifo();
+    waitforeverybody();
 
-     resettimevars();
+    resettimevars();
 
-     return(0);
+    return(0);
 }
 
 int saveplayer(int8_t spot)
 {
-     int32_t i, j;
-     char  fn[] = "game0.sav";
-     char  mpfn[] = "gameA_00.sav";
-     char  *fnptr,scriptptrs[MAXSCRIPTSIZE];
-         FILE *fil;
-     int32_t bv = BYTEVERSION;
-	 char  fullpathsavefilename[16];
+    int32_t i;
+    intptr_t j;
+    char  fn[] = "game0.sav";
+    char  mpfn[] = "gameA_00.sav";
+    char* fnptr, scriptptrs[MAXSCRIPTSIZE];
+    FILE* fil;
+    int32_t bv = BYTEVERSION;
+    char  fullpathsavefilename[16];
 
-     if(spot < 0)
-     {
+    if (spot < 0)
+    {
         multiflag = 1;
         multiwhat = 1;
-        multipos = -spot-1;
+        multipos = -spot - 1;
         return -1;
-     }
+    }
 
-     waitforeverybody();
+    waitforeverybody();
 
-     if( multiflag == 2 && multiwho != myconnectindex )
-     {
-         fnptr = mpfn;
-         mpfn[4] = spot + 'A';
+    if (multiflag == 2 && multiwho != myconnectindex)
+    {
+        fnptr = mpfn;
+        mpfn[4] = spot + 'A';
 
-         if(ud.multimode > 9)
-         {
-             mpfn[6] = (multiwho/10) + '0';
-             mpfn[7] = multiwho + '0';
-         }
-         else mpfn[7] = multiwho + '0';
-     }
-     else
-     {
+        if (ud.multimode > 9)
+        {
+            mpfn[6] = (multiwho / 10) + '0';
+            mpfn[7] = multiwho + '0';
+        }
+        else mpfn[7] = multiwho + '0';
+    }
+    else
+    {
         fnptr = fn;
         fn[4] = spot + '0';
-     }
+    }
 
 
-	// Are we loading a TC?
-	if(getGameDir()[0] != '\0')
-	{
-		// Yes
-		sprintf(fullpathsavefilename, "%s\\%s", getGameDir(), fnptr);
-	}
-	else
-	{
-		// No 
-		sprintf(fullpathsavefilename, "%s", fnptr);
-	}
+    // Are we loading a TC?
+    if (getGameDir()[0] != '\0')
+    {
+        // Yes
+        sprintf(fullpathsavefilename, "%s\\%s", getGameDir(), fnptr);
+    }
+    else
+    {
+        // No 
+        sprintf(fullpathsavefilename, "%s", fnptr);
+    }
 
-     if ((fil = fopen(fullpathsavefilename,"wb")) == 0) return(-1);
+    if ((fil = fopen(fullpathsavefilename, "wb")) == 0) return(-1);
 
-     ready2send = 0;
+    ready2send = 0;
 
-     dfwrite(&bv,4,1,fil);
-     dfwrite(&ud.multimode,sizeof(ud.multimode),1,fil);
+    dfwrite(&bv, 4, 1, fil);
+    dfwrite(&ud.multimode, sizeof(ud.multimode), 1, fil);
 
-         dfwrite(&ud.savegame[spot][0],19,1,fil);
-         dfwrite(&ud.volume_number,sizeof(ud.volume_number),1,fil);
-     dfwrite(&ud.level_number,sizeof(ud.level_number),1,fil);
-         dfwrite(&ud.player_skill,sizeof(ud.player_skill),1,fil);
-     dfwrite(tiles[MAXTILES-1].data,160,100,fil);
+    dfwrite(&ud.savegame[spot][0], 19, 1, fil);
+    dfwrite(&ud.volume_number, sizeof(ud.volume_number), 1, fil);
+    dfwrite(&ud.level_number, sizeof(ud.level_number), 1, fil);
+    dfwrite(&ud.player_skill, sizeof(ud.player_skill), 1, fil);
+    dfwrite(tiles[MAXTILES - 1].data, 160, 100, fil);
 
-         dfwrite(&numwalls,2,1,fil);
-     dfwrite(&wall[0],sizeof(walltype),MAXWALLS,fil);
-         dfwrite(&numsectors,2,1,fil);
-     dfwrite(&sector[0],sizeof(sectortype),MAXSECTORS,fil);
-         dfwrite(&sprite[0],sizeof(spritetype),MAXSPRITES,fil);
-         dfwrite(&headspritesect[0],2,MAXSECTORS+1,fil);
-         dfwrite(&prevspritesect[0],2,MAXSPRITES,fil);
-         dfwrite(&nextspritesect[0],2,MAXSPRITES,fil);
-         dfwrite(&headspritestat[0],2,MAXSTATUS+1,fil);
-         dfwrite(&prevspritestat[0],2,MAXSPRITES,fil);
-         dfwrite(&nextspritestat[0],2,MAXSPRITES,fil);
-         dfwrite(&numcyclers,sizeof(numcyclers),1,fil);
-         dfwrite(&cyclers[0][0],12,MAXCYCLERS,fil);
-     dfwrite(ps,sizeof(ps),1,fil);
-     dfwrite(po,sizeof(po),1,fil);
-         dfwrite(&numanimwalls,sizeof(numanimwalls),1,fil);
-         dfwrite(&animwall,sizeof(animwall),1,fil);
-         dfwrite(&msx[0],sizeof(int32_t),sizeof(msx)/sizeof(int32_t),fil);
-         dfwrite(&msy[0],sizeof(int32_t),sizeof(msy)/sizeof(int32_t),fil);
-     dfwrite(&spriteqloc,sizeof(short),1,fil);
-     dfwrite(&spriteqamount,sizeof(short),1,fil);
-     dfwrite(&spriteq[0],sizeof(short),spriteqamount,fil);
-         dfwrite(&mirrorcnt,sizeof(short),1,fil);
-         dfwrite(&mirrorwall[0],sizeof(short),64,fil);
-         dfwrite(&mirrorsector[0],sizeof(short),64,fil);
-     dfwrite(&show2dsector[0],sizeof(uint8_t ),MAXSECTORS>>3,fil);
-     dfwrite(&actortype[0],sizeof(uint8_t ),MAXTILES,fil);
-     dfwrite(&boardfilename[0],sizeof(boardfilename),1,fil);
+    dfwrite(&numwalls, 2, 1, fil);
+    dfwrite(&wall[0], sizeof(walltype), MAXWALLS, fil);
+    dfwrite(&numsectors, 2, 1, fil);
+    dfwrite(&sector[0], sizeof(sectortype), MAXSECTORS, fil);
+    dfwrite(&sprite[0], sizeof(spritetype), MAXSPRITES, fil);
+    dfwrite(&headspritesect[0], 2, MAXSECTORS + 1, fil);
+    dfwrite(&prevspritesect[0], 2, MAXSPRITES, fil);
+    dfwrite(&nextspritesect[0], 2, MAXSPRITES, fil);
+    dfwrite(&headspritestat[0], 2, MAXSTATUS + 1, fil);
+    dfwrite(&prevspritestat[0], 2, MAXSPRITES, fil);
+    dfwrite(&nextspritestat[0], 2, MAXSPRITES, fil);
+    dfwrite(&numcyclers, sizeof(numcyclers), 1, fil);
+    dfwrite(&cyclers[0][0], 12, MAXCYCLERS, fil);
+    dfwrite(ps, sizeof(ps), 1, fil);
+    dfwrite(po, sizeof(po), 1, fil);
+    dfwrite(&numanimwalls, sizeof(numanimwalls), 1, fil);
+    dfwrite(&animwall, sizeof(animwall), 1, fil);
+    dfwrite(&msx[0], sizeof(int32_t), sizeof(msx) / sizeof(int32_t), fil);
+    dfwrite(&msy[0], sizeof(int32_t), sizeof(msy) / sizeof(int32_t), fil);
+    dfwrite(&spriteqloc, sizeof(short), 1, fil);
+    dfwrite(&spriteqamount, sizeof(short), 1, fil);
+    dfwrite(&spriteq[0], sizeof(short), spriteqamount, fil);
+    dfwrite(&mirrorcnt, sizeof(short), 1, fil);
+    dfwrite(&mirrorwall[0], sizeof(short), 64, fil);
+    dfwrite(&mirrorsector[0], sizeof(short), 64, fil);
+    dfwrite(&show2dsector[0], sizeof(uint8_t), MAXSECTORS >> 3, fil);
+    dfwrite(&actortype[0], sizeof(uint8_t), MAXTILES, fil);
+    dfwrite(&boardfilename[0], sizeof(boardfilename), 1, fil);
 
-     dfwrite(&numclouds,sizeof(numclouds),1,fil);
-     dfwrite(&clouds[0],sizeof(short)<<7,1,fil);
-     dfwrite(&cloudx[0],sizeof(short)<<7,1,fil);
-     dfwrite(&cloudy[0],sizeof(short)<<7,1,fil);
+    dfwrite(&numclouds, sizeof(numclouds), 1, fil);
+    dfwrite(&clouds[0], sizeof(short) << 7, 1, fil);
+    dfwrite(&cloudx[0], sizeof(short) << 7, 1, fil);
+    dfwrite(&cloudy[0], sizeof(short) << 7, 1, fil);
 
-     for(i=0;i<MAXSCRIPTSIZE;i++)
-     {
-          if( (int32_t)script[i] >= (int32_t)(&script[0]) && (int32_t)script[i] < (int32_t)(&script[MAXSCRIPTSIZE]) )
-          {
-                scriptptrs[i] = 1;
-                j = (int32_t)script[i] - (int32_t)&script[0];
-                script[i] = j;
-          }
-          else scriptptrs[i] = 0;
-     }
+    for (i = 0; i < MAXSCRIPTSIZE; i++)
+    {
+        if (script[i] >= (intptr_t)(&script[0]) && script[i] < (intptr_t)(&script[MAXSCRIPTSIZE]))
+        {
+            scriptptrs[i] = 1;
+            j = script[i] - (intptr_t)&script[0];
+            script[i] = j;
+        }
+        else scriptptrs[i] = 0;
+    }
 
-     dfwrite(&scriptptrs[0],1,MAXSCRIPTSIZE,fil);
-     dfwrite(&script[0],4,MAXSCRIPTSIZE,fil);
+    dfwrite(&scriptptrs[0], 1, MAXSCRIPTSIZE, fil);
+    dfwrite(&script[0], 4, MAXSCRIPTSIZE, fil);
 
-     for(i=0;i<MAXSCRIPTSIZE;i++)
-        if( scriptptrs[i] )
-     {
-        j = script[i]+(int32_t)&script[0];
-        script[i] = j;
-     }
+    for (i = 0; i < MAXSCRIPTSIZE; i++)
+        if (scriptptrs[i])
+        {
+            j = script[i] + (intptr_t)&script[0];
+            script[i] = j;
+        }
 
-     for(i=0;i<MAXTILES;i++)
-         if(actorscrptr[i])
-     {
-        j = (int32_t)actorscrptr[i]-(int32_t)&script[0];
-        actorscrptr[i] = (int32_t *)j;
-     }
-     dfwrite(&actorscrptr[0],4,MAXTILES,fil);
-     for(i=0;i<MAXTILES;i++)
-         if(actorscrptr[i])
-     {
-         j = (int32_t)actorscrptr[i]+(int32_t)&script[0];
-         actorscrptr[i] = (int32_t *)j;
-     }
+    for (i = 0; i < MAXTILES; i++)
+        if (actorscrptr[i])
+        {
+            j = (intptr_t)actorscrptr[i] - (intptr_t)&script[0];
+            actorscrptr[i] = (intptr_t*)j;
+        }
+    dfwrite(&actorscrptr[0], 4, MAXTILES, fil);
+    for (i = 0; i < MAXTILES; i++)
+        if (actorscrptr[i])
+        {
+            j = (intptr_t)actorscrptr[i] + (intptr_t)&script[0];
+            actorscrptr[i] = (intptr_t*)j;
+        }
 
-     for(i=0;i<MAXSPRITES;i++)
-     {
+    for (i = 0; i < MAXSPRITES; i++)
+    {
         scriptptrs[i] = 0;
 
-        if(actorscrptr[PN] == 0) continue;
+        if (actorscrptr[PN] == 0) continue;
 
-        j = (int32_t)&script[0];
+        j = (intptr_t)&script[0];
 
-        if(T2 >= j && T2 < (int32_t)(&script[MAXSCRIPTSIZE]) )
+        if (T2 >= j && T2 < (intptr_t)(&script[MAXSCRIPTSIZE]))
         {
             scriptptrs[i] |= 1;
             T2 -= j;
         }
-        if(T5 >= j && T5 < (int32_t)(&script[MAXSCRIPTSIZE]) )
+        if (T5 >= j && T5 < (intptr_t)(&script[MAXSCRIPTSIZE]))
         {
             scriptptrs[i] |= 2;
             T5 -= j;
         }
-        if(T6 >= j && T6 < (int32_t)(&script[MAXSCRIPTSIZE]) )
+        if (T6 >= j && T6 < (intptr_t)(&script[MAXSCRIPTSIZE]))
         {
             scriptptrs[i] |= 4;
             T6 -= j;
         }
     }
 
-    dfwrite(&scriptptrs[0],1,MAXSPRITES,fil);
-    dfwrite(&hittype[0],sizeof(struct weaponhit),MAXSPRITES,fil);
+    dfwrite(&scriptptrs[0], 1, MAXSPRITES, fil);
+    dfwrite(&hittype[0], sizeof(struct weaponhit), MAXSPRITES, fil);
 
-    for(i=0;i<MAXSPRITES;i++)
+    for (i = 0; i < MAXSPRITES; i++)
     {
-        if(actorscrptr[PN] == 0) continue;
-        j = (int32_t)&script[0];
+        if (actorscrptr[PN] == 0) continue;
+        j = (intptr_t)&script[0];
 
-        if(scriptptrs[i]&1)
+        if (scriptptrs[i] & 1)
             T2 += j;
-        if(scriptptrs[i]&2)
+        if (scriptptrs[i] & 2)
             T5 += j;
-        if(scriptptrs[i]&4)
+        if (scriptptrs[i] & 4)
             T6 += j;
     }
 
-         dfwrite(&lockclock,sizeof(lockclock),1,fil);
-     dfwrite(&pskybits,sizeof(pskybits),1,fil);
-     dfwrite(&pskyoff[0],sizeof(pskyoff[0]),MAXPSKYTILES,fil);
-         dfwrite(&animatecnt,sizeof(animatecnt),1,fil);
-         dfwrite(&animatesect[0],2,MAXANIMATES,fil);
-         for(i = animatecnt-1;i>=0;i--) animateptr[i] = (int32_t *)((int32_t)animateptr[i]-(int32_t)(&sector[0]));
-         dfwrite(&animateptr[0],4,MAXANIMATES,fil);
-         for(i = animatecnt-1;i>=0;i--) animateptr[i] = (int32_t *)((int32_t)animateptr[i]+(int32_t)(&sector[0]));
-         dfwrite(&animategoal[0],4,MAXANIMATES,fil);
-         dfwrite(&animatevel[0],4,MAXANIMATES,fil);
+    dfwrite(&lockclock, sizeof(lockclock), 1, fil);
+    dfwrite(&pskybits, sizeof(pskybits), 1, fil);
+    dfwrite(&pskyoff[0], sizeof(pskyoff[0]), MAXPSKYTILES, fil);
+    dfwrite(&animatecnt, sizeof(animatecnt), 1, fil);
+    dfwrite(&animatesect[0], 2, MAXANIMATES, fil);
+    for (i = animatecnt - 1; i >= 0; i--) animateptr[i] = (int32_t*)((intptr_t)animateptr[i] - (intptr_t)(&sector[0]));
+    dfwrite(&animateptr[0], 4, MAXANIMATES, fil);
+    for (i = animatecnt - 1; i >= 0; i--) animateptr[i] = (int32_t*)((intptr_t)animateptr[i] + (intptr_t)(&sector[0]));
+    dfwrite(&animategoal[0], 4, MAXANIMATES, fil);
+    dfwrite(&animatevel[0], 4, MAXANIMATES, fil);
 
-         dfwrite(&earthquaketime,sizeof(earthquaketime),1,fil);
-         dfwrite(&ud.from_bonus,sizeof(ud.from_bonus),1,fil);
-     dfwrite(&ud.secretlevel,sizeof(ud.secretlevel),1,fil);
-     dfwrite(&ud.respawn_monsters,sizeof(ud.respawn_monsters),1,fil);
-     dfwrite(&ud.respawn_items,sizeof(ud.respawn_items),1,fil);
-     dfwrite(&ud.respawn_inventory,sizeof(ud.respawn_inventory),1,fil);
-     dfwrite(&ud.god,sizeof(ud.god),1,fil);
-     dfwrite(&ud.auto_run,sizeof(ud.auto_run),1,fil);
-     dfwrite(&ud.crosshair,sizeof(ud.crosshair),1,fil);
-     dfwrite(&ud.monsters_off,sizeof(ud.monsters_off),1,fil);
-     dfwrite(&ud.last_level,sizeof(ud.last_level),1,fil);
-     dfwrite(&ud.eog,sizeof(ud.eog),1,fil);
-     dfwrite(&ud.coop,sizeof(ud.coop),1,fil);
-     dfwrite(&ud.marker,sizeof(ud.marker),1,fil);
-     dfwrite(&ud.ffire,sizeof(ud.ffire),1,fil);
-     dfwrite(&camsprite,sizeof(camsprite),1,fil);
-     dfwrite(&connecthead,sizeof(connecthead),1,fil);
-     dfwrite(connectpoint2,sizeof(connectpoint2),1,fil);
-     dfwrite(&numplayersprites,sizeof(numplayersprites),1,fil);
-     dfwrite((short *)&frags[0][0],sizeof(frags),1,fil);
+    dfwrite(&earthquaketime, sizeof(earthquaketime), 1, fil);
+    dfwrite(&ud.from_bonus, sizeof(ud.from_bonus), 1, fil);
+    dfwrite(&ud.secretlevel, sizeof(ud.secretlevel), 1, fil);
+    dfwrite(&ud.respawn_monsters, sizeof(ud.respawn_monsters), 1, fil);
+    dfwrite(&ud.respawn_items, sizeof(ud.respawn_items), 1, fil);
+    dfwrite(&ud.respawn_inventory, sizeof(ud.respawn_inventory), 1, fil);
+    dfwrite(&ud.god, sizeof(ud.god), 1, fil);
+    dfwrite(&ud.auto_run, sizeof(ud.auto_run), 1, fil);
+    dfwrite(&ud.crosshair, sizeof(ud.crosshair), 1, fil);
+    dfwrite(&ud.monsters_off, sizeof(ud.monsters_off), 1, fil);
+    dfwrite(&ud.last_level, sizeof(ud.last_level), 1, fil);
+    dfwrite(&ud.eog, sizeof(ud.eog), 1, fil);
+    dfwrite(&ud.coop, sizeof(ud.coop), 1, fil);
+    dfwrite(&ud.marker, sizeof(ud.marker), 1, fil);
+    dfwrite(&ud.ffire, sizeof(ud.ffire), 1, fil);
+    dfwrite(&camsprite, sizeof(camsprite), 1, fil);
+    dfwrite(&connecthead, sizeof(connecthead), 1, fil);
+    dfwrite(connectpoint2, sizeof(connectpoint2), 1, fil);
+    dfwrite(&numplayersprites, sizeof(numplayersprites), 1, fil);
+    dfwrite((short*)&frags[0][0], sizeof(frags), 1, fil);
 
-     dfwrite(&randomseed,sizeof(randomseed),1,fil);
-     dfwrite(&global_random,sizeof(global_random),1,fil);
-     dfwrite(&parallaxyscale,sizeof(parallaxyscale),1,fil);
+    dfwrite(&randomseed, sizeof(randomseed), 1, fil);
+    dfwrite(&global_random, sizeof(global_random), 1, fil);
+    dfwrite(&parallaxyscale, sizeof(parallaxyscale), 1, fil);
 
-         fclose(fil);
+    fclose(fil);
 
-     if(ud.multimode < 2)
-     {
-         strcpy(fta_quotes[122],"GAME SAVED");
-         FTA(122,&ps[myconnectindex],1);
-     }
+    if (ud.multimode < 2)
+    {
+        strcpy(fta_quotes[122], "GAME SAVED");
+        FTA(122, &ps[myconnectindex], 1);
+    }
 
-     ready2send = 1;
+    ready2send = 1;
 
-     waitforeverybody();
+    waitforeverybody();
 
-     ototalclock = totalclock;
+    ototalclock = totalclock;
 
-     return(0);
+    return(0);
 }
 
 #define LMB (buttonstat&1)
@@ -1307,7 +1310,7 @@ int getfilenames(char  kind[6])
 	}
 	while (_dos_findnext(&fileinfo) == 0);
 
-#elif (defined PLATFORM_UNIX)
+#elif (defined UNIX)
 
     DIR *dir;
     struct dirent *dent;

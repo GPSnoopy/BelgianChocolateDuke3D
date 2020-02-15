@@ -30,7 +30,7 @@ int CVAR_GetNumCvarBindings()
     return num_cvar_bindings;
 }
 
-cvar_binding* CVAR_GetCvarBinding(unsigned int nBinding)
+cvar_binding* CVAR_GetCvarBinding(int nBinding)
 {
     if(nBinding > num_cvar_bindings -1)
     {
