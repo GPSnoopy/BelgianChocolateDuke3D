@@ -550,7 +550,7 @@ struct weaponhit
     short tempang,actorstayput,dispicnum;
     short timetosleep;
     int32_t floorz,ceilingz,lastvx,lastvy,bposx,bposy,bposz;
-    intptr_t temp_data[6];
+    intptr_t temp_data[6]; // tanguyf: this causes savegames not to be compatible between 32 and 64-bits
 };
 
 extern struct weaponhit hittype[MAXSPRITES];
