@@ -21,7 +21,7 @@ After reading both Fabien Sanglard's Game Engine Black Books on [Wolfenstein 3D]
 
 ### Known Issues
 
-* 64-bit: Save games do not work.
+* Save games are not compatible between 32-bit and 64-bit (due to `struct weaponhit`).
 * Linux: MIDI does not play (vcpkg does not configure sdl2-mixer for it).
 * Engine: Leaning left/right falls back to low-res rendering.
 
@@ -38,8 +38,7 @@ An original copy of [Duke Nukem 3D](https://3drealms.com/catalog/duke-nukem-3d_2
 ```
 
 **Linux (GCC Makefile)** [![Linux CI Status](https://github.com/GPSnoopy/BelgianChocolateDuke3D/workflows/Linux%20CI/badge.svg)](https://github.com/GPSnoopy/BelgianChocolateDuke3D/actions?query=workflow%3A%22Linux+CI%22)
-```
-# get all native libraries needed for SDL2 in vcpkg
+```bash
 > sudo apt-get install libsdl2-mixer-dev
 > ./vcpkg_linux.sh
 > ./build_linux.sh
