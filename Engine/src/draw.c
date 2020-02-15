@@ -10,7 +10,9 @@
 #include "build.h"
 #include "draw.h"
 
-int32_t pixelsAllowed = 10000000000;
+#if RENDER_LIMIT_PIXELS
+int64_t pixelsAllowed = 10000000000;
+#endif
 
 uint8_t  *transluc = NULL;
 
@@ -19,20 +21,6 @@ static int transrev = 0;
 
 #define shrd(a,b,c) (((b)<<(32-(c))) | ((a)>>(c)))
 #define shld(a,b,c) (((b)>>(32-(c))) | ((a)<<(c)))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* ---------------  WALLS RENDERING METHOD (USED TO BE HIGHLY OPTIMIZED ASSEMBLY) ----------------------------*/
 extern int32_t asm1;
@@ -49,8 +37,6 @@ void sethlinesizes(int32_t i1, int32_t _bits, uint8_t * textureAddress)
     bitsSetup = _bits;
     textureSetup = textureAddress;
 } 
-
-
 
 //FCS:   Draw ceiling/floors
 //Draw a line from destination in the framebuffer to framebuffer-numPixels
@@ -73,8 +59,10 @@ void hlineasm4(int32_t numPixels, int32_t shade, uint32_t i4, uint32_t i5, uint8
 	    source = i5 >> shifter;
 	    source = shld(source,i4,bits);
 	    source = texture[source];
-        
+
+#if RENDER_LIMIT_PIXELS
 		if (pixelsAllowed-- > 0)
+#endif
 			*dest = globalpalwritten[shade|source];
         
 	    dest--;
@@ -126,7 +114,9 @@ void rhlineasm4(int32_t i1, uint8_t* texture, int32_t i3, uint32_t i4, uint32_t 
 	    ebp &= rmach_esi;
 	    i1 = ((i1&0xffffff00)|rmach_edx[i3]);
 
+#if RENDER_LIMIT_PIXELS
 		if (pixelsAllowed-- > 0)
+#endif
 			dest[numPixels - offset] = (i1&0xff);
 
 	    texture -= ebp;
@@ -175,7 +165,9 @@ void rmhlineasm4(int32_t i1, uint8_t* shade, int32_t colorIndex, int32_t i4, int
         
         //Check if this colorIndex is the transparent color (255).
 	    if ((colorIndex&0xff) != 255) {
+#if RENDER_LIMIT_PIXELS
 			if (pixelsAllowed-- > 0)
+#endif
 			{
 				i1 = ((i1&0xffffff00)|rmmach_edx[colorIndex]);
 				dest[numPixels - offset] = (i1 & 0xff);
@@ -204,8 +196,6 @@ static uint8_t  mach3_al;
 //FCS:  RENDER TOP AND BOTTOM COLUMN
 int32_t prevlineasm1(int32_t i1, uint8_t* palette, int32_t i3, int32_t i4, uint8_t  *source, uint8_t  *dest)
 {
-
-
     if (i3 == 0)
     {
 		if (!RENDER_DRAW_TOP_AND_BOTTOM_COLUMN)
@@ -215,10 +205,10 @@ int32_t prevlineasm1(int32_t i1, uint8_t* palette, int32_t i3, int32_t i4, uint8
         i4 = ((uint32_t)i4) >> mach3_al;
 	    i4 = (i4&0xffffff00) | source[i4];
 
+#if RENDER_LIMIT_PIXELS
 		if (pixelsAllowed-- > 0)
+#endif
 			*dest = palette[i4];
-
-		
 
 	    return i1;
     } else {
@@ -241,8 +231,10 @@ int32_t vlineasm1(int32_t vince, uint8_t* palookupoffse, int32_t numPixels, int3
 	    temp = ((uint32_t)vplce) >> mach3_al;
         
 	    temp = texture[temp];
-      
+
+#if RENDER_LIMIT_PIXELS
 		if (pixelsAllowed-- > 0)
+#endif
 			*dest = palookupoffse[temp];
 	    
 		vplce += vince;
@@ -274,8 +266,10 @@ int32_t tvlineasm1(int32_t i1, uint8_t  * texture, int32_t numPixels, int32_t i4
             
 			if (transrev) 
 				colorIndex = ((colorIndex>>8)|(colorIndex<<8));
-            
+
+#if RENDER_LIMIT_PIXELS
 			if (pixelsAllowed-- > 0)
+#endif
 				*dest = transluc[colorIndex];
 		}
         
@@ -329,7 +323,9 @@ void tvlineasm2(uint32_t i1, uint32_t i2, uintptr_t i3, uintptr_t i4, uint32_t i
 				if (transrev) 
 					val = ((val>>8)|(val<<8));
 
+#if RENDER_LIMIT_PIXELS
 				if (pixelsAllowed-- > 0)
+#endif
 					((uint8_t  *)i6)[tran2edi1] = transluc[val];
 			}
 		} else if (i4 == 255) { // skipdraw2
@@ -340,7 +336,9 @@ void tvlineasm2(uint32_t i1, uint32_t i2, uintptr_t i3, uintptr_t i4, uint32_t i
 			if (transrev) 
                 val = ((val>>8)|(val<<8));
 
+#if RENDER_LIMIT_PIXELS
 			if (pixelsAllowed-- > 0)
+#endif
 				((uint8_t  *)i6)[tran2edi] = transluc[val];
 		} else {
 			uint16_t l = ((uint8_t  *)i6)[tran2edi]<<8;
@@ -351,11 +349,15 @@ void tvlineasm2(uint32_t i1, uint32_t i2, uintptr_t i3, uintptr_t i4, uint32_t i
 				l = ((l>>8)|(l<<8));
 				r = ((r>>8)|(r<<8));
 			}
+#if RENDER_LIMIT_PIXELS
 			if (pixelsAllowed-- > 0)
+#endif
 			{
 				((uint8_t  *)i6)[tran2edi] = transluc[l];
 				((uint8_t  *)i6)[tran2edi1] =transluc[r];
+#if RENDER_LIMIT_PIXELS
 				pixelsAllowed--;
+#endif
 			}
 		}
 		i6 += bytesperline;
@@ -378,8 +380,10 @@ int32_t mvlineasm1(int32_t vince, uint8_t* palookupoffse, int32_t i3, int32_t vp
 
 	    if (temp != 255) 
 		{
+#if RENDER_LIMIT_PIXELS
 			if (pixelsAllowed-- > 0)
-			*dest = palookupoffse[temp];
+#endif
+				*dest = palookupoffse[temp];
 		}
 
 	    vplce += vince;
@@ -416,8 +420,10 @@ void vlineasm4(int32_t columnIndex, intptr_t framebuffer)
 				
         	    temp = ((uint32_t)vplce[i]) >> mach3_al;
         	    temp = (((uint8_t *)(bufplce[i]))[temp]);
-                
+
+#if RENDER_LIMIT_PIXELS
 				if (pixelsAllowed-- > 0)
+#endif
         			dest[index+i] = palookupoffse [i] [temp];
                 
 	            vplce[i] += vince[i];
@@ -444,8 +450,10 @@ void mvlineasm4(int32_t column, intptr_t framebufferOffset)
 
     do {
 
+#if RENDER_LIMIT_PIXELS
 		if (pixelsAllowed <= 0)
 			return;
+#endif
 
         for (i = 0; i < 4; i++)
         {
@@ -454,7 +462,9 @@ void mvlineasm4(int32_t column, intptr_t framebufferOffset)
 	      temp = (((uint8_t *)(bufplce[i]))[temp]);
 	      if (temp != 255)
 		  {
+#if RENDER_LIMIT_PIXELS
 			  if (pixelsAllowed-- > 0)
+#endif
 				dest[index+i] = palookupoffse[i][temp];
 		  }
 	      vplce[i] += vince[i];
@@ -525,8 +535,10 @@ setup:
     while(1) {
         
         i1 = (i1&0xffffff00) | (((uint8_t  *)spal_eax)[i1]&0xff);
-        
+
+#if RENDER_LIMIT_PIXELS
         if (pixelsAllowed-- > 0)
+#endif
             *dest = i1;
         
         dest += bytesperline;
@@ -585,8 +597,10 @@ setup:
         if ((colorIndex&0xff) != 255)
         {
             colorIndex = (colorIndex&0xffffff00) | (((uint8_t  *)spal_eax)[colorIndex]&0xff);
-            
+
+#if RENDER_LIMIT_PIXELS
             if (pixelsAllowed-- > 0)
+#endif
                 *dest = colorIndex;
         }
    
@@ -666,7 +680,9 @@ void DrawSpriteVerticalLine(int32_t i2, int32_t numPixels, uint32_t i4, uint8_t 
 
 				colorIndex = transluc[val];
 
+#if RENDER_LIMIT_PIXELS
 				if (pixelsAllowed-- > 0)
+#endif
 					*dest = colorIndex;
 			}
             
@@ -738,7 +754,9 @@ void mhlineskipmodify( uint32_t i2, int32_t numPixels, int32_t i5, uint8_t* dest
 
         //Skip transparent color.
 		if ((colorIndex&0xff) != 0xff){
+#if RENDER_LIMIT_PIXELS
             if (pixelsAllowed-- > 0)
+#endif
 				*dest = mmach_asm3[colorIndex];
         }
 	    i2 += mmach_asm1;
@@ -792,7 +810,9 @@ void thlineskipmodify(int32_t i1, uint32_t i2, uint32_t i3, int32_t i4, int32_t 
 		    if (transrev) 
 				val = ((val>>8)|(val<<8));
 
+#if RENDER_LIMIT_PIXELS
 			if (pixelsAllowed-- > 0)
+#endif
 			 *i6 = transluc[val];
 	    }
 
@@ -899,7 +919,9 @@ void slopevlin(intptr_t i1, uint32_t i2, intptr_t* i3, uint32_t index, int32_t i
 			eax = ((eax & 0xffffff00) | (*((uint8_t*)(ebx + edx))));
 			ebx = esi;
 
+#if RENDER_LIMIT_PIXELS
 			if (pixelsAllowed-- > 0)
+#endif
 				*((uint8_t  *)i1) = (eax&0xff);
 
 		    edx = edi;

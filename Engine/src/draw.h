@@ -75,8 +75,10 @@ void settrans(int32_t type);
 //FCS: In order to see how the engine renders different part of the screen you can set the following macros
 //VISUALIZE RENDERER
 
-#define MAX_PIXEL_RENDERERED ((1600*1200)+20000 )
-extern int32_t pixelsAllowed;
+#define RENDER_LIMIT_PIXELS 0 // tanguyf: pixelsAllowed causes too many subtle rendering bugs to be left on by default
+#if RENDER_LIMIT_PIXELS
+extern int64_t pixelsAllowed;
+#endif
 
 #define RENDER_DRAW_WALL_BORDERS 1
 #define RENDER_DRAW_WALL_INSIDE 1
@@ -84,7 +86,7 @@ extern int32_t pixelsAllowed;
 #define RENDER_DRAW_TOP_AND_BOTTOM_COLUMN 1
 #define RENDER_SLOPPED_CEILING_AND_FLOOR 1
 
-#if RENDER_DRAW_WALL_BORDERS && RENDER_DRAW_WALL_INSIDE && RENDER_DRAW_CEILING_AND_FLOOR  && RENDER_DRAW_TOP_AND_BOTTOM_COLUMN && RENDER_SLOPPED_CEILING_AND_FLOOR && MAX_PIXEL_RENDERERED!=0
+#if RENDER_DRAW_WALL_BORDERS && RENDER_DRAW_WALL_INSIDE && RENDER_DRAW_CEILING_AND_FLOOR  && RENDER_DRAW_TOP_AND_BOTTOM_COLUMN && RENDER_SLOPPED_CEILING_AND_FLOOR
    #define CLEAR_FRAMEBUFFER 0
 #else
    #define CLEAR_FRAMEBUFFER 1
