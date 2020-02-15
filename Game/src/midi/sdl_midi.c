@@ -26,6 +26,12 @@ char  *MUSIC_ErrorString(int ErrorNumber)
 
 int MUSIC_Init(int SoundCard, int Address)
 {
+    if (Mix_Init(MIX_INIT_MID) != MIX_INIT_MID)
+    {
+        printf("Mix_Init: %s\n", Mix_GetError());
+        return MUSIC_Error;
+    }
+
 	if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024)==-1) {
 	    printf("Mix_OpenAudio: %s\n", Mix_GetError());
     }
@@ -119,11 +125,23 @@ int MUSIC_PlaySong(char  *songFilename, int loopflag)
     kclose( fd );
     
     //Ok, the file is in memory
-    rw = SDL_RWFromMem((void *) musicDataBuffer, fileSize); 
+    if ((rw = SDL_RWFromMem((void *) musicDataBuffer, fileSize)) == NULL)
+    {
+        printf("SDL_RWFromMem: %s\n", SDL_GetError());
+        return 0;
+    }
     
-    sdlMusic = Mix_LoadMUS_RW(rw, SDL_TRUE);
+    if ((sdlMusic = Mix_LoadMUS_RW(rw, SDL_TRUE)) == NULL)
+    {
+        printf("Mix_LoadMUS_RW: %s\n", Mix_GetError());
+        return 0;
+    }
     
-    Mix_PlayMusic(sdlMusic, (loopflag == MUSIC_PlayOnce) ? 0 : -1);
+    if (Mix_PlayMusic(sdlMusic, (loopflag == MUSIC_PlayOnce) ? 0 : -1) == -1)
+    {
+        printf("Mix_PlayMusic: %s\n", Mix_GetError());
+        return 0;
+    }
     
     return 1;
 }
