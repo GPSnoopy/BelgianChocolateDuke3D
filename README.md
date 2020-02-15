@@ -22,7 +22,7 @@ After reading both Fabien Sanglard's Game Engine Black Books on [Wolfenstein 3D]
 
 ## Requirements
 
-An original copy of [Duke Nukem 3D](https://3drealms.com/catalog/duke-nukem-3d_27/) (specifically the DUKE3D.GRP file from the original CD in binary working directory (and with rw permissions?)).
+An original copy of [Duke Nukem 3D](https://3drealms.com/catalog/duke-nukem-3d_27/). Specifically the DUKE3D.GRP file from the original CD in binary working directory.
 
 ## Build
 
