@@ -26,13 +26,13 @@ An original copy of [Duke Nukem 3D](https://3drealms.com/catalog/duke-nukem-3d_2
 
 ## Build
 
-**Windows (Visual Studio 2019 x64 solution)** [![Windows CI Status](https://github.com/GPSnoopy/chocolate_duke3D/workflows/Windows%20CI/badge.svg)](https://github.com/GPSnoopy/chocolate_duke3D/actions?query=workflow%3A%22Windows+CI%22)
+**Windows (Visual Studio 2019 x64 solution)** [![Windows CI Status](https://github.com/GPSnoopy/BelgianChocolateDuke3D/workflows/Windows%20CI/badge.svg)](https://github.com/GPSnoopy/BelgianChocolateDuke3D/actions?query=workflow%3A%22Windows+CI%22)
 ```
 > vcpkg_windows.bat
 > build_windows.bat
 ```
 
-**Linux (GCC Makefile)** [![Linux CI Status](https://github.com/GPSnoopy/chocolate_duke3D/workflows/Linux%20CI/badge.svg)](https://github.com/GPSnoopy/chocolate_duke3D/actions?query=workflow%3A%22Linux+CI%22)
+**Linux (GCC Makefile)** [![Linux CI Status](https://github.com/GPSnoopy/BelgianChocolateDuke3D/workflows/Linux%20CI/badge.svg)](https://github.com/GPSnoopy/BelgianChocolateDuke3D/actions?query=workflow%3A%22Linux+CI%22)
 ```
 > ./vcpkg_linux.sh
 > ./build_linux.sh
