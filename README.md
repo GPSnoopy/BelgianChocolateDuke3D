@@ -14,11 +14,16 @@ This is a fork of Fabien Sanglard's project [Chocolate Duke Nukem 3D](https://gi
 
 After reading both Fabien Sanglard's Game Engine Black Books on [Wolfenstein 3D](https://github.com/fabiensanglard/gebbwolf3) and [Doom](https://github.com/fabiensanglard/gebbdoom), I slowly got curious on how Duke 3D would perform on a modern computer (an Intel Core i9-9900K) with a modern Operating System (Windows 10 and Ubuntu 18.04). After cloning his Chocolate Duke 3D git repository, I had to spend a bit of time getting the project up and running. While doing that, I've been keeping on adding some improvements.
 
-* Ported from SDL to SDL2.
-* Consolidated build systems with CMake.
-* Added a proper continuous integration system (via GitHub Actions)
-* Added many fixes for 64-bit support (thanks to Rohit Nirmal's own fork as a source of inspiration).
-* Many minor fixes too small to be listed here.
+* Ported to SDL2.
+* Ported to vcpkg and CMake.
+* Added continuous integration (via GitHub Actions).
+* Added 64-bit support.
+
+### Known Issues
+
+* 64-bit: Save games do not work.
+* Linux: MIDI does not play (vcpkg does need configure sdl2-mixer for it).
+* Engine: Leaning left/right falls back to low-res rendering.
 
 ## Requirements
 
@@ -33,9 +38,9 @@ An original copy of [Duke Nukem 3D](https://3drealms.com/catalog/duke-nukem-3d_2
 ```
 
 **Linux (GCC Makefile)** [![Linux CI Status](https://github.com/GPSnoopy/BelgianChocolateDuke3D/workflows/Linux%20CI/badge.svg)](https://github.com/GPSnoopy/BelgianChocolateDuke3D/actions?query=workflow%3A%22Linux+CI%22)
-```bash
+```
 # get all native libraries needed for SDL2 in vcpkg
-> sudo apt-get install libsdl2-dev timidity
+> sudo apt-get install libsdl2-mixer-dev
 > ./vcpkg_linux.sh
 > ./build_linux.sh
 ```

@@ -29,7 +29,7 @@ int MUSIC_Init(int SoundCard, int Address)
     if (Mix_Init(MIX_INIT_MID) != MIX_INIT_MID)
     {
         printf("Mix_Init: %s\n", Mix_GetError());
-        return MUSIC_Error;
+        //return MUSIC_Error; // Do not fatal on missing MIDI subsystem.
     }
 
 	if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024)==-1) {
