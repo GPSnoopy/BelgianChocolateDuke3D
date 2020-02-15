@@ -50,8 +50,8 @@ elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
 endif()
 
 find_package(ENet REQUIRED)
-find_path(SDL2_INCLUDE_DIR SDL2/SDL.h)
-find_package(SDL2 CONFIG REQUIRED) 
+find_path(SDL2_INCLUDE_DIR SDL2/SDL.h NO_SYSTEM_ENVIRONMENT_PATH)
+find_package(SDL2 CONFIG REQUIRED)
 find_package(SDL2-mixer CONFIG REQUIRED)
 
 add_subdirectory(Engine)

@@ -34,6 +34,7 @@ An original copy of [Duke Nukem 3D](https://3drealms.com/catalog/duke-nukem-3d_2
 
 **Linux (GCC Makefile)** [![Linux CI Status](https://github.com/GPSnoopy/BelgianChocolateDuke3D/workflows/Linux%20CI/badge.svg)](https://github.com/GPSnoopy/BelgianChocolateDuke3D/actions?query=workflow%3A%22Linux+CI%22)
 ```
+> sudo apt-get install libasound2-dev libpulse-dev 
 > ./vcpkg_linux.sh
 > ./build_linux.sh
 ```

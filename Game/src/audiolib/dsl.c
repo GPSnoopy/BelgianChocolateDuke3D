@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -72,7 +73,6 @@ int DSL_Init( void )
 	
 	if (SDL_InitSubSystem(SDL_INIT_AUDIO|SDL_INIT_NOPARACHUTE) < 0) {
 		DSL_SetErrorCode(DSL_SDLInitFailure);
-		
 		return DSL_Error;
 	}
 	
@@ -167,6 +167,7 @@ int   DSL_BeginBufferedPlayback( char *BufferStart,
 	if (chunksize % blah) chunksize += blah - (chunksize % blah);
 
 	if (Mix_OpenAudio(SampleRate, format, channels, chunksize) < 0) {
+        printf("SDL: failed to open audio: %s\n", SDL_GetError());
 		DSL_SetErrorCode(DSL_MixerInitFailure);
 		
 		return DSL_Error;

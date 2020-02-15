@@ -18,14 +18,14 @@
 #define SDL_CHECK_NOT_NULL(val, message) __checkSdlNotNull ( (val), (message), __FILE__, __LINE__ )
 
 
-inline void __checkSdlSuccess(int result, char const* func, const char* file, int line)
+inline static void __checkSdlSuccess(int result, char const* func, const char* file, int line)
 {
 	if (result != 0)
 	{
 		Error(EXIT_FAILURE,
 			"BUILDSDL: %s failed!\n"
 			"BUILDSDL: SDL_Error: %s.\n"
-			"BUILDSDL: FILE: %s\n",
+			"BUILDSDL: FILE: %s\n"
 			"BUILDSDL: LINE: %d",
 			func,
 			SDL_GetError(),
@@ -34,14 +34,14 @@ inline void __checkSdlSuccess(int result, char const* func, const char* file, in
 	}
 }
 
-inline void __checkSdlNotNull(void* handle, char const* msg, const char* file, int line)
+inline static void __checkSdlNotNull(void* handle, char const* msg, const char* file, int line)
 {
 	if (handle == NULL)
 	{
 		Error(EXIT_FAILURE,
 			"BUILDSDL: Failed to %s!\n"
 			"BUILDSDL: SDL_Error: %s.\n"
-			"BUILDSDL: FILE: %s\n",
+			"BUILDSDL: FILE: %s\n"
 			"BUILDSDL: LINE: %d",
 			msg,
 			SDL_GetError(),
@@ -50,7 +50,7 @@ inline void __checkSdlNotNull(void* handle, char const* msg, const char* file, i
 	}
 }
 
-inline void set_sdl_scancodes(uint32_t scancodes[], size_t size)
+inline static void set_sdl_scancodes(uint32_t scancodes[], size_t size)
 {
     assert(size == SDL_NUM_SCANCODES);
 	
