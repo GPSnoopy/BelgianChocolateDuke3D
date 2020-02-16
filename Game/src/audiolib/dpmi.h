@@ -61,20 +61,7 @@ typedef struct
    uint16_t SS;
    } dpmi_regs;
 
-uint32_t DPMI_GetRealModeVector( int num );
-
-int  DPMI_CallRealModeFunction( dpmi_regs *callregs );
 int  DPMI_GetDOSMemory( void **ptr, void **descriptor, unsigned length );
 int  DPMI_FreeDOSMemory( void *descriptor );
-int  DPMI_LockMemory( void *address, unsigned length );
-int  DPMI_LockMemoryRegion( void *start, void *end );
-int  DPMI_UnlockMemory( void *address, unsigned length );
-int  DPMI_UnlockMemoryRegion( void *start, void *end );
-
-#define DPMI_Lock( variable ) \
-   ( DPMI_LockMemory( &( variable ), sizeof( variable ) ) )
-
-#define DPMI_Unlock( variable ) \
-   ( DPMI_UnlockMemory( &( variable ), sizeof( variable ) ) )
 
 #endif

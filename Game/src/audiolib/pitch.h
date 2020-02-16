@@ -42,6 +42,5 @@ enum PITCH_ERRORS
 
 //void          PITCH_Init( void );
 uint32_t PITCH_GetScale( int pitchoffset );
-void          PITCH_UnlockMemory( void );
-int           PITCH_LockMemory( void );
+
 #endif
