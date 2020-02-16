@@ -1293,7 +1293,7 @@ void moveplayers(void) //Players
                 s->xvel = 128;
                 s->ang = p->ang;
                 s->extra++;
-                
+                IFMOVING;
             }
             else
             {
@@ -1570,7 +1570,7 @@ void movestandables(void)
                     s->picnum = CRANE+1;
                     s->xvel += 8;
                 }
-                
+                IFMOVING;
                 if(sect == t[1])
                     t[0]++;
             }
@@ -1665,7 +1665,7 @@ void movestandables(void)
                 if( s->xvel < 192 )
                     s->xvel += 8;
                 s->ang = getangle(msx[t[4]]-s->x,msy[t[4]]-s->y);
-                
+                IFMOVING;
                 if( ((s->x-msx[t[4]])*(s->x-msx[t[4]])+(s->y-msy[t[4]])*(s->y-msy[t[4]]) ) < (128*128) )
                     t[0]++;
             }
