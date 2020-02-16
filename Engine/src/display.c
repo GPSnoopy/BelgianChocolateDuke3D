@@ -201,8 +201,8 @@ static void go_to_new_vid_mode(int w, int h)
 
     SDL_CHECK_NOT_NULL(window, "create window");
 
-    // don't override higher-res app icon on OS X
-#ifndef PLATFORM_MACOSX
+    // don't override higher-res app icon on OS X or Windows
+#if !PLATFORM_MACOSX && !WIN32
     SDL_Surface* image = SDL_LoadBMP_RW(SDL_RWFromMem(iconBMP, sizeof(iconBMP)), 1);
     Uint32 colorkey = 0; // index in this image to be transparent
     SDL_SetColorKey(image, SDL_TRUE, colorkey);
