@@ -1075,6 +1075,22 @@ void WriteLastPaletteToFile()
     WritePaletteToFile(lastPalette,"lastPalette.tga",16,16);
 }
 
+void VBE_getPalette(int32_t start, int32_t num, uint8_t* palettebuffer)
+{
+    SDL_Color* sdlp = surface->format->palette->colors + start;
+    uint8_t* p = palettebuffer + (start * 4);
+    int i;
+
+    for (i = 0; i < num; i++)
+    {
+        *p++ = (Uint8)((((float)sdlp->b) / 255.0) * 63.0);
+        *p++ = (Uint8)((((float)sdlp->g) / 255.0) * 63.0);
+        *p++ = (Uint8)((((float)sdlp->r) / 255.0) * 63.0);
+        *p++ = sdlp->a;   /* This byte is unused in both SDL and BUILD. */
+        sdlp++;
+    }
+}
+
 void VBE_setPalette(uint8_t  *palettebuffer)
 /*
  * (From Ken's docs:)
@@ -1115,29 +1131,18 @@ void VBE_setPalette(uint8_t  *palettebuffer)
         sdlp++;
     }
 
-	// tanguyf: updating the palette is not immediate with a buffered surface, screen needs updating as well.
     SDL_CHECK_SUCCESS( SDL_SetPaletteColors(surface->format->palette, fmt_swap, 0, 256) );
-    SDL_CHECK_SUCCESS( SDL_BlitSurface(surface, NULL, surface_rgba, NULL) );
-    SDL_CHECK_SUCCESS( SDL_UpdateTexture(texture, NULL, surface_rgba->pixels, surface_rgba->pitch) );
-    SDL_CHECK_SUCCESS( SDL_RenderCopy(renderer, texture, NULL, NULL) );
-    SDL_RenderPresent(renderer);
 }
 
-void VBE_getPalette(int32_t start, int32_t num, uint8_t  *palettebuffer)
+void VBE_presentPalette()
 {
-    SDL_Color *sdlp = surface->format->palette->colors + start;
-    uint8_t  *p = palettebuffer + (start * 4);
-    int i;
-
-    for (i = 0; i < num; i++)
-    {
-        *p++ = (Uint8) ((((float) sdlp->b) / 255.0) * 63.0);
-        *p++ = (Uint8) ((((float) sdlp->g) / 255.0) * 63.0);
-        *p++ = (Uint8) ((((float) sdlp->r) / 255.0) * 63.0);
-        *p++ = sdlp->a;   /* This byte is unused in both SDL and BUILD. */
-        sdlp++;
-    }
-} 
+    // tanguyf: updating the palette is not immediate with a buffered surface, screen needs updating as well.
+	// Call this function if nextpage() is not called. E.g. static intro logo.
+    SDL_CHECK_SUCCESS(SDL_BlitSurface(surface, NULL, surface_rgba, NULL));
+    SDL_CHECK_SUCCESS(SDL_UpdateTexture(texture, NULL, surface_rgba->pixels, surface_rgba->pitch));
+    SDL_CHECK_SUCCESS(SDL_RenderCopy(renderer, texture, NULL, NULL));
+    SDL_RenderPresent(renderer);
+}
 
 void _uninitengine(void)
 {

@@ -2333,18 +2333,18 @@ void showtwoscreens(void)
 	    setview(0,0,xdim-1,ydim-1);
 	    flushperms();
 	    ps[myconnectindex].palette = palette;
-	    for(i=0;i<64;i+=7) palto(0,0,0,i);
+	    for(i=0;i<64;i+=7) palto(0,0,0,i,true);
 	    KB_FlushKeyboardQueue();
 
 	    rotatesprite(0,0,65536L,0,3291,0,0,2+8+16+64, 0,0,xdim-1,ydim-1);
 
 	    nextpage(); 
-		for(i=63;i>0;i-=7) palto(0,0,0,i);
+		for(i=63;i>0;i-=7) palto(0,0,0,i,true);
 
 	    while( !KB_KeyWaiting() ); // getpackets(); // Net already off. Trying to get packets here makes sporadic crash..
 	
 	    for(i=0;i<64;i+=7) 
-			palto(0,0,0,i);
+			palto(0,0,0,i,true);
 
 	    KB_FlushKeyboardQueue();
 
@@ -2352,7 +2352,7 @@ void showtwoscreens(void)
 	    nextpage(); 
 		
 		for(i=63;i>0;i-=7) 
-			palto(0,0,0,i);
+			palto(0,0,0,i,true);
 
 	    while( !KB_KeyWaiting() ); // getpackets();
 	}
@@ -2363,7 +2363,7 @@ void showtwoscreens(void)
 	    ps[myconnectindex].palette = palette;
 
 	    for(i=0;i<64;i+=7) 
-			palto(0,0,0,i);
+			palto(0,0,0,i,true);
 
 	    KB_FlushKeyboardQueue();
 
@@ -2372,7 +2372,7 @@ void showtwoscreens(void)
 	    nextpage();
 
 		for(i=63;i>0;i-=7) 
-			palto(0,0,0,i);
+			palto(0,0,0,i,true);
 
 	    totalclock = 0;
 
@@ -2858,7 +2858,8 @@ void displayrest(int32_t smoothratio)
         palto( pp->pals[0],
                pp->pals[1],
                pp->pals[2],
-               pp->pals_time|128);
+               pp->pals_time|128,
+               false);
 
         restorepalette = 1;
     }
@@ -2867,7 +2868,7 @@ void displayrest(int32_t smoothratio)
         setbrightness(ud.brightness>>2,&pp->palette[0]);
         restorepalette = 0;
     }
-    else if(pp->loogcnt > 0) palto(0,64,0,(pp->loogcnt>>1)+128);
+    else if(pp->loogcnt > 0) palto(0,64,0,(pp->loogcnt>>1)+128,false);
 
 }
 
@@ -7477,7 +7478,7 @@ void Logo(void)
 
     setview(0,0,xdim-1,ydim-1);
     clearview(0L);
-    palto(0,0,0,63);
+    palto(0,0,0,63,false);
 
     flushperms();
     nextpage();
@@ -7494,7 +7495,7 @@ void Logo(void)
 		        getpackets();
 				
 		        playanm("logo.anm",5);
-		        palto(0,0,0,63);
+		        palto(0,0,0,63,false);
 		        KB_FlushKeyboardQueue();
 		    }
 		
@@ -7507,13 +7508,13 @@ void Logo(void)
 		
 		//"REALITY IS OUR GAME" Screen
 	    for(i=0;i<64;i+=7) 
-			palto(0,0,0,i);
+			palto(0,0,0,i,true);
 	    ps[myconnectindex].palette = drealms;
-	    palto(0,0,0,63);
+	    palto(0,0,0,63,false);
 	    rotatesprite(0,0,65536L,0,DREALMS,0,0,2+8+16+64, 0,0,xdim-1,ydim-1);
 	    nextpage(); 
 		for(i=63;i>0;i-=7) 
-			palto(0,0,0,i);
+			palto(0,0,0,i,true);
         
         
         
@@ -7526,7 +7527,7 @@ void Logo(void)
 
 
 	    for(i=0;i<64;i+=7) 
-			palto(0,0,0,i);
+			palto(0,0,0,i,true);
 	    clearview(0L);
 	    nextpage();
 	    ps[myconnectindex].palette = titlepal;
@@ -7535,7 +7536,7 @@ void Logo(void)
 	    KB_FlushKeyboardQueue();
 	    nextpage();
 	    for(i=63;i>0;i-=7) 
-			palto(0,0,0,i);
+			palto(0,0,0,i,true);
 
 	    totalclock = 0;
 	
@@ -7605,7 +7606,7 @@ void Logo(void)
 		playmusic(&env_music_fn[0][0]);
 
 	    ps[myconnectindex].palette = titlepal;
-	    for(i=63;i>0;i-=7) palto(0,0,0,i);
+	    for(i=63;i>0;i-=7) palto(0,0,0,i,true);
 
         rotatesprite(0,0,65536L,0,BETASCREEN,0,0,2+8+16+64,0,0,xdim-1,ydim-1);
         rotatesprite(160<<16,(104)<<16,60<<10,0,DUKENUKEM,0,0,2+8,0,0,xdim-1,ydim-1);
@@ -7630,7 +7631,7 @@ void Logo(void)
     ps[myconnectindex].palette = palette;
     sound(NITEVISION_ONOFF);
 
-    palto(0,0,0,0);
+    palto(0,0,0,0,false);
     clearview(0L);
 }
 
@@ -8318,7 +8319,7 @@ int main(int argc,char  **argv)
     {
         clearview(0L);
         ps[myconnectindex].palette = palette;
-        palto(0,0,0,0);
+        palto(0,0,0,0,false);
         rotatesprite(320<<15,200<<15,65536L,0,LOADSCREEN,0,0,2+8+64,0,0,xdim-1,ydim-1);
         menutext(160,105,0,0,"LOADING SAVED GAME...");
         nextpage();
@@ -8803,7 +8804,7 @@ int32_t playback(void)
             which_demo = 1;
             goto RECHECK;
         }
-        for(t=0;t<63;t+=7) palto(0,0,0,t);
+        for(t=0;t<63;t+=7) palto(0,0,0,t,true);
         drawbackground();
 
         CONSOLE_HandleInput();
@@ -8816,7 +8817,7 @@ int32_t playback(void)
         nextpage();
         for(t=63;t>0;t-=7) 
 		{
-			palto(0,0,0,t);
+			palto(0,0,0,t,true);
 		}
 
         ud.reccnt = 0;
@@ -9661,33 +9662,33 @@ void doorders(void)
 
     setview(0,0,xdim-1,ydim-1);
 
-    for(i=0;i<63;i+=7) palto(0,0,0,i);
+    for(i=0;i<63;i+=7) palto(0,0,0,i,true);
     ps[myconnectindex].palette = palette;
     totalclock = 0;
     KB_FlushKeyboardQueue();
     rotatesprite(0,0,65536L,0,ORDERING,0,0,2+8+16+64, 0,0,xdim-1,ydim-1);
-    nextpage(); for(i=63;i>0;i-=7) palto(0,0,0,i);
+    nextpage(); for(i=63;i>0;i-=7) palto(0,0,0,i,true);
     totalclock = 0;while( !KB_KeyWaiting() ) getpackets();
 
-    for(i=0;i<63;i+=7) palto(0,0,0,i);
+    for(i=0;i<63;i+=7) palto(0,0,0,i,true);
     totalclock = 0;
     KB_FlushKeyboardQueue();
     rotatesprite(0,0,65536L,0,ORDERING+1,0,0,2+8+16+64, 0,0,xdim-1,ydim-1);
-    nextpage(); for(i=63;i>0;i-=7) palto(0,0,0,i);
+    nextpage(); for(i=63;i>0;i-=7) palto(0,0,0,i,true);
     totalclock = 0;while( !KB_KeyWaiting() ) getpackets();
 
-    for(i=0;i<63;i+=7) palto(0,0,0,i);
+    for(i=0;i<63;i+=7) palto(0,0,0,i,true);
     totalclock = 0;
     KB_FlushKeyboardQueue();
     rotatesprite(0,0,65536L,0,ORDERING+2,0,0,2+8+16+64, 0,0,xdim-1,ydim-1);
-    nextpage(); for(i=63;i>0;i-=7) palto(0,0,0,i);
+    nextpage(); for(i=63;i>0;i-=7) palto(0,0,0,i,true);
     totalclock = 0;while( !KB_KeyWaiting() ) getpackets();
 
-    for(i=0;i<63;i+=7) palto(0,0,0,i);
+    for(i=0;i<63;i+=7) palto(0,0,0,i,true);
     totalclock = 0;
     KB_FlushKeyboardQueue();
     rotatesprite(0,0,65536L,0,ORDERING+3,0,0,2+8+16+64, 0,0,xdim-1,ydim-1);
-    nextpage(); for(i=63;i>0;i-=7) palto(0,0,0,i);
+    nextpage(); for(i=63;i>0;i-=7) palto(0,0,0,i,true);
     totalclock = 0;while( !KB_KeyWaiting() ) getpackets();
 }
 
@@ -9719,7 +9720,7 @@ void dobonus(uint8_t  bonusonly)
 
     bonuscnt = 0;
 
-    for(t=0;t<64;t+=7) palto(0,0,0,t);
+    for(t=0;t<64;t+=7) palto(0,0,0,t,true);
     setview(0,0,xdim-1,ydim-1);
     clearview(0L);
     nextpage();
@@ -9741,7 +9742,7 @@ void dobonus(uint8_t  bonusonly)
                 rotatesprite(0,50<<16,65536L,0,VICTORY1,0,0,2+8+16+64+128,0,0,xdim-1,ydim-1);
                 nextpage();
                 ps[myconnectindex].palette = endingpal;
-                for(t=63;t>=0;t--) palto(0,0,0,t);
+                for(t=63;t>=0;t--) palto(0,0,0,t,true);
 
                 KB_FlushKeyboardQueue();
                 totalclock = 0; //tinc = 0;
@@ -9784,15 +9785,15 @@ void dobonus(uint8_t  bonusonly)
                 }
             }
 
-            for(t=0;t<64;t++) palto(0,0,0,t);
+            for(t=0;t<64;t++) palto(0,0,0,t,true);
 
             KB_FlushKeyboardQueue();
             ps[myconnectindex].palette = palette;
 
             rotatesprite(0,0,65536L,0,3292,0,0,2+8+16+64, 0,0,xdim-1,ydim-1);
-            nextpage(); for(t=63;t>0;t--) palto(0,0,0,t);
+            nextpage(); for(t=63;t>0;t--) palto(0,0,0,t,true);
             while( !KB_KeyWaiting() ) getpackets();
-            for(t=0;t<64;t++) palto(0,0,0,t);
+            for(t=0;t<64;t++) palto(0,0,0,t,true);
             MUSIC_StopSong();
             FX_StopAllSounds();
             clearsoundlocks();
@@ -9812,14 +9813,14 @@ void dobonus(uint8_t  bonusonly)
 
             sound(PIPEBOMB_EXPLODE);
 
-            for(t=0;t<64;t++) palto(0,0,0,t);
+            for(t=0;t<64;t++) palto(0,0,0,t,true);
             setview(0,0,xdim-1,ydim-1);
             KB_FlushKeyboardQueue();
             ps[myconnectindex].palette = palette;
             rotatesprite(0,0,65536L,0,3293,0,0,2+8+16+64, 0,0,xdim-1,ydim-1);
-            nextpage(); for(t=63;t>0;t--) palto(0,0,0,t);
+            nextpage(); for(t=63;t>0;t--) palto(0,0,0,t,true);
             while( !KB_KeyWaiting() ) getpackets();
-            for(t=0;t<64;t++) palto(0,0,0,t);
+            for(t=0;t<64;t++) palto(0,0,0,t,true);
 
             break;
 
@@ -9851,7 +9852,7 @@ void dobonus(uint8_t  bonusonly)
             KB_FlushKeyboardQueue();
 
             ps[myconnectindex].palette = palette;
-            palto(0,0,0,63);
+            palto(0,0,0,63,false);
             clearview(0L);
             menutext(160,60,0,0,"THANKS TO ALL OUR");
             menutext(160,60+16,0,0,"FANS FOR GIVING");
@@ -9860,10 +9861,10 @@ void dobonus(uint8_t  bonusonly)
             menutext(160,70+16+16+16+16,0,0,"SEQUEL SOON.");
             nextpage();
 
-            for(t=63;t>0;t-=3) palto(0,0,0,t);
+            for(t=63;t>0;t-=3) palto(0,0,0,t,true);
             KB_FlushKeyboardQueue();
             while(!KB_KeyWaiting()) getpackets();
-            for(t=0;t<64;t+=3) palto(0,0,0,t);
+            for(t=0;t<64;t+=3) palto(0,0,0,t,true);
 
             clearview(0L);
             nextpage();
@@ -9875,7 +9876,7 @@ void dobonus(uint8_t  bonusonly)
 
             clearview(0L);
             nextpage();
-            palto(0,0,0,63);
+            palto(0,0,0,63,false);
 
             FX_StopAllSounds();
             clearsoundlocks();
@@ -9890,7 +9891,7 @@ void dobonus(uint8_t  bonusonly)
             nextpage();
             if(ud.lockout == 0)
             {
-                for(t=63;t>=0;t--) palto(0,0,0,t);
+                for(t=63;t>=0;t--) palto(0,0,0,t,true);
                 playanm("cineov3.anm",2);
                 KB_FlushKeyboardQueue();
                 ototalclock = totalclock+200;
@@ -10024,7 +10025,7 @@ void dobonus(uint8_t  bonusonly)
         nextpage();
 
         for(t=0;t<64;t+=7)
-            palto(0,0,0,63-t);
+            palto(0,0,0,63-t,true);
 
         KB_FlushKeyboardQueue();
         while(KB_KeyWaiting()==0) getpackets();
@@ -10037,7 +10038,7 @@ void dobonus(uint8_t  bonusonly)
 
         if(bonusonly || ud.multimode > 1) return;
 
-        for(t=0;t<64;t+=7) palto(0,0,0,t);
+        for(t=0;t<64;t+=7) palto(0,0,0,t,true);
     }
 
     if(bonusonly || ud.multimode > 1) return;
@@ -10064,7 +10065,7 @@ void dobonus(uint8_t  bonusonly)
 
     nextpage();
     KB_FlushKeyboardQueue();
-    for(t=0;t<64;t++) palto(0,0,0,63-t);
+    for(t=0;t<64;t++) palto(0,0,0,63-t,true);
     bonuscnt = 0;
     totalclock = 0; //tinc = 0;
 

@@ -4151,7 +4151,7 @@ else
     }
 }
 
-void palto(uint8_t  r,uint8_t  g,uint8_t  b,int32_t e)
+void palto(uint8_t  r,uint8_t  g,uint8_t  b,int32_t e, int present)
 {
     int i;
     uint8_t  temparray[768];
@@ -4164,6 +4164,11 @@ void palto(uint8_t  r,uint8_t  g,uint8_t  b,int32_t e)
     }
 
     setbrightness(ud.brightness>>2,temparray);
+
+	if (present)
+	{
+        VBE_presentPalette();
+	}
 }
 
 

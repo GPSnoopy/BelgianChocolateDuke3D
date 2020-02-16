@@ -258,7 +258,7 @@ extern void sortfilenames(void);
 extern void menus(void );
 void gameexitanycase(void);
 //#line "menues.c" 2414
-extern void palto(uint8_t  r,uint8_t  g,uint8_t  b,int32_t e);
+extern void palto(uint8_t  r,uint8_t  g,uint8_t  b,int32_t e, int present);
 //#line "menues.c" 2436
 extern void drawoverheadmap(int32_t cposx,int32_t cposy,int32_t czoom,short cang);
 //#line "menues.c" 2685

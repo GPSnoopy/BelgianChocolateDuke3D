@@ -1370,7 +1370,7 @@ void dofrontscreens(void)
     if(ud.recstat != 2)
     {
         ps[myconnectindex].palette = palette;
-        for(j=0;j<63;j+=7) palto(0,0,0,j);
+        for(j=0;j<63;j+=7) palto(0,0,0,j,true);
         i = ud.screen_size;
         ud.screen_size = 0;
         vscrn();
@@ -1391,7 +1391,7 @@ void dofrontscreens(void)
 
         nextpage();
 
-        for(j=63;j>0;j-=7) palto(0,0,0,j);
+        for(j=63;j>0;j-=7) palto(0,0,0,j,true);
 
         KB_FlushKeyboardQueue();
         ud.screen_size = i;
@@ -1400,7 +1400,7 @@ void dofrontscreens(void)
     {
         clearview(0L);
         ps[myconnectindex].palette = palette;
-        palto(0,0,0,0);
+        palto(0,0,0,0,false);
         rotatesprite(320<<15,200<<15,65536L,0,LOADSCREEN,0,0,2+8+64,0,0,xdim-1,ydim-1);
         menutext(160,105,0,0,"LOADING...");
         nextpage();
@@ -1613,7 +1613,7 @@ if (!VOLUMEONE)
      resetmys();
 
      ps[myconnectindex].palette = palette;
-     palto(0,0,0,0);
+     palto(0,0,0,0,false);
 
      setpal(&ps[myconnectindex]);
      flushperms();
@@ -1632,7 +1632,7 @@ if (!VOLUMEONE)
      flushpackets();
      waitforeverybody();
 
-     palto(0,0,0,0);
+     palto(0,0,0,0,false);
      vscrn();
      clearview(0L);
      drawbackground();
