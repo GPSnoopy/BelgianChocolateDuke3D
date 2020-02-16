@@ -36,9 +36,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 
 #include "dsl.h"
-
 #include "ll_man.h"
-#include "user.h"
 #include "fx_man.h"
 
 #define TRUE  ( 1 == 1 )
@@ -124,12 +122,6 @@ int FX_SetupCard
    int status;
    int DeviceStatus;
 
-   if ( USER_CheckParameter( "ASSVER" ) )
-      {
-      FX_SetErrorCode( FX_ASSVersion );
-      return( FX_Error );
-      }
-
    FX_SoundDevice = SoundCard;
 
    status = FX_Ok;
@@ -214,12 +206,6 @@ int FX_Init
    if ( FX_Installed )
       {
       FX_Shutdown();
-      }
-
-   if ( USER_CheckParameter( "ASSVER" ) )
-      {
-      FX_SetErrorCode( FX_ASSVersion );
-      return( FX_Error );
       }
 
    status = LL_LockMemory();
@@ -1029,46 +1015,11 @@ int FX_StartDemandFeedPlayback
    Starts the sound recording engine.
 ---------------------------------------------------------------------*/
 
-int FX_StartRecording
-   (
-   int MixRate,
-   void ( *function )( char *ptr, int length )
-   )
-
-   {
-   int status;
-
-#ifdef PLAT_DOS
-   switch( FX_SoundDevice )
-      {
-      case SoundBlaster :
-      case Awe32 :
-      case ProAudioSpectrum :
-      case SoundMan16 :
-         status = MV_StartRecording( MixRate, function );
-         if ( status != MV_Ok )
-            {
-            FX_SetErrorCode( FX_MultiVocError );
-            status = FX_Warning;
-            }
-         else
-            {
-            status = FX_Ok;
-            }
-         break;
-
-      default :
-         FX_SetErrorCode( FX_InvalidCard );
-         status = FX_Warning;
-         break;
-      }
-#else
-   FX_SetErrorCode( FX_InvalidCard );
-   status = FX_Warning;
-#endif
-
-   return( status );
-   }
+int FX_StartRecording(int MixRate, void (*function)(char* ptr, int length))
+{
+    FX_SetErrorCode(FX_InvalidCard);
+    return FX_Warning;
+}
 
 
 /*---------------------------------------------------------------------
@@ -1077,22 +1028,6 @@ int FX_StartRecording
    Stops the sound record engine.
 ---------------------------------------------------------------------*/
 
-void FX_StopRecord
-   (
-   void
-   )
-
-   {
-#ifdef PLAT_DOS
-   // Stop sound playback
-   switch( FX_SoundDevice )
-      {
-      case SoundBlaster :
-      case Awe32 :
-      case ProAudioSpectrum :
-      case SoundMan16 :
-         MV_StopRecord();
-         break;
-      }
-#endif
-   }
+void FX_StopRecord(void)
+{
+}

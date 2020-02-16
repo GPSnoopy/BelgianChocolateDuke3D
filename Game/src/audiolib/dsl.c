@@ -223,12 +223,3 @@ unsigned DSL_GetPlaybackRate( void )
 {
 	return _SampleRate;
 }
-
-uint32_t DisableInterrupts( void )
-{
-	return 0;
-}
-
-void RestoreInterrupts( uint32_t flags )
-{
-}

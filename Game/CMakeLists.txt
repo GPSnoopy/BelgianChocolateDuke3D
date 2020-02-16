@@ -10,7 +10,6 @@ set(src_files_audiolib_headers
 	src/audiolib/dpmi.h
 	src/audiolib/dsl.h
 	src/audiolib/fx_man.h
-	src/audiolib/interrup.h
 	src/audiolib/linklist.h
 	src/audiolib/ll_man.h
 	src/audiolib/multivoc.h
@@ -18,7 +17,6 @@ set(src_files_audiolib_headers
 	src/audiolib/pitch.h
 	src/audiolib/sndcards.h
 	src/audiolib/standard.h
-	src/audiolib/user.h
 	src/audiolib/usrhooks.h
 	src/audiolib/util.h
 )
@@ -32,7 +30,6 @@ set(src_files_audiolib
 	src/audiolib/mvreverb.c
 	src/audiolib/nodpmi.c
 	src/audiolib/pitch.c
-	src/audiolib/user.c
 	# TODO source contains loads of files that are not used (only DOS). Delete them?
 )
 
