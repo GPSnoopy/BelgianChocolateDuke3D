@@ -31,25 +31,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef __SNDCARDS_H
 #define __SNDCARDS_H
 
-#define ASS_VERSION_STRING "1.12"
-
 typedef enum
-   {
-//   ASS_NoSound,
-   SoundBlaster,
-   ProAudioSpectrum,
-   SoundMan16,
-   Adlib,
-   GenMidi,
-   SoundCanvas,
-   Awe32,
-   WaveBlaster,
-   SoundScape,
-   UltraSound,
-   SoundSource,
-   TandySoundSource,
-   PC,
-   NumSoundCards
-   } soundcardnames;
+{
+    SC_SoundScape,
+    SC_Unknown
+} soundcardnames;
 
 #endif

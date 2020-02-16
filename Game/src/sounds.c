@@ -50,7 +50,7 @@ void SoundStartup(void)
     int32 status;
 
     // if they chose None lets return
-    if (FXDevice == NumSoundCards) return;
+    if (FXDevice == SC_Unknown) return;
 
     if (eightytwofifty && numplayers > 1)
     {
@@ -95,7 +95,7 @@ void SoundShutdown( void )
    int32 status;
 
    // if they chose None lets return
-   if (FXDevice == NumSoundCards)
+   if (FXDevice == SC_Unknown)
       return;
 
    status = FX_Shutdown();
@@ -118,7 +118,7 @@ void MusicStartup( void )
    int32 status;
 
    // if they chose None lets return
-   if ((MusicDevice == NumSoundCards) || (eightytwofifty && numplayers > 1) )
+   if ((MusicDevice == SC_Unknown) || (eightytwofifty && numplayers > 1) )
       return;
 
    status = MUSIC_Init( MusicDevice, MidiPort );
@@ -154,7 +154,7 @@ void MusicShutdown( void )
    int32 status;
 
    // if they chose None lets return
-   if ((MusicDevice == NumSoundCards) || (eightytwofifty && numplayers > 1) )
+   if ((MusicDevice == SC_Unknown) || (eightytwofifty && numplayers > 1) )
       return;
 
    status = MUSIC_Shutdown();
@@ -213,7 +213,7 @@ void intomenusounds(void)
 void playmusic(char  *fn)
 {
     if(MusicToggle == 0) return;
-    if(MusicDevice == NumSoundCards) return;
+    if(MusicDevice == SC_Unknown) return;
 
     // the SDL_mixer version does more or less this same thing.  --ryan.
     PlayMusic(fn);
@@ -224,7 +224,7 @@ uint8_t  loadsound(uint16_t num)
     int32_t   fp, l;
 
     if(num >= NUM_SOUNDS || SoundToggle == 0) return 0;
-    if (FXDevice == NumSoundCards) return 0;
+    if (FXDevice == SC_Unknown) return 0;
 
     fp = TCkopen4load(sounds[num],0);
     if(fp == -1)
@@ -252,7 +252,7 @@ int xyzsound(short num,short i,int32_t x,int32_t y,int32_t z)
     int voice, sndang, ca, pitch;
 	
     if( num >= NUM_SOUNDS ||
-        FXDevice == NumSoundCards ||
+        FXDevice == SC_Unknown ||
         ( (soundm[num]&8) && ud.lockout ) ||
         SoundToggle == 0 ||
         Sound[num].num > 3 ||
@@ -393,7 +393,7 @@ void sound(short num)
     int voice;
     int32_t start;
 
-    if (FXDevice == NumSoundCards) return;
+    if (FXDevice == SC_Unknown) return;
     if(SoundToggle==0) return;
     if(VoiceToggle==0 && (soundm[num]&4) ) return;
     if( (soundm[num]&8) && ud.lockout ) return;

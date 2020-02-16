@@ -2518,7 +2518,7 @@ else
                     break;
 
                 case 0:
-                    if (FXDevice != NumSoundCards)
+                    if (FXDevice != SC_Unknown)
                     {
                         SoundToggle = 1-SoundToggle;
                         if( SoundToggle == 0 )
@@ -2532,7 +2532,7 @@ else
 				case 1:
 
                     if(eightytwofifty == 0 || numplayers < 2)
-                        if(MusicDevice != NumSoundCards)
+                        if(MusicDevice != SC_Unknown)
                     {
                         MusicToggle = 1-MusicToggle;
                         if( MusicToggle == 0 ) 
@@ -2549,15 +2549,15 @@ else
                     break;
 
                 case 4:
-                    if(SoundToggle && (FXDevice != NumSoundCards)) VoiceToggle = 1-VoiceToggle;
+                    if(SoundToggle && (FXDevice != SC_Unknown)) VoiceToggle = 1-VoiceToggle;
                     break;
 
 				case 5:
-                    if(SoundToggle && (FXDevice != NumSoundCards)) AmbienceToggle = 1-AmbienceToggle;
+                    if(SoundToggle && (FXDevice != SC_Unknown)) AmbienceToggle = 1-AmbienceToggle;
                     break;
 
 				case 6:
-                    if(SoundToggle && (FXDevice != NumSoundCards))
+                    if(SoundToggle && (FXDevice != SC_Unknown))
                     {
                         ReverseStereo = 1-ReverseStereo;
                         FX_SetReverseStereo(ReverseStereo);
@@ -2565,7 +2565,7 @@ else
                     break;
 
 				case 7: // xduke: 1.3d sound style - hear opponent
-					if(SoundToggle && (FXDevice != NumSoundCards))
+					if(SoundToggle && (FXDevice != SC_Unknown))
                     {
                         OpponentSoundToggle = 1-OpponentSoundToggle;
                     }
@@ -2575,33 +2575,33 @@ else
                     break;
             }
 
-            if(SoundToggle && FXDevice != NumSoundCards) menutext(c+160+40,43,0,(FXDevice == NumSoundCards),"ON");
-            else menutext(c+160+40,43,0,(FXDevice == NumSoundCards),"OFF");
+            if(SoundToggle && FXDevice != SC_Unknown) menutext(c+160+40,43,0,(FXDevice == SC_Unknown),"ON");
+            else menutext(c+160+40,43,0,(FXDevice == SC_Unknown),"OFF");
 
-            if(MusicToggle && (MusicDevice != NumSoundCards) && (!eightytwofifty||numplayers<2))
-                menutext(c+160+40,43+16,0,(MusicDevice == NumSoundCards),"ON");
-            else menutext(c+160+40,43+16,0,(MusicDevice == NumSoundCards),"OFF");
+            if(MusicToggle && (MusicDevice != SC_Unknown) && (!eightytwofifty||numplayers<2))
+                menutext(c+160+40,43+16,0,(MusicDevice == SC_Unknown),"ON");
+            else menutext(c+160+40,43+16,0,(MusicDevice == SC_Unknown),"OFF");
 
-            menutext(c,43,SHX(-2),(FXDevice == NumSoundCards),"SOUND");
-            menutext(c,43+16+16,SHX(-4),(FXDevice==NumSoundCards)||SoundToggle==0,"SOUND VOLUME");
+            menutext(c,43,SHX(-2),(FXDevice == SC_Unknown),"SOUND");
+            menutext(c,43+16+16,SHX(-4),(FXDevice==SC_Unknown)||SoundToggle==0,"SOUND VOLUME");
             {
                 l = FXVolume;
                 FXVolume >>= 2;
-                bar(c+167+40,43+16+16,(short *)&FXVolume,4,(FXDevice!=NumSoundCards)&&x==2,SHX(-4),SoundToggle==0||(FXDevice==NumSoundCards));
+                bar(c+167+40,43+16+16,(short *)&FXVolume,4,(FXDevice!=SC_Unknown)&&x==2,SHX(-4),SoundToggle==0||(FXDevice==SC_Unknown));
                 if(l != FXVolume)
                     FXVolume <<= 2;
                 if(l != FXVolume)
                     FX_SetVolume( (short) FXVolume );
             }
-            menutext(c,43+16,SHX(-3),(MusicDevice==NumSoundCards),"MUSIC");
-            menutext(c,43+16+16+16,SHX(-5),(MusicDevice==NumSoundCards)||(numplayers > 1 && eightytwofifty)||MusicToggle==0,"MUSIC VOLUME");
+            menutext(c,43+16,SHX(-3),(MusicDevice==SC_Unknown),"MUSIC");
+            menutext(c,43+16+16+16,SHX(-5),(MusicDevice==SC_Unknown)||(numplayers > 1 && eightytwofifty)||MusicToggle==0,"MUSIC VOLUME");
             {
                 l = MusicVolume;
                 MusicVolume >>= 2;
                 bar(c+167+40,43+16+16+16,
                     (short *)&MusicVolume,4,
-                    (eightytwofifty==0||numplayers < 2) && (MusicDevice!=NumSoundCards) && x==3,SHX(-5),
-                    (numplayers > 1 && eightytwofifty)||MusicToggle==0||(MusicDevice==NumSoundCards));
+                    (eightytwofifty==0||numplayers < 2) && (MusicDevice!=SC_Unknown) && x==3,SHX(-5),
+                    (numplayers > 1 && eightytwofifty)||MusicToggle==0||(MusicDevice==SC_Unknown));
                 MusicVolume <<= 2;
                 if(l != MusicVolume)
                 {
@@ -2610,23 +2610,23 @@ else
                     MUSIC_SetVolume( (short) MusicVolume );
                 }
             }
-            menutext(c,43+16+16+16+16,SHX(-6),(FXDevice==NumSoundCards)||SoundToggle==0,"DUKE TALK");
-            menutext(c,43+16+16+16+16+16,SHX(-7),(FXDevice==NumSoundCards)||SoundToggle==0,"AMBIENCE");
+            menutext(c,43+16+16+16+16,SHX(-6),(FXDevice==SC_Unknown)||SoundToggle==0,"DUKE TALK");
+            menutext(c,43+16+16+16+16+16,SHX(-7),(FXDevice==SC_Unknown)||SoundToggle==0,"AMBIENCE");
 
-            menutext(c,43+16+16+16+16+16+16,SHX(-8),(FXDevice==NumSoundCards)||SoundToggle==0,"FLIP STEREO");
+            menutext(c,43+16+16+16+16+16+16,SHX(-8),(FXDevice==SC_Unknown)||SoundToggle==0,"FLIP STEREO");
 
-            if(VoiceToggle) menutext(c+160+40,43+16+16+16+16,0,(FXDevice==NumSoundCards)||SoundToggle==0,"ON");
-            else menutext(c+160+40,43+16+16+16+16,0,(FXDevice==NumSoundCards)||SoundToggle==0,"OFF");
+            if(VoiceToggle) menutext(c+160+40,43+16+16+16+16,0,(FXDevice==SC_Unknown)||SoundToggle==0,"ON");
+            else menutext(c+160+40,43+16+16+16+16,0,(FXDevice==SC_Unknown)||SoundToggle==0,"OFF");
 
-            if(AmbienceToggle) menutext(c+160+40,43+16+16+16+16+16,0,(FXDevice==NumSoundCards)||SoundToggle==0,"ON");
-            else menutext(c+160+40,43+16+16+16+16+16,0,(FXDevice==NumSoundCards)||SoundToggle==0,"OFF");
+            if(AmbienceToggle) menutext(c+160+40,43+16+16+16+16+16,0,(FXDevice==SC_Unknown)||SoundToggle==0,"ON");
+            else menutext(c+160+40,43+16+16+16+16+16,0,(FXDevice==SC_Unknown)||SoundToggle==0,"OFF");
 
-            if(ReverseStereo) menutext(c+160+40,43+16+16+16+16+16+16,0,(FXDevice==NumSoundCards)||SoundToggle==0,"ON");
-            else menutext(c+160+40,43+16+16+16+16+16+16,0,(FXDevice==NumSoundCards)||SoundToggle==0,"OFF");
+            if(ReverseStereo) menutext(c+160+40,43+16+16+16+16+16+16,0,(FXDevice==SC_Unknown)||SoundToggle==0,"ON");
+            else menutext(c+160+40,43+16+16+16+16+16+16,0,(FXDevice==SC_Unknown)||SoundToggle==0,"OFF");
 
-            menutext(c,43+16+16+16+16+16+16+16,SHX(-9),(FXDevice==NumSoundCards)||SoundToggle==0,"OPPONENT SOUND");
-			if(OpponentSoundToggle) menutext(c+160+40,43+16+16+16+16+16+16+16,0,(FXDevice==NumSoundCards)||SoundToggle==0,"ON");
-			else menutext(c+160+40,43+16+16+16+16+16+16+16,0,(FXDevice==NumSoundCards)||SoundToggle==0,"OFF");
+            menutext(c,43+16+16+16+16+16+16+16,SHX(-9),(FXDevice==SC_Unknown)||SoundToggle==0,"OPPONENT SOUND");
+			if(OpponentSoundToggle) menutext(c+160+40,43+16+16+16+16+16+16+16,0,(FXDevice==SC_Unknown)||SoundToggle==0,"ON");
+			else menutext(c+160+40,43+16+16+16+16+16+16+16,0,(FXDevice==SC_Unknown)||SoundToggle==0,"OFF");
 
             break;
 

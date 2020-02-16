@@ -516,7 +516,6 @@ extern char  fta_quotes[NUMOFFIRSTTIMEACTIVE][64];
 extern uint8_t  scantoasc[128],ready2send;
 extern uint8_t  scantoascwithshift[128];
 
-extern fx_device device;
 extern SAMPLE Sound[ NUM_SOUNDS ];
 extern int32 VoiceToggle,AmbienceToggle, OpponentSoundToggle;
 extern int32 mouseSensitivity_X, mouseSensitivity_Y;

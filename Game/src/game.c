@@ -629,7 +629,7 @@ void getpackets(void)
 
                 if(numlumps == 0) break;
 
-                if (SoundToggle == 0 || ud.lockout == 1 || FXDevice == NumSoundCards)
+                if (SoundToggle == 0 || ud.lockout == 1 || FXDevice == SC_Unknown)
                     break;
                 rtsptr = RTS_GetSound(packbuf[1]-1);
                 if (*rtsptr == 'C')
@@ -6866,7 +6866,7 @@ void nonsharedkeys(void)
             }
         }
 
-        if(KB_KeyPressed( sc_F4 ) && FXDevice != NumSoundCards )
+        if(KB_KeyPressed( sc_F4 ) && FXDevice != SC_Unknown )
         {
             KB_ClearKeyDown( sc_F4 );
             FX_StopAllSounds();
@@ -6934,7 +6934,7 @@ void nonsharedkeys(void)
             FTA(109+ps[myconnectindex].over_shoulder_on,&ps[myconnectindex],1);
         }
 
-        if( KB_KeyPressed( sc_F5 ) && MusicDevice != NumSoundCards )
+        if( KB_KeyPressed( sc_F5 ) && MusicDevice != SC_Unknown )
         {
             KB_ClearKeyDown( sc_F5 );
             strcpy(text,&music_fn[0][music_select][0]);
@@ -8236,7 +8236,7 @@ int main(int argc,char  **argv)
 
     Startup();
 
-    if( eightytwofifty && numplayers > 1 && (MusicDevice != NumSoundCards) )
+    if( eightytwofifty && numplayers > 1 && (MusicDevice != SC_Unknown) )
     {
         puts("\n=========================================================================");
         puts("WARNING: 8250 UART detected.");
@@ -9951,7 +9951,7 @@ void dobonus(uint8_t  bonusonly)
 
     if(playerswhenstarted > 1 && ud.coop != 1 )
     {
-        if(!(MusicToggle == 0 || MusicDevice == NumSoundCards))
+        if(!(MusicToggle == 0 || MusicDevice == SC_Unknown))
             sound(BONUSMUSIC);
 
         rotatesprite(0,0,65536L,0,MENUSCREEN,16,0,2+8+16+64,0,0,xdim-1,ydim-1);
@@ -10059,7 +10059,7 @@ void dobonus(uint8_t  bonusonly)
 
     gametext(160,192,"PRESS ANY KEY TO CONTINUE",16,2+8+16);
 
-    if(!(MusicToggle == 0 || MusicDevice == NumSoundCards))
+    if(!(MusicToggle == 0 || MusicDevice == SC_Unknown))
         sound(BONUSMUSIC);
 
     nextpage();

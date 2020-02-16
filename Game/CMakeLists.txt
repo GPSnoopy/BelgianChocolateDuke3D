@@ -15,7 +15,6 @@ set(src_files_audiolib_headers
 	src/audiolib/music.h
 	src/audiolib/pitch.h
 	src/audiolib/sndcards.h
-	src/audiolib/standard.h
 	src/audiolib/usrhooks.h
 	src/audiolib/util.h
 )

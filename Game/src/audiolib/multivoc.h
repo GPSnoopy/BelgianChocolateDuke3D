@@ -73,31 +73,14 @@ int   MV_KillAllVoices( void );
 int   MV_Kill( int handle );
 int   MV_VoicesPlaying( void );
 int   MV_VoiceAvailable( int priority );
-int   MV_SetPitch( int handle, int pitchoffset );
-int   MV_SetFrequency( int handle, int frequency );
-int   MV_EndLooping( int handle );
 int   MV_SetPan( int handle, int vol, int left, int right );
 int   MV_Pan3D( int handle, int angle, int distance );
 void  MV_SetReverb( int reverb );
-void  MV_SetFastReverb( int reverb );
 int   MV_GetMaxReverbDelay( void );
-int   MV_GetReverbDelay( void );
 void  MV_SetReverbDelay( int delay );
 int   MV_SetMixMode( int numchannels, int samplebits );
 int   MV_StartPlayback( void );
 void  MV_StopPlayback( void );
-int   MV_StartRecording( int MixRate, void ( *function )( char *ptr, int length ) );
-void  MV_StopRecord( void );
-int   MV_StartDemandFeedPlayback( void ( *function )( char **ptr, uint32_t *length ),
-         int rate, int pitchoffset, int vol, int left, int right,
-         int priority, unsigned long callbackval );
-int   MV_PlayRaw( uint8_t *ptr, unsigned long length,
-         unsigned rate, int pitchoffset, int vol, int left,
-         int right, int priority, unsigned long callbackval );
-int   MV_PlayLoopedRaw( uint8_t *ptr, unsigned long length,
-         uint8_t *loopstart, uint8_t *loopend, unsigned rate, int pitchoffset,
-         int vol, int left, int right, int priority,
-         unsigned long callbackval );
 int   MV_PlayWAV( uint8_t *ptr, int pitchoffset, int vol, int left,
          int right, int priority, unsigned long callbackval );
 int   MV_PlayWAV3D( uint8_t *ptr, int pitchoffset, int angle, int distance,

@@ -65,10 +65,9 @@ static int       MV_ReverbTable = -1;
 static Pan MV_PanTable[ MV_NumPanPositions ][ 63 + 1 ];
 
 static int MV_Installed   = FALSE;
-static int MV_SoundCard   = SoundBlaster;
+static int MV_SoundCard   = SC_Unknown;
 static int MV_TotalVolume = MV_MaxTotalVolume;
 static int MV_MaxVoices   = 1;
-static int MV_Recording;
 
 int MV_BufferSize = MixBufferSize;
 static int MV_BufferLength;
@@ -1038,11 +1037,6 @@ VoiceNode *MV_AllocVoice
    VoiceNode   *voice;
    VoiceNode   *node;
 
-   if ( MV_Recording )
-      {
-      return( NULL );
-      }
-
    // Check if we have any free voices
    if ( LL_Empty( &VoicePool, next, prev ) )
       {
@@ -1151,74 +1145,6 @@ void MV_SetVoicePitch
    // Multiply by MixBufferSize - 1
    voice->FixedPointBufferSize = ( voice->RateScale * MixBufferSize ) -
       voice->RateScale;
-   }
-
-
-/*---------------------------------------------------------------------
-   Function: MV_SetPitch
-
-   Sets the pitch for the voice associated with the specified handle.
----------------------------------------------------------------------*/
-
-int MV_SetPitch
-   (
-   int handle,
-   int pitchoffset
-   )
-
-   {
-   VoiceNode *voice;
-
-   if ( !MV_Installed )
-      {
-      MV_SetErrorCode( MV_NotInstalled );
-      return( MV_Error );
-      }
-
-   voice = MV_GetVoice( handle );
-   if ( voice == NULL )
-      {
-      MV_SetErrorCode( MV_VoiceNotFound );
-      return( MV_Error );
-      }
-
-   MV_SetVoicePitch( voice, voice->SamplingRate, pitchoffset );
-
-   return( MV_Ok );
-   }
-
-
-/*---------------------------------------------------------------------
-   Function: MV_SetFrequency
-
-   Sets the frequency for the voice associated with the specified handle.
----------------------------------------------------------------------*/
-
-int MV_SetFrequency
-   (
-   int handle,
-   int frequency
-   )
-
-   {
-   VoiceNode *voice;
-
-   if ( !MV_Installed )
-      {
-      MV_SetErrorCode( MV_NotInstalled );
-      return( MV_Error );
-      }
-
-   voice = MV_GetVoice( handle );
-   if ( voice == NULL )
-      {
-      MV_SetErrorCode( MV_VoiceNotFound );
-      return( MV_Error );
-      }
-
-   MV_SetVoicePitch( voice, frequency, 0 );
-
-   return( MV_Ok );
    }
 
 
@@ -1377,43 +1303,6 @@ void MV_SetVoiceVolume
 
 
 /*---------------------------------------------------------------------
-   Function: MV_EndLooping
-
-   Stops the voice associated with the specified handle from looping
-   without stoping the sound.
----------------------------------------------------------------------*/
-
-int MV_EndLooping
-   (
-   int handle
-   )
-
-   {
-   VoiceNode *voice;
-   unsigned flags;
-
-   if ( !MV_Installed )
-      {
-      MV_SetErrorCode( MV_NotInstalled );
-      return( MV_Error );
-      }
-
-   voice = MV_GetVoice( handle );
-   if ( voice == NULL )
-      {
-      MV_SetErrorCode( MV_VoiceNotFound );
-      return( MV_Warning );
-      }
-
-   voice->LoopCount = 0;
-   voice->LoopStart = NULL;
-   voice->LoopEnd   = NULL;
-
-   return( MV_Ok );
-   }
-
-
-/*---------------------------------------------------------------------
    Function: MV_SetPan
 
    Sets the stereo and mono volume level of the voice associated
@@ -1511,23 +1400,6 @@ void MV_SetReverb
 
 
 /*---------------------------------------------------------------------
-   Function: MV_SetFastReverb
-
-   Sets the level of reverb to add to mix.
----------------------------------------------------------------------*/
-
-void MV_SetFastReverb
-   (
-   int reverb
-   )
-
-   {
-   MV_ReverbLevel = max( 0, min( 16, reverb ) );
-   MV_ReverbTable = -1;
-   }
-
-
-/*---------------------------------------------------------------------
    Function: MV_GetMaxReverbDelay
 
    Returns the maximum delay time for reverb.
@@ -1544,22 +1416,6 @@ int MV_GetMaxReverbDelay
    maxdelay = 65536; //MixBufferSize * MV_NumberOfBuffers;
 
    return maxdelay;
-   }
-
-
-/*---------------------------------------------------------------------
-   Function: MV_GetReverbDelay
-
-   Returns the current delay time for reverb.
----------------------------------------------------------------------*/
-
-int MV_GetReverbDelay
-   (
-   void
-   )
-
-   {
-   return MV_ReverbDelay; // / MV_SampleSize;
    }
 
 
@@ -1732,196 +1588,6 @@ void MV_StopPlayback
          MV_CallBackFunc( voice->callbackval );
          }
       }
-   }
-
-
-/*---------------------------------------------------------------------
-   Function: MV_StartRecording
-
-   Starts the sound recording engine.
----------------------------------------------------------------------*/
-
-int MV_StartRecording(int MixRate, void ( *function )( char *ptr, int length ))
-{
-	MV_SetErrorCode( MV_UnsupportedCard );
-	return( MV_Error );
-}
-
-
-/*---------------------------------------------------------------------
-   Function: MV_StopRecord
-
-   Stops the sound record engine.
----------------------------------------------------------------------*/
-
-void MV_StopRecord(void)
-{
-}
-
-
-/*---------------------------------------------------------------------
-   Function: MV_StartDemandFeedPlayback
-
-   Plays a digitized sound from a user controlled buffering system.
----------------------------------------------------------------------*/
-
-int MV_StartDemandFeedPlayback
-   (
-   void ( *function )( char **ptr, uint32_t *length ),
-   int rate,
-   int pitchoffset,
-   int vol,
-   int left,
-   int right,
-   int priority,
-   unsigned long callbackval
-   )
-
-   {
-   VoiceNode *voice;
-
-   if ( !MV_Installed )
-      {
-      MV_SetErrorCode( MV_NotInstalled );
-      return( MV_Error );
-      }
-
-   // Request a voice from the voice pool
-   voice = MV_AllocVoice( priority );
-   if ( voice == NULL )
-      {
-      MV_SetErrorCode( MV_NoVoices );
-      return( MV_Error );
-      }
-
-   voice->wavetype    = DemandFeed;
-   voice->bits        = 8;
-   voice->GetSound    = MV_GetNextDemandFeedBlock;
-   voice->NextBlock   = NULL;
-   voice->DemandFeed  = function;
-   voice->LoopStart   = NULL;
-   voice->LoopCount   = 0;
-   voice->GLast       = -1;
-   voice->GPos        = 0;
-   voice->GVal[0]     = 0;
-   voice->GVal[1]     = 0;
-   voice->GVal[2]     = 0;
-   voice->GVal[3]     = 0;
-   voice->BlockLength = 0;
-   voice->position    = 0;
-   voice->sound       = NULL;
-   voice->length      = 0;
-   voice->BlockLength = 0;
-   voice->Playing     = TRUE;
-   voice->next        = NULL;
-   voice->prev        = NULL;
-   voice->priority    = priority;
-   voice->callbackval = callbackval;
-
-   MV_SetVoicePitch( voice, rate, pitchoffset );
-   MV_SetVoiceVolume( voice, vol, left, right );
-   MV_PlayVoice( voice );
-
-   return( voice->handle );
-   }
-
-
-/*---------------------------------------------------------------------
-   Function: MV_PlayRaw
-
-   Begin playback of sound data with the given sound levels and
-   priority.
----------------------------------------------------------------------*/
-
-int MV_PlayRaw
-   (
-   uint8_t *ptr,
-   unsigned long length,
-   unsigned rate,
-   int   pitchoffset,
-   int   vol,
-   int   left,
-   int   right,
-   int   priority,
-   unsigned long callbackval
-   )
-
-   {
-   int status;
-
-   status = MV_PlayLoopedRaw( ptr, length, NULL, NULL, rate, pitchoffset,
-      vol, left, right, priority, callbackval );
-
-   return( status );
-   }
-
-
-/*---------------------------------------------------------------------
-   Function: MV_PlayLoopedRaw
-
-   Begin playback of sound data with the given sound levels and
-   priority.
----------------------------------------------------------------------*/
-
-int MV_PlayLoopedRaw
-   (
-   uint8_t *ptr,
-   unsigned long length,
-   uint8_t *loopstart,
-   uint8_t *loopend,
-   unsigned rate,
-   int   pitchoffset,
-   int   vol,
-   int   left,
-   int   right,
-   int   priority,
-   unsigned long callbackval
-   )
-
-   {
-   VoiceNode *voice;
-
-   if ( !MV_Installed )
-      {
-      MV_SetErrorCode( MV_NotInstalled );
-      return( MV_Error );
-      }
-
-   // Request a voice from the voice pool
-   voice = MV_AllocVoice( priority );
-   if ( voice == NULL )
-      {
-      MV_SetErrorCode( MV_NoVoices );
-      return( MV_Error );
-      }
-
-   voice->wavetype    = Raw;
-   voice->bits        = 8;
-   voice->GetSound    = MV_GetNextRawBlock;
-   voice->Playing     = TRUE;
-   voice->NextBlock   = ptr;
-   voice->position    = 0;
-   voice->BlockLength = length;
-   voice->length      = 0;
-   voice->next        = NULL;
-   voice->prev        = NULL;
-   voice->priority    = priority;
-   voice->GLast       = -1;
-   voice->GPos        = 0;
-   voice->GVal[0]     = 0;
-   voice->GVal[1]     = 0;
-   voice->GVal[2]     = 0;
-   voice->GVal[3]     = 0;
-   voice->callbackval = callbackval;
-   voice->LoopStart   = loopstart;
-   voice->LoopEnd     = loopend;
-   voice->LoopSize    = ( voice->LoopEnd - voice->LoopStart ) + 1;
-
-   MV_SetVoicePitch( voice, rate, pitchoffset );
-   MV_SetVoiceVolume( voice, vol, left, right );
-   MV_PlayVoice( voice );
-
-   return( voice->handle );
    }
 
 
@@ -2604,7 +2270,6 @@ int MV_Init
    MV_Installed    = TRUE;
    MV_CallBackFunc = NULL;
    MV_RecordFunc   = NULL;
-   MV_Recording    = FALSE;
    MV_ReverbLevel  = 0;
    MV_ReverbTable  = -1;
 
@@ -2688,12 +2353,6 @@ int MV_Shutdown
    MV_KillAllVoices();
 
    MV_Installed = FALSE;
-
-   // Stop the sound recording engine
-   if ( MV_Recording )
-      {
-      MV_StopRecord();
-      }
 
    // Stop the sound playback engine
    MV_StopPlayback();

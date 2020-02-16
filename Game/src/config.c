@@ -213,7 +213,7 @@ void CONFIG_SetDefaults( void )
    OpponentSoundToggle = 1;
    FXVolume = 220;
    MusicVolume = 200;
-   FXDevice = SoundScape;
+   FXDevice = SC_SoundScape;
    MusicDevice = -1;
    ReverseStereo = 0;
    
@@ -687,8 +687,8 @@ void CONFIG_ReadSetup( void )
    SCRIPT_GetNumber( scripthandle, "Sound Setup", "FXDevice",&FXDevice);
 
 	// reimplementation of ASS expects a "SoundScape".
-	if (FXDevice != NumSoundCards)
-	    FXDevice = SoundScape;
+	if (FXDevice != SC_Unknown)
+	    FXDevice = SC_SoundScape;
 
    SCRIPT_GetNumber( scripthandle, "Sound Setup", "MusicDevice",&MusicDevice);
    SCRIPT_GetNumber( scripthandle, "Sound Setup", "FXVolume",&FXVolume);

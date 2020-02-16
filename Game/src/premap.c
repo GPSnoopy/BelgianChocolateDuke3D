@@ -238,7 +238,7 @@ uint8_t  getsound(uint16_t num)
     int32_t   l;
 
     if(num >= NUM_SOUNDS || SoundToggle == 0) return 0;
-    if (FXDevice == NumSoundCards) return 0;
+    if (FXDevice == SC_Unknown) return 0;
 
     fp = TCkopen4load(sounds[num],0);
     if(fp == -1) return 0;
@@ -262,7 +262,7 @@ void precachenecessarysounds(void)
 {
     short i, j;
 
-    if (FXDevice == NumSoundCards) return;
+    if (FXDevice == SC_Unknown) return;
     j = 0;
 
     for(i=0;i<NUM_SOUNDS;i++)

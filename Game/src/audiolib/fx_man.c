@@ -36,8 +36,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define TRUE  ( 1 == 1 )
 #define FALSE ( !TRUE )
 
-static unsigned FX_MixRate;
-
 int FX_SoundDevice = -1;
 int FX_ErrorCode = FX_Ok;
 int FX_Installed = FALSE;
@@ -68,13 +66,6 @@ char *FX_ErrorString(int ErrorNumber)
          ErrorString = "Fx ok\n";
          break;
 
-      case FX_ASSVersion :
-         ErrorString = "Apogee Sound System Version " ASS_VERSION_STRING "  "
-            "Programmed by Jim Dose\n"
-            "(c) Copyright 1995 James R. Dose.  All Rights Reserved.\n";
-         break;
-
-
       case FX_SoundCardError :
          ErrorString = DSL_ErrorString( DSL_Error );
          break;
@@ -101,46 +92,6 @@ char *FX_ErrorString(int ErrorNumber)
 
 
 /*---------------------------------------------------------------------
-   Function: FX_SetupCard
-
-   Sets the configuration of a sound device.
----------------------------------------------------------------------*/
-
-int FX_SetupCard
-   (
-   int SoundCard,
-   fx_device *device
-   )
-
-   {
-   int status;
-   int DeviceStatus;
-
-   FX_SoundDevice = SoundCard;
-
-   status = FX_Ok;
-   FX_SetErrorCode( FX_Ok );
-
-
-      DeviceStatus = DSL_Init();
-      if ( DeviceStatus != DSL_Ok )
-         {
-         FX_SetErrorCode( FX_SoundCardError );
-         status = FX_Error;
-         }
-         else
-         {
-         device->MaxVoices     = 32;
-         device->MaxSampleBits = 0;
-         device->MaxChannels   = 0;
-         }
-
-
-   return( status );
-   }
-
-
-/*---------------------------------------------------------------------
    Function: FX_Init
 
    Selects which sound device to use.
@@ -152,7 +103,7 @@ int FX_Init
    int numvoices,
    int numchannels,
    int samplebits,
-   unsigned mixrate
+   int mixrate
    )
 
    {
@@ -164,22 +115,12 @@ int FX_Init
       FX_Shutdown();
       }
 
-   FX_MixRate = mixrate;
-
    status = FX_Ok;
    FX_SoundDevice = SoundCard;
    switch( SoundCard )
       {
-      case SoundBlaster :
-      case Awe32 :
-      case ProAudioSpectrum :
-      case SoundMan16 :
-      case SoundScape :
-      case SoundSource :
-      case TandySoundSource :
-      case UltraSound :
-         devicestatus = MV_Init( SoundCard, FX_MixRate, numvoices,
-            numchannels, samplebits );
+      case SC_SoundScape :
+         devicestatus = MV_Init( SoundCard, mixrate, numvoices, numchannels, samplebits );
          if ( devicestatus != MV_Ok )
             {
             FX_SetErrorCode( FX_MultiVocError );
@@ -223,14 +164,7 @@ int FX_Shutdown
    status = FX_Ok;
    switch( FX_SoundDevice )
       {
-      case SoundBlaster :
-      case Awe32 :
-      case ProAudioSpectrum :
-      case SoundMan16 :
-      case SoundScape :
-      case SoundSource :
-      case TandySoundSource :
-      case UltraSound :
+      case SC_SoundScape :
          status = MV_Shutdown();
          if ( status != MV_Ok )
             {
@@ -265,14 +199,7 @@ int FX_SetCallBack(void ( *function )( int32_t ))
 
    switch( FX_SoundDevice )
       {
-      case SoundBlaster :
-      case Awe32 :
-      case ProAudioSpectrum :
-      case SoundMan16 :
-      case SoundScape :
-      case SoundSource :
-      case TandySoundSource :
-      case UltraSound :
+      case SC_SoundScape :
          MV_SetCallBack( function );
          break;
 
@@ -296,24 +223,6 @@ void FX_SetVolume(int volume)
 
    MV_SetVolume( volume );
 
-   }
-
-
-/*---------------------------------------------------------------------
-   Function: FX_GetVolume
-
-   Returns the volume of the current sound device.
----------------------------------------------------------------------*/
-
-int FX_GetVolume(void)
-   {
-   int volume;
-
-
-   volume = MV_GetVolume();
-
-
-   return( volume );
    }
 
 
@@ -360,54 +269,6 @@ void FX_SetReverb
 
 
 /*---------------------------------------------------------------------
-   Function: FX_SetFastReverb
-
-   Sets the reverb level.
----------------------------------------------------------------------*/
-
-void FX_SetFastReverb
-   (
-   int reverb
-   )
-
-   {
-   MV_SetFastReverb( reverb );
-   }
-
-
-/*---------------------------------------------------------------------
-   Function: FX_GetMaxReverbDelay
-
-   Returns the maximum delay time for reverb.
----------------------------------------------------------------------*/
-
-int FX_GetMaxReverbDelay
-   (
-   void
-   )
-
-   {
-   return MV_GetMaxReverbDelay();
-   }
-
-
-/*---------------------------------------------------------------------
-   Function: FX_GetReverbDelay
-
-   Returns the current delay time for reverb.
----------------------------------------------------------------------*/
-
-int FX_GetReverbDelay
-   (
-   void
-   )
-
-   {
-   return MV_GetReverbDelay();
-   }
-
-
-/*---------------------------------------------------------------------
    Function: FX_SetReverbDelay
 
    Sets the delay level of reverb to add to mix.
@@ -438,143 +299,6 @@ int FX_VoiceAvailable
    return MV_VoiceAvailable( priority );
    }
 
-/*---------------------------------------------------------------------
-   Function: FX_EndLooping
-
-   Stops the voice associated with the specified handle from looping
-   without stoping the sound.
----------------------------------------------------------------------*/
-
-int FX_EndLooping
-   (
-   int handle
-   )
-
-   {
-   int status;
-
-   status = MV_EndLooping( handle );
-   if ( status == MV_Error )
-      {
-      FX_SetErrorCode( FX_MultiVocError );
-      status = FX_Warning;
-      }
-
-   return( status );
-   }
-
-/*---------------------------------------------------------------------
-   Function: FX_SetPan
-
-   Sets the stereo and mono volume level of the voice associated
-   with the specified handle.
----------------------------------------------------------------------*/
-
-int FX_SetPan
-   (
-   int handle,
-   int vol,
-   int left,
-   int right
-   )
-
-   {
-   int status;
-
-   status = MV_SetPan( handle, vol, left, right );
-   if ( status == MV_Error )
-      {
-      FX_SetErrorCode( FX_MultiVocError );
-      status = FX_Warning;
-      }
-
-   return( status );
-   }
-
-
-/*---------------------------------------------------------------------
-   Function: FX_SetPitch
-
-   Sets the pitch of the voice associated with the specified handle.
----------------------------------------------------------------------*/
-
-int FX_SetPitch
-   (
-   int handle,
-   int pitchoffset
-   )
-
-   {
-   int status;
-
-   status = MV_SetPitch( handle, pitchoffset );
-   if ( status == MV_Error )
-      {
-      FX_SetErrorCode( FX_MultiVocError );
-      status = FX_Warning;
-      }
-
-   return( status );
-   }
-
-
-/*---------------------------------------------------------------------
-   Function: FX_SetFrequency
-
-   Sets the frequency of the voice associated with the specified handle.
----------------------------------------------------------------------*/
-
-int FX_SetFrequency
-   (
-   int handle,
-   int frequency
-   )
-
-   {
-   int status;
-
-   status = MV_SetFrequency( handle, frequency );
-   if ( status == MV_Error )
-      {
-      FX_SetErrorCode( FX_MultiVocError );
-      status = FX_Warning;
-      }
-
-   return( status );
-   }
-
-
-/*---------------------------------------------------------------------
-   Function: FX_PlayVOC
-
-   Begin playback of sound data with the given volume and priority.
----------------------------------------------------------------------*/
-
-int FX_PlayVOC
-   (
-   uint8_t *ptr,
-   int pitchoffset,
-   int vol,
-   int left,
-   int right,
-   int priority,
-   uint32_t callbackval
-   )
-
-   {
-   int handle;
-
-   handle = MV_PlayVOC( ptr, pitchoffset, vol, left, right,
-      priority, callbackval );
-   if ( handle < MV_Ok )
-      {
-      FX_SetErrorCode( FX_MultiVocError );
-      handle = FX_Warning;
-      }
-
-   return( handle );
-   }
-
 
 /*---------------------------------------------------------------------
    Function: FX_PlayLoopedVOC
@@ -600,38 +324,6 @@ int FX_PlayLoopedVOC
 
    handle = MV_PlayLoopedVOC( ptr, loopstart, loopend, pitchoffset,
       vol, left, right, priority, callbackval );
-   if ( handle < MV_Ok )
-      {
-      FX_SetErrorCode( FX_MultiVocError );
-      handle = FX_Warning;
-      }
-
-   return( handle );
-   }
-
-
-/*---------------------------------------------------------------------
-   Function: FX_PlayWAV
-
-   Begin playback of sound data with the given volume and priority.
----------------------------------------------------------------------*/
-
-int FX_PlayWAV
-   (
-   uint8_t *ptr,
-   int32_t pitchoffset,
-   int32_t vol,
-   int32_t left,
-   int32_t right,
-   int32_t priority,
-   uint32_t callbackval
-   )
-
-   {
-   int handle;
-
-   handle = MV_PlayWAV( ptr, pitchoffset, vol, left, right,
-      priority, callbackval );
    if ( handle < MV_Ok )
       {
       FX_SetErrorCode( FX_MultiVocError );
@@ -741,76 +433,6 @@ int FX_PlayWAV3D
 
 
 /*---------------------------------------------------------------------
-   Function: FX_PlayRaw
-
-   Begin playback of raw sound data with the given volume and priority.
----------------------------------------------------------------------*/
-
-int FX_PlayRaw
-   (
-   uint8_t *ptr,
-   uint32_t length,
-   uint32_t rate,
-   int32_t pitchoffset,
-   int32_t vol,
-   int32_t left,
-   int32_t right,
-   int32_t priority,
-   uint32_t callbackval
-   )
-
-   {
-   int handle;
-
-   handle = MV_PlayRaw( ptr, length, rate, pitchoffset,
-      vol, left, right, priority, callbackval );
-   if ( handle < MV_Ok )
-      {
-      FX_SetErrorCode( FX_MultiVocError );
-      handle = FX_Warning;
-      }
-
-   return( handle );
-   }
-
-
-/*---------------------------------------------------------------------
-   Function: FX_PlayLoopedRaw
-
-   Begin playback of raw sound data with the given volume and priority.
----------------------------------------------------------------------*/
-
-int FX_PlayLoopedRaw
-   (
-   uint8_t *ptr,
-   uint32_t length,
-   char *loopstart,
-   char *loopend,
-   uint32_t rate,
-   int32_t pitchoffset,
-   int32_t vol,
-   int32_t left,
-   int32_t right,
-   int32_t priority,
-   uint32_t callbackval
-   )
-
-   {
-   int handle;
-
-   handle = MV_PlayLoopedRaw( ptr, length, loopstart, loopend,
-      rate, pitchoffset, vol, left, right, priority, callbackval );
-   if ( handle < MV_Ok )
-      {
-      FX_SetErrorCode( FX_MultiVocError );
-      handle = FX_Warning;
-      }
-
-   return( handle );
-   }
-
-
-/*---------------------------------------------------------------------
    Function: FX_Pan3D
 
    Set the angle and distance from the listener of the voice associated
@@ -835,38 +457,6 @@ int FX_Pan3D
       }
 
    return( status );
-   }
-
-
-/*---------------------------------------------------------------------
-   Function: FX_SoundActive
-
-   Tests if the specified sound is currently playing.
----------------------------------------------------------------------*/
-
-int FX_SoundActive
-   (
-   int handle
-   )
-
-   {
-   return( MV_VoicePlaying( handle ) );
-   }
-
-
-/*---------------------------------------------------------------------
-   Function: FX_SoundsPlaying
-
-   Reports the number of voices playing.
----------------------------------------------------------------------*/
-
-int FX_SoundsPlaying
-   (
-   void
-   )
-
-   {
-   return( MV_VoicesPlaying() );
    }
 
 
@@ -918,60 +508,3 @@ int FX_StopAllSounds
 
    return( FX_Ok );
    }
-
-
-/*---------------------------------------------------------------------
-   Function: FX_StartDemandFeedPlayback
-
-   Plays a digitized sound from a user controlled buffering system.
----------------------------------------------------------------------*/
-
-int FX_StartDemandFeedPlayback
-   (
-   void ( *function )( char **ptr, uint32_t *length ),
-   int32_t rate,
-   int32_t pitchoffset,
-   int32_t vol,
-   int32_t left,
-   int32_t right,
-   int32_t priority,
-   uint32_t callbackval
-   )
-
-   {
-   int handle;
-
-   handle = MV_StartDemandFeedPlayback( function, rate,
-      pitchoffset, vol, left, right, priority, callbackval );
-   if ( handle < MV_Ok )
-      {
-      FX_SetErrorCode( FX_MultiVocError );
-      handle = FX_Warning;
-      }
-
-   return( handle );
-   }
-
-
-/*---------------------------------------------------------------------
-   Function: FX_StartRecording
-
-   Starts the sound recording engine.
----------------------------------------------------------------------*/
-
-int FX_StartRecording(int MixRate, void (*function)(char* ptr, int length))
-{
-    FX_SetErrorCode(FX_InvalidCard);
-    return FX_Warning;
-}
-
-
-/*---------------------------------------------------------------------
-   Function: FX_StopRecord
-
-   Stops the sound record engine.
----------------------------------------------------------------------*/
-
-void FX_StopRecord(void)
-{
-}

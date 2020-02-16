@@ -28,10 +28,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
    (c) Copyright 1993 James R. Dose.  All Rights Reserved.
 **********************************************************************/
 
-#include <stdlib.h>
-//#include <math.h>
-#include "dpmi.h"
-#include "standard.h"
 #include "pitch.h"
 
 #define MAXDETUNE 25

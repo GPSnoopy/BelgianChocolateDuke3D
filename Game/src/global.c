@@ -113,8 +113,6 @@ char  sounds[NUM_SOUNDS][14];
 
 short title_zoom;
 
-fx_device device;
-
 SAMPLE Sound[ NUM_SOUNDS ];
 SOUNDOWNER SoundOwner[NUM_SOUNDS][4];
 
