@@ -23,10 +23,10 @@ inline static void __checkSdlSuccess(int result, char const* func, const char* f
 	if (result != 0)
 	{
 		Error(EXIT_FAILURE,
-			"BUILDSDL: %s failed!\n"
-			"BUILDSDL: SDL_Error: %s.\n"
-			"BUILDSDL: FILE: %s\n"
-			"BUILDSDL: LINE: %d",
+			"SDL: %s failed!\n"
+			"SDL: SDL_Error: %s.\n"
+			"SDL: FILE: %s\n"
+			"SDL: LINE: %d",
 			func,
 			SDL_GetError(),
 			file,
@@ -39,10 +39,10 @@ inline static void __checkSdlNotNull(void* handle, char const* msg, const char* 
 	if (handle == NULL)
 	{
 		Error(EXIT_FAILURE,
-			"BUILDSDL: Failed to %s!\n"
-			"BUILDSDL: SDL_Error: %s.\n"
-			"BUILDSDL: FILE: %s\n"
-			"BUILDSDL: LINE: %d",
+			"SDL: Failed to %s!\n"
+			"SDL: SDL_Error: %s.\n"
+			"SDL: FILE: %s\n"
+			"SDL: LINE: %d",
 			msg,
 			SDL_GetError(),
 			file,

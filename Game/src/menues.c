@@ -3189,7 +3189,6 @@ else
 
 				case 1:
 					BFullScreen = !BFullScreen;
-					SDL_QuitSubSystem(SDL_INIT_VIDEO);
 					_platform_init(0, NULL, "Duke Nukem 3D", "Duke3D");
 					_setgamemode(validmodexdim[current_resolution],validmodeydim[current_resolution]);
 					break;

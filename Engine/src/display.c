@@ -16,7 +16,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
-#include <assert.h>
 #include <string.h>
 #include "platform.h"
 
@@ -37,12 +36,7 @@
 #include "engine.h"
 #include "network.h"
 #include "sdl_util.h"
-
-#include "mmulti_unstable.h"
-#include "mmulti_stable.h"
-#include "network.h"
 #include "icon.h"
-
 #include "draw.h"
 #include "cache.h"
 
@@ -70,9 +64,11 @@ uint8_t  *screen, vesachecked;
 int32_t buffermode, origbuffermode, linearmode;
 uint8_t  permanentupdate = 0, vgacompatible;
 
-SDL_Window* window = NULL;
-SDL_Surface* window_surface = NULL;
-SDL_Surface* surface = NULL; /* This isn't static so that we can use it elsewhere AH */
+static SDL_Window* window = NULL;
+static SDL_Renderer* renderer = NULL;
+static SDL_Texture* texture = NULL;
+static SDL_Surface* surface = NULL;
+static SDL_Surface* surface_rgba = NULL;
 
 static uint32_t sdl_flags = 0;
 static int32_t mouse_relative_x = 0;
@@ -89,9 +85,6 @@ int32_t total_render_time = 1;
 int32_t total_rendered_frames = 0;
 
 static char *titleName = NULL;
-
-void restore256_palette (void);
-void set16color_palette (void);
 
 #define print_tf_state(str, val) printf("%s: {%s}\n", str, (val) ? "true" : "false" )
 
@@ -188,16 +181,23 @@ static void go_to_new_vid_mode(int w, int h)
 {
     if (window != NULL)
     {
+        SDL_FreeSurface(surface_rgba);
         SDL_FreeSurface(surface);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyRenderer(renderer);
         SDL_DestroyWindow(window);
+        SDL_QuitSubSystem(SDL_INIT_VIDEO);
+        window = NULL;
     }
-	
+
+    SDL_CHECK_SUCCESS( SDL_InitSubSystem(SDL_INIT_VIDEO) );
+
     window = SDL_CreateWindow(
         titleName,
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
         w, h,
-        sdl_flags);
+        sdl_flags | SDL_WINDOW_ALLOW_HIGHDPI);
 
     SDL_CHECK_NOT_NULL(window, "create window");
 
@@ -213,13 +213,27 @@ static void go_to_new_vid_mode(int w, int h)
     getvalidvesamodes();
     SDL_ClearError();
 
-    window_surface = SDL_GetWindowSurface(window);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    SDL_CHECK_NOT_NULL(renderer, "create renderer");
+
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
+    SDL_SetHint(SDL_HINT_RENDER_VSYNC, "0");
 	
-    SDL_CHECK_NOT_NULL(window_surface, "get window surface");
+    SDL_CHECK_SUCCESS( SDL_RenderSetLogicalSize(renderer, w, h) );
 
-    surface = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, 8, 0, 0, 0, 0);
-
+    texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, w, h);
+    SDL_CHECK_NOT_NULL(texture, "create texture");
+	
+    surface = SDL_CreateRGBSurface(0, w, h, 8, 0, 0, 0, 0);
     SDL_CHECK_NOT_NULL(surface, "create palettized surface");
+
+    const Uint32 rmask = 0x00ff0000;
+    const Uint32 gmask = 0x0000ff00;
+    const Uint32 bmask = 0x000000ff;
+    const Uint32 amask = 0xff000000;
+
+    surface_rgba = SDL_CreateRGBSurface(0, w, h, 32, rmask, gmask, bmask, amask);
+    SDL_CHECK_NOT_NULL(surface_rgba, "create RGBA surface");
 
     init_new_res_vars();
 }
@@ -345,7 +359,6 @@ void fullscreen_toggle_and_change_driver(void)
 	y = surface->h;
 
 	BFullScreen =!BFullScreen;
-	SDL_QuitSubSystem(SDL_INIT_VIDEO);
 	_platform_init(0, NULL, "Duke Nukem 3D", "Duke3D");
 	_setgamemode(x,y);
 	//vscrn();
@@ -657,11 +670,8 @@ void _platform_init(int argc, char  **argv, const char  *title, const char  *ico
     if (title == NULL)
         title = "BUILD";
 
-    if (iconName == NULL)
-        iconName = "BUILD";
-
     titleName = string_dupe(title);
-    sdl_flags = BFullScreen ? SDL_WINDOW_FULLSCREEN : 0;
+    sdl_flags = BFullScreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0;
     set_sdl_scancodes(scancodes, sizeof(scancodes) / sizeof(scancodes[0]));
     
     output_sdl_versions();
@@ -787,15 +797,13 @@ static inline void get_max_screen_res(int32_t *max_w, int32_t *max_h)
 }
 
 
-static void add_vesa_mode(const char  *typestr, int w, int h)
+static void add_vesa_mode(int w, int h)
 {
-    //printf("Adding %s resolution (%dx%d).\n", typestr, w, h);
     validmode[validmodecnt] = validmodecnt;
     validmodexdim[validmodecnt] = w;
     validmodeydim[validmodecnt] = h;
     validmodecnt++;
-} /* add_vesa_mode */
-
+}
 
 /* Let the user specify a specific mode via environment variable. */
 static inline void add_user_defined_resolution(void)
@@ -808,7 +816,7 @@ static inline void add_user_defined_resolution(void)
         return;
 
     if (get_dimensions_from_str(envr, &w, &h))
-        add_vesa_mode("user defined", w, h);
+        add_vesa_mode(w, h);
     else
         printf("User defined resolution [%s] is bogus!\n", envr);
 } /* add_user_defined_resolution */
@@ -929,8 +937,16 @@ void getvalidvesamodes(void)
     static int already_checked = 0;
     int i;
     int stdres[][2] = {
-	    {320, 240}, {640, 480},
-	    {800, 600}, {1024, 768}
+	    {320, 240},
+    	{640, 480},
+    	{800, 600},
+    	{1024, 768},
+        {1280, 960},
+    	{1440, 1080},
+    	{1600, 1200},
+		{1920, 1440},
+        {2560, 1920},
+		{2880, 2160}
     };
 
     if (already_checked)
@@ -939,22 +955,31 @@ void getvalidvesamodes(void)
     already_checked = 1;
    	validmodecnt = 0;
     vidoption = 1;  /* !!! tmp */
-
-    /* fill in the standard resolutions... */
-    for (i = 0; i < sizeof (stdres) / sizeof (stdres[0]); i++)
-        add_vesa_mode("standard", stdres[i][0], stdres[i][1]);
-
-    /* Anything the hardware can specifically do is added now... */
-    int displayIndex = 0;
-    int numModes = SDL_GetNumDisplayModes(displayIndex);
+	
+    // Fill in the standard 4:3 resolutions that the display supports
+    int numModes = SDL_GetNumDisplayModes(0);
+    int maxWidth = 0;
+    int maxHeight = 0;
+	
 	for (i = 0; i < numModes; ++i)
 	{
         SDL_DisplayMode mode;
-        SDL_CHECK_SUCCESS( SDL_GetDisplayMode(displayIndex, i, &mode) );
+        SDL_CHECK_SUCCESS(SDL_GetDisplayMode(0, i, &mode));
 
-        add_vesa_mode("physical", mode.w, mode.h);
+        maxWidth = max(maxWidth, mode.w);
+        maxHeight = max(maxHeight, mode.h);
 	}
-
+	
+    for (i = 0; i < sizeof(stdres) / sizeof(stdres[0]); i++)
+    {
+        assert(stdres[i][0] / 4 == stdres[i][1] / 3);
+    	
+        if (stdres[i][0] <= maxWidth && stdres[i][1] <= maxHeight)
+        {
+            add_vesa_mode(stdres[i][0], stdres[i][1]);
+        }
+    }
+	
     /* Now add specific resolutions that the user wants... */
     add_user_defined_resolution();
 
@@ -1092,8 +1117,10 @@ void VBE_setPalette(uint8_t  *palettebuffer)
 
 	// tanguyf: updating the palette is not immediate with a buffered surface, screen needs updating as well.
     SDL_CHECK_SUCCESS( SDL_SetPaletteColors(surface->format->palette, fmt_swap, 0, 256) );
-    SDL_CHECK_SUCCESS( SDL_BlitSurface(surface, NULL, window_surface, NULL) );
-    SDL_CHECK_SUCCESS( SDL_UpdateWindowSurface(window) );
+    SDL_CHECK_SUCCESS( SDL_BlitSurface(surface, NULL, surface_rgba, NULL) );
+    SDL_CHECK_SUCCESS( SDL_UpdateTexture(texture, NULL, surface_rgba->pixels, surface_rgba->pitch) );
+    SDL_CHECK_SUCCESS( SDL_RenderCopy(renderer, texture, NULL, NULL) );
+    SDL_RenderPresent(renderer);
 }
 
 void VBE_getPalette(int32_t start, int32_t num, uint8_t  *palettebuffer)
@@ -1172,9 +1199,11 @@ void readmousebstatus(short *bstatus)
 void _updateScreenRect(int32_t x, int32_t y, int32_t w, int32_t h)
 {
     SDL_Rect rect = { x, y, w, h };
-	
-    SDL_CHECK_SUCCESS( SDL_BlitSurface(surface, &rect, window_surface, &rect) );
-    SDL_CHECK_SUCCESS( SDL_UpdateWindowSurface(window) );
+
+    SDL_CHECK_SUCCESS(SDL_BlitSurface(surface, &rect, surface_rgba, &rect));
+    SDL_CHECK_SUCCESS(SDL_UpdateTexture(texture, &rect, surface_rgba->pixels, surface_rgba->pitch));
+    SDL_CHECK_SUCCESS(SDL_RenderCopy(renderer, texture, &rect, &rect));
+    SDL_RenderPresent(renderer);
 }
 
 //int counter= 0 ;
@@ -1185,8 +1214,10 @@ void _nextpage(void)
 
     _handle_events();
 
-    SDL_CHECK_SUCCESS( SDL_BlitSurface(surface, NULL, window_surface, NULL) );
-    SDL_CHECK_SUCCESS( SDL_UpdateWindowSurface(window) );
+    SDL_CHECK_SUCCESS( SDL_BlitSurface(surface, NULL, surface_rgba, NULL) );
+    SDL_CHECK_SUCCESS( SDL_UpdateTexture(texture, NULL, surface_rgba->pixels, surface_rgba->pitch) );
+    SDL_CHECK_SUCCESS( SDL_RenderCopy(renderer, texture, NULL, NULL) );
+    SDL_RenderPresent(renderer);
     
     //sprintf(bmpName,"%d.bmp",counter++);
     //SDL_SaveBMP(surface,bmpName);
