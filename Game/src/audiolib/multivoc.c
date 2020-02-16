@@ -32,12 +32,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
 
-#include "util.h"
 #include "dpmi.h"
 #include "usrhooks.h"
-#include "dma.h"
 #include "linklist.h"
 #include "sndcards.h"
 #include "dsl.h"
@@ -59,11 +56,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 static int       MV_ReverbLevel;
 int       MV_ReverbDelay;
-#if 0
-static VOLUME16 *MV_ReverbTable = NULL;
-#else
 static int       MV_ReverbTable = -1;
-#endif
 
 //static signed short MV_VolumeTable[ MV_MaxVolume + 1 ][ 256 ];
 //static signed short MV_VolumeTable[ 63 + 1 ][ 256 ];
@@ -92,7 +85,6 @@ static int MV_SwapLeftRight = FALSE;
 static int MV_RequestedMixRate;
 int MV_MixRate;
 
-static int MV_DMAChannel = -1;
 static int MV_BuffShift;
 
 static int MV_TotalMemory;
@@ -121,13 +113,8 @@ int *MV_GLast, *MV_GPos, *MV_GVal;
 
 // char  *MV_HarshClipTable;
 char  *MV_MixDestination;
-#if 0
-short *MV_LeftVolume;
-short *MV_RightVolume;
-#else
 int    MV_LeftVolume;
 int    MV_RightVolume;
-#endif
 int    MV_SampleSize = 1;
 int    MV_RightChannelOffset;
 

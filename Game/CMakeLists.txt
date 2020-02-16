@@ -6,7 +6,6 @@ add_definitions(-DCHECK_XDUKE_REV)
 
 set(src_files_audiolib_headers
 	src/audiolib/_multivc.h
-	src/audiolib/dma.h
 	src/audiolib/dpmi.h
 	src/audiolib/dsl.h
 	src/audiolib/fx_man.h
@@ -22,13 +21,13 @@ set(src_files_audiolib_headers
 )
 
 set(src_files_audiolib
+	src/audiolib/dpmi.c
 	src/audiolib/dsl.c
 	src/audiolib/fx_man.c
 	src/audiolib/ll_man.c
 	src/audiolib/multivoc.c
 	src/audiolib/mv_mix.c
 	src/audiolib/mvreverb.c
-	src/audiolib/nodpmi.c
 	src/audiolib/pitch.c
 	# TODO source contains loads of files that are not used (only DOS). Delete them?
 )

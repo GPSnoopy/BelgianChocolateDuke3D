@@ -29,7 +29,6 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 // sounds.h
 //
 //****************************************************************************
-#include "audiolib/fx_man.h"
 
 #ifndef _sounds_public_
 #define _sounds_public_
@@ -40,7 +39,6 @@ extern int32_t FXDevice;
 extern int32 MusicDevice;
 extern int32 FXVolume;
 extern int32 MusicVolume;
-extern fx_blaster_config BlasterConfig;
 extern int32 NumVoices;
 extern int32 NumChannels;
 extern int32 NumBits;

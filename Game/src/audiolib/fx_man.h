@@ -31,7 +31,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef __FX_MAN_H
 #define __FX_MAN_H
 
-#include "sndcards.h"
 #include <inttypes.h>
 
 typedef struct
@@ -43,17 +42,6 @@ typedef struct
 
 #define MonoFx   1
 #define StereoFx 2
-
-typedef struct
-   {
-   unsigned long Address;
-   unsigned long Type;
-   unsigned long Interrupt;
-   unsigned long Dma8;
-   unsigned long Dma16;
-   unsigned long Midi;
-   unsigned long Emu;
-   } fx_blaster_config;
 
 enum FX_ERRORS
    {
@@ -80,8 +68,6 @@ enum fx_BLASTER_Types
 
 char *FX_ErrorString( int ErrorNumber );
 int   FX_SetupCard( int SoundCard, fx_device *device );
-int   FX_GetBlasterSettings( fx_blaster_config *blaster );
-int   FX_SetupSoundBlaster( fx_blaster_config blaster, int *MaxVoices, int *MaxSampleBits, int *MaxChannels );
 int   FX_Init( int SoundCard, int numvoices, int numchannels, int samplebits, unsigned mixrate );
 int   FX_Shutdown( void );
 int   FX_SetCallBack( void ( *function )( int32_t ) );

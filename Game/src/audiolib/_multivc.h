@@ -123,13 +123,8 @@ typedef struct VoiceNode
 
    void          ( *DemandFeed )( char **ptr, uint32_t *length );
 
-#if 0
-   short        *LeftVolume;
-   short        *RightVolume;
-#else
    int           LeftVolume;
    int           RightVolume;
-#endif
 
    int           GLast;
    int           GPos;

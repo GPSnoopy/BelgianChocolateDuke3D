@@ -27,7 +27,6 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <ctype.h>
 #include <time.h>
 #include "duke3d.h"
 #include "scriplib.h"
@@ -51,7 +50,6 @@ int32 MusicToggle;
 int32 VoiceToggle;
 int32 AmbienceToggle;
 int32 OpponentSoundToggle; // xduke to toggle opponent's sounds on/off in DM (duke 1.3d scheme)
-fx_blaster_config BlasterConfig;
 int32 NumVoices;
 int32 NumChannels;
 int32 NumBits;
@@ -693,43 +691,21 @@ void CONFIG_ReadSetup( void )
 	    FXDevice = SoundScape;
 
    SCRIPT_GetNumber( scripthandle, "Sound Setup", "MusicDevice",&MusicDevice);
-
-   //  if (MusicDevice != NumSoundCards)
-   //     MusicDevice = SoundScape;
-
-// FIX_00015: Forced NumVoices=8, NumChannels=2, NumBits=16, MixRate=44100, ScreenMode = x(
-//            (ScreenMode has no meaning anymore)
-
    SCRIPT_GetNumber( scripthandle, "Sound Setup", "FXVolume",&FXVolume);
    SCRIPT_GetNumber( scripthandle, "Sound Setup", "MusicVolume",&MusicVolume);
    SCRIPT_GetNumber( scripthandle, "Sound Setup", "SoundToggle",&SoundToggle);
    SCRIPT_GetNumber( scripthandle, "Sound Setup", "MusicToggle",&MusicToggle);
    SCRIPT_GetNumber( scripthandle, "Sound Setup", "VoiceToggle",&VoiceToggle);
    SCRIPT_GetNumber( scripthandle, "Sound Setup", "AmbienceToggle",&AmbienceToggle);
-   SCRIPT_GetNumber( scripthandle, "Sound Setup", "OpponentSoundToggle",&OpponentSoundToggle);   
-   SCRIPT_GetNumber( scripthandle, "Sound Setup", "NumVoices",&NumVoices);
+   SCRIPT_GetNumber( scripthandle, "Sound Setup", "OpponentSoundToggle",&OpponentSoundToggle);
+	
    NumVoices = 32;
-   SCRIPT_GetNumber( scripthandle, "Sound Setup", "NumChannels",&NumChannels);
    NumChannels = 2;
-   SCRIPT_GetNumber( scripthandle, "Sound Setup", "NumBits",&NumBits);
    NumBits = 16;
-   SCRIPT_GetNumber( scripthandle, "Sound Setup", "MixRate",&MixRate);
    MixRate = 44100;
+	
    SCRIPT_GetNumber( scripthandle, "Sound Setup", "MidiPort",&MidiPort);
-   SCRIPT_GetNumber( scripthandle, "Sound Setup", "BlasterAddress",&dummy);
-   BlasterConfig.Address = dummy;
-   SCRIPT_GetNumber( scripthandle, "Sound Setup", "BlasterType",&dummy);
-   BlasterConfig.Type = dummy;
-   SCRIPT_GetNumber( scripthandle, "Sound Setup", "BlasterInterrupt",&dummy);
-   BlasterConfig.Interrupt = dummy;
-   SCRIPT_GetNumber( scripthandle, "Sound Setup", "BlasterDma8",&dummy);
-   BlasterConfig.Dma8 = dummy;
-   SCRIPT_GetNumber( scripthandle, "Sound Setup", "BlasterDma16",&dummy);
-   BlasterConfig.Dma16 = dummy;
-   SCRIPT_GetNumber( scripthandle, "Sound Setup", "BlasterEmu",&dummy);
-   BlasterConfig.Emu = dummy;
    SCRIPT_GetNumber( scripthandle, "Sound Setup", "ReverseStereo",&ReverseStereo);
-
    SCRIPT_GetNumber( scripthandle, "Controls","ControllerType",&ControllerType);
    SCRIPT_GetNumber( scripthandle, "Controls","MouseAimingFlipped",&ud.mouseflip);
    SCRIPT_GetNumber( scripthandle, "Controls","MouseAiming",&MouseAiming);

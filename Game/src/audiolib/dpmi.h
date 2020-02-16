@@ -31,35 +31,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef __DPMI_H
 #define __DPMI_H
 
-#include <inttypes.h>
-
 enum DPMI_Errors
    {
    DPMI_Warning = -2,
    DPMI_Error   = -1,
    DPMI_Ok      = 0
    };
-
-typedef struct
-   {
-   uint32_t  EDI;
-   uint32_t  ESI;
-   uint32_t  EBP;
-   uint32_t  Reserved;
-   uint32_t  EBX;
-   uint32_t  EDX;
-   uint32_t  ECX;
-   uint32_t  EAX;
-   uint32_t Flags;
-   uint32_t ES;
-   uint32_t DS;
-   uint32_t FS;
-   uint32_t GS;
-   uint32_t IP;
-   uint16_t CS;
-   uint16_t SP;
-   uint16_t SS;
-   } dpmi_regs;
 
 int  DPMI_GetDOSMemory( void **ptr, void **descriptor, unsigned length );
 int  DPMI_FreeDOSMemory( void *descriptor );

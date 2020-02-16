@@ -28,16 +28,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
    (c) Copyright 1994 James R. Dose.  All Rights Reserved.
 **********************************************************************/
 
-#include <stdio.h>
-#include <stdlib.h>
+#include "dsl.h"
+#include "fx_man.h"
 #include "sndcards.h"
 #include "multivoc.h"
-
-
-
-#include "dsl.h"
-#include "ll_man.h"
-#include "fx_man.h"
 
 #define TRUE  ( 1 == 1 )
 #define FALSE ( !TRUE )
@@ -143,44 +137,6 @@ int FX_SetupCard
 
 
    return( status );
-   }
-
-
-/*---------------------------------------------------------------------
-   Function: FX_GetBlasterSettings
-
-   Returns the current BLASTER environment variable settings.
----------------------------------------------------------------------*/
-
-int FX_GetBlasterSettings
-   (
-   fx_blaster_config *blaster
-   )
-
-   {
-
-   return( FX_Ok );
-   }
-
-
-/*---------------------------------------------------------------------
-   Function: FX_SetupSoundBlaster
-
-   Handles manual setup of the Sound Blaster information.
----------------------------------------------------------------------*/
-
-int FX_SetupSoundBlaster
-   (
-   fx_blaster_config blaster,
-   int *MaxVoices,
-   int *MaxSampleBits,
-   int *MaxChannels
-   )
-
-   {
-
-
-   return( FX_Ok );
    }
 
 
