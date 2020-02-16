@@ -6,17 +6,18 @@ add_definitions(-DCHECK_XDUKE_REV)
 
 set(src_files_audiolib_headers
 	src/audiolib/_multivc.h
-	src/audiolib/debugio.h
 	src/audiolib/dma.h
 	src/audiolib/dpmi.h
 	src/audiolib/dsl.h
-	src/audiolib/interrup.h
 	src/audiolib/fx_man.h
+	src/audiolib/interrup.h
 	src/audiolib/linklist.h
 	src/audiolib/ll_man.h
 	src/audiolib/multivoc.h
+	src/audiolib/music.h
 	src/audiolib/pitch.h
 	src/audiolib/sndcards.h
+	src/audiolib/standard.h
 	src/audiolib/user.h
 	src/audiolib/usrhooks.h
 	src/audiolib/util.h
