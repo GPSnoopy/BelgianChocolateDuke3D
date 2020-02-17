@@ -524,10 +524,10 @@ extern SOUNDOWNER SoundOwner[NUM_SOUNDS][4];
 extern uint8_t  playerreadyflag[MAXPLAYERS],playerquitflag[MAXPLAYERS];
 extern char  sounds[NUM_SOUNDS][14];
 
-extern intptr_t script[MAXSCRIPTSIZE],*scriptptr,*insptr,*labelcode,labelcnt;
+extern int32_t script[MAXSCRIPTSIZE],*scriptptr,*insptr,*labelcode,labelcnt;
 extern char  *label,*textptr,error,warning;
 extern uint8_t killit_flag;
-extern intptr_t*actorscrptr[MAXTILES],*parsing_actor;
+extern int32_t*actorscrptr[MAXTILES],*parsing_actor;
 extern uint8_t  actortype[MAXTILES];
 extern uint8_t  *music_pointer;
 
@@ -549,7 +549,7 @@ struct weaponhit
     short tempang,actorstayput,dispicnum;
     short timetosleep;
     int32_t floorz,ceilingz,lastvx,lastvy,bposx,bposy,bposz;
-    intptr_t temp_data[6]; // tanguyf: this causes savegames not to be compatible between 32 and 64-bits
+    int32_t temp_data[6];
 };
 
 extern struct weaponhit hittype[MAXSPRITES];

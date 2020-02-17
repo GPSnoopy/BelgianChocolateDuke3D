@@ -24,7 +24,8 @@ After reading both Fabien Sanglard's Game Engine Black Books on [Wolfenstein 3D]
 * Save games are not compatible between 32-bit and 64-bit (due to serialization of `intptr_t` values).
 * Linux: MIDI does not play (vcpkg does not configure sdl2-mixer for it).
 * Engine: Leaning left/right falls back to low-res rendering.
-* Engine: minimap has rendering glitches when fully-textured.
+* Engine: Minimap has rendering glitches when fully-textured.
+* Engine: Pixel imprecision when rendering health/ammo numbers in the status bar, leaving ghost pixels.
 
 ## Requirements
 
@@ -53,6 +54,7 @@ _Not yet supported._
 * **Project Initiator:** [Fabien Sanglard](https://github.com/fabiensanglard)
 * **Linux Integration:** [Juan Manuel Borges Caño](https://github.com/juanmabc)
 * **64-bit Port:** [Rohit Nirmal](https://github.com/rohit-n)
+* **64-bit Port:** [Jonathon Fowler] (https://github.com/jonof/jfduke3d)
 * **Belgian Chocolate fork:** [Tanguy Fautre](https://github.com/GPSnoopy/)
 
 ## More Information

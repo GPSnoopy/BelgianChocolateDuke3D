@@ -37,7 +37,7 @@ static int32_t last_used_size;
 
 static short g_i,g_p;
 static int32_t g_x;
-static intptr_t *g_t;
+static int32_t *g_t;
 static spritetype *g_sp;
 
 #define NUMKEYWORDS     112
@@ -53,7 +53,7 @@ char  *keyw[NUMKEYWORDS] =
 {
     "definelevelname",  // 0
     "actor",            // 1    [#]
-    "addammo",   // 2    [#]
+    "addammo",          // 2    [#]
     "ifrnd",            // 3    [C]
     "enda",             // 4    [:]
     "ifcansee",         // 5    [C]
@@ -134,35 +134,35 @@ char  *keyw[NUMKEYWORDS] =
     "quote",            // 80
     "ifinouterspace",   // 81
     "ifnotmoving",      // 82
-    "respawnhitag",        // 83
-    "tip",             // 84
+    "respawnhitag",     // 83
+    "tip",              // 84
     "ifspritepal",      // 85
-    "money",         // 86
-    "soundonce",         // 87
+    "money",            // 86
+    "soundonce",        // 87
     "addkills",         // 88
     "stopsound",        // 89
-    "ifawayfromwall",       // 90
+    "ifawayfromwall",   // 90
     "ifcanseetarget",   // 91
-    "globalsound",  // 92
-    "lotsofglass", // 93
-    "ifgotweaponce", // 94
-    "getlastpal", // 95
-    "pkick",  // 96
-    "mikesnd", // 97
-    "useractor",  // 98
-    "sizeat",  // 99
-    "addstrength", // 100   [#]
-    "cstator", // 101
-    "mail", // 102
-    "paper", // 103
-    "tossweapon", // 104
-    "sleeptime", // 105
-    "nullop", // 106
+    "globalsound",      // 92
+    "lotsofglass",      // 93
+    "ifgotweaponce",    // 94
+    "getlastpal",       // 95
+    "pkick",            // 96
+    "mikesnd",          // 97
+    "useractor",        // 98
+    "sizeat",           // 99
+    "addstrength",      // 100   [#]
+    "cstator",          // 101
+    "mail",             // 102
+    "paper",            // 103
+    "tossweapon",       // 104
+    "sleeptime",        // 105
+    "nullop",           // 106
     "definevolumename", // 107
-    "defineskillname", // 108
-    "ifnosounds", // 109
-    "clipdist", // 110
-    "ifangdiffl" // 111
+    "defineskillname",  // 108
+    "ifnosounds",       // 109
+    "clipdist",         // 110
+    "ifangdiffl"        // 111
 };
 
 
@@ -442,11 +442,40 @@ void transnum(void)
     textptr += l;
 }
 
-
-uint8_t  parsecommand(int readfromGRP)
+/**
+ * Encode a scriptptr into a form suitable for portably
+ * inserting into bytecode. We store the pointer as minus
+ * the offset from the start of the script buffer, just
+ * to make it perhaps a little more obvious what is happening.
+ */
+int32_t encodescriptptr(int32_t* scptr)
 {
-    int32_t i, j, k;
-    intptr_t *tempscrptr;
+    int32_t offs = (int32_t)(scptr - script);
+
+	assert(offs >= 0);
+    assert(offs < MAXSCRIPTSIZE);
+
+	return -offs;
+}
+
+/**
+ * Decode an encoded representation of a scriptptr
+ */
+int32_t* decodescriptptr(int32_t scptr)
+{
+    assert(scptr <= 0);
+
+	int32_t offs = -scptr;
+
+	assert(offs >= 0);
+    assert(offs < MAXSCRIPTSIZE);
+
+	return script + offs;
+}
+
+uint8_t parsecommand(int readfromGRP)
+{
+    int32_t i, j, k, *tempscrptr;
     uint8_t  done, temp_ifelse_check;
     int32_t tw;
     char *origtptr;
@@ -484,7 +513,7 @@ uint8_t  parsecommand(int readfromGRP)
             {
                 getlabel();
                 scriptptr--;
-                labelcode[labelcnt] = (intptr_t) scriptptr;
+                labelcode[labelcnt] = encodescriptptr(scriptptr);
                 labelcnt++;
 
                 parsing_state = 1;
@@ -629,7 +658,7 @@ uint8_t  parsecommand(int readfromGRP)
                         break;
                     }
                 if(i == labelcnt)
-                    labelcode[labelcnt++] = (intptr_t) scriptptr;
+                    labelcode[labelcnt++] = encodescriptptr(scriptptr);
                 for(j=0;j<2;j++)
                 {
                     if(keyword() >= 0) break;
@@ -787,7 +816,7 @@ uint8_t  parsecommand(int readfromGRP)
                     }
 
                 if(i == labelcnt)
-                    labelcode[labelcnt++] = (intptr_t) scriptptr;
+                    labelcode[labelcnt++] = encodescriptptr(scriptptr);
 
                 for(j=0;j<3;j++)
                 {
@@ -841,7 +870,7 @@ uint8_t  parsecommand(int readfromGRP)
                     }
 
                 if(i == labelcnt)
-                    labelcode[labelcnt++] = (intptr_t) scriptptr;
+                    labelcode[labelcnt++] = encodescriptptr(scriptptr);
 
                 for(j=0;j<5;j++)
                 {
@@ -1018,7 +1047,7 @@ uint8_t  parsecommand(int readfromGRP)
                 tempscrptr = scriptptr;
                 scriptptr++; //Leave a spot for the fail location
                 parsecommand(readfromGRP);
-                *tempscrptr = (intptr_t) scriptptr;
+                *tempscrptr = encodescriptptr(scriptptr);
             }
             else
             {
@@ -1099,7 +1128,7 @@ uint8_t  parsecommand(int readfromGRP)
 
             parsecommand(readfromGRP);
 
-            *tempscrptr = (intptr_t) scriptptr;
+            *tempscrptr = encodescriptptr(scriptptr);
 
             checking_ifelse++;
             return 0;
@@ -1586,7 +1615,7 @@ void loadefs(char  *filenam, char  *mptr, int readfromGRP)
     total_lines = 0;
 
     passone(readfromGRP); //Tokenize
-    *script = (intptr_t) scriptptr;
+    *script = encodescriptptr(scriptptr);
 
     if(warning|error)
         printf("Found %hhd warning(s), '%c' error(s).\n",warning,error);
@@ -1765,10 +1794,9 @@ short furthestcanseepoint(short i,spritetype *ts,int32_t *dax,int32_t *day)
 void alterang(short a)
 {
     short aang, angdif, goalang,j;
-    int32_t ticselapsed;
-    intptr_t* moveptr;
+    int32_t ticselapsed, *moveptr;
 
-    moveptr = (intptr_t*)g_t[1];
+    moveptr = decodescriptptr(g_t[1]);
     ticselapsed = (g_t[0])&31;
     aang = g_sp->ang;
 
@@ -1831,8 +1859,7 @@ void alterang(short a)
 
 void move()
 {
-    int32_t l;
-	intptr_t *moveptr;
+    int32_t l, *moveptr;
     short a, goalang, angdif;
     int32_t daxvel;
 
@@ -1899,7 +1926,7 @@ void move()
         return;
     }
 
-    moveptr = (intptr_t*)g_t[1];
+    moveptr = decodescriptptr(g_t[1]);
 
     if(a&geth) g_sp->xvel += (*moveptr-g_sp->xvel)>>1;
     if(a&getv) g_sp->zvel += ((*(moveptr+1)<<4)-g_sp->zvel)>>1;
@@ -2027,8 +2054,6 @@ void move()
    }
 }
 
-uint8_t  parse(void);
-
 void parseifelse(int32_t condition)
 {
     if( condition )
@@ -2038,7 +2063,7 @@ void parseifelse(int32_t condition)
     }
     else
     {
-        insptr = (intptr_t *) *(insptr+1);
+        insptr = decodescriptptr(*(insptr+1));
         if(*insptr == 10)
         {
             insptr+=2;
@@ -2188,9 +2213,9 @@ uint8_t  parse(void)
         case 24:
             insptr++;
             g_t[5] = *insptr;
-            g_t[4] = *(intptr_t*)(g_t[5]);       // Action
-            g_t[1] = *(intptr_t*)(g_t[5]+sizeof(intptr_t));       // move
-            g_sp->hitag = *(intptr_t*)(g_t[5]+sizeof(intptr_t)*2);    // Ai
+            g_t[4] = *(decodescriptptr(g_t[5]));       // Action
+            g_t[1] = *(decodescriptptr(g_t[5]) + 1);   // move
+            g_sp->hitag = *(decodescriptptr(g_t[5]) + 2);    // Ai
             g_t[0] = g_t[2] = g_t[3] = 0;
             if(g_sp->hitag&random_angle)
                 g_sp->ang = TRAND&2047;
@@ -2225,7 +2250,7 @@ uint8_t  parse(void)
                 hittype[g_i].timetosleep = SLEEPTIME;
             break;
         case 10:
-            insptr = (intptr_t*) *(insptr+1);
+            insptr = decodescriptptr(*(insptr + 1));
             break;
         case 100:
             insptr++;
@@ -2576,11 +2601,11 @@ uint8_t  parse(void)
             break;
         case 17:
             {
-				intptr_t *tempscrptr;
-
+				int32_t *tempscrptr;
+        		
                 tempscrptr = insptr+2;
 
-                insptr = (intptr_t *) *(insptr+1);
+                insptr = decodescriptptr(*(insptr + 1));
                 while(1) if(parse()) break;
                 insptr = tempscrptr;
             }
@@ -3154,13 +3179,13 @@ void execute(short i,short p,int32_t x)
     if(g_t[4])
     {
         g_sp->lotag += TICSPERFRAME;
-        if(g_sp->lotag > *(intptr_t*)(g_t[4]+(sizeof(intptr_t) * 4)))
+        if (g_sp->lotag > * (decodescriptptr(g_t[4]) + 4))
         {
             g_t[2]++;
             g_sp->lotag = 0;
-            g_t[3] += *(intptr_t*)(g_t[4] + (sizeof(intptr_t) * 3));
+            g_t[3] += *(decodescriptptr(g_t[4]) + 3);
         }
-        if( klabs(g_t[3]) >= klabs( *(intptr_t*)(g_t[4]+sizeof(intptr_t)) * *(intptr_t*)(g_t[4]+ (sizeof(intptr_t) * 3)) ))
+        if( klabs(g_t[3]) >= klabs( *(decodescriptptr(g_t[4])+1) * *(decodescriptptr(g_t[4])+3) ) )
             g_t[3] = 0;
     }
 
