@@ -1516,8 +1516,7 @@ void movefallers(void)
 void movestandables(void)
 {
     short i, j, k, m, nexti, nextj, p, sect;
-    intptr_t l=0,*t;
-    int32_t x;
+    int32_t l=0,x,*t;
     spritetype *s;
 
     i = headspritestat[6];
@@ -3139,8 +3138,7 @@ void movetransports(void)
 
 void moveactors(void)
 {
-    int32_t x, m, l;
-	intptr_t *t;
+    int32_t x, m, l, *t;
     short a, i, j, nexti, nextj, sect, p;
     spritetype *s;
     uint16_t k;
@@ -4397,8 +4395,7 @@ void moveactors(void)
 void moveexplosions(void)  // STATNUM 5
 {
     short i, j, nexti, sect, p;
-    intptr_t l, *t;
-    int32_t x;
+    int32_t l, x, *t;
     spritetype *s;
 
     i = headspritestat[5];
@@ -4930,8 +4927,7 @@ void moveexplosions(void)  // STATNUM 5
 
 void moveeffectors(void)   //STATNUM 3
 {
-    intptr_t q=0, l, st, j, *t;
-    int32_t x,m;
+    int32_t q = 0, l, m, x, st, j, * t;
     short i, k, nexti, nextk, p, sh, nextj;
     spritetype *s;
     sectortype *sc;
@@ -6486,32 +6482,35 @@ void moveeffectors(void)   //STATNUM 3
                 break;
 
             case 21: // Cascading effect
+            {
+                int32_t *lp;
 
-                if( t[0] == 0 ) break;
+                if (t[0] == 0) break;
 
-                if( s->ang == 1536 )
-                    l = (intptr_t) &sc->ceilingz;
+                if (s->ang == 1536)
+                    lp = &sc->ceilingz;
                 else
-                    l = (intptr_t) &sc->floorz;
+                    lp = &sc->floorz;
 
-                if( t[0] == 1 ) //Decide if the s->sectnum should go up or down
+                if (t[0] == 1) //Decide if the s->sectnum should go up or down
                 {
-                    s->zvel = ksgn(s->z-*(intptr_t*)l) * (SP<<4);
+                    s->zvel = ksgn(s->z - *lp) * (SP << 4);
                     t[0]++;
                 }
 
-                if( sc->extra == 0 )
+                if (sc->extra == 0)
                 {
-                    *(intptr_t*)l += s->zvel;
+                    *lp += s->zvel;
 
-                    if(klabs(*(intptr_t*)l-s->z) < 1024)
+                    if (klabs(*lp - s->z) < 1024)
                     {
-                        *(intptr_t*)l = s->z;
+                        *lp = s->z;
                         KILLIT(i); //All done
                     }
                 }
                 else sc->extra--;
                 break;
+            }
 
             case 22:
 

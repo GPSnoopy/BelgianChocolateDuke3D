@@ -1,10 +1,6 @@
 #ifndef _INCL_DUKEWIN_H_
 #define _INCL_DUKEWIN_H_ 1
 
-#ifndef _MSC_VER  /* might need this. */
-typedef int32_t int32_t __int64;
-#endif
-
 #pragma warning(disable:4761)
 
 #ifdef _DEBUG
@@ -46,11 +42,6 @@ void _dos_getdate(struct dosdate_t *date);
 #ifndef max
 #define max(x, y) ((x) > (y) ? (x) : (y))
 #endif
-
-#ifdef FP_OFF
-#undef FP_OFF
-#endif
-#define FP_OFF(x) ((int32_t) (x))
 
 // 64 megs should be enough for anybody.  :)  --ryan.
 #define Z_AvailHeap() ((64 * 1024) * 1024)

@@ -24,6 +24,8 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 */
 //-------------------------------------------------------------------------
 
+#include <time.h>
+
 #ifdef _WIN32
   #include <windows.h>
 #elif defined(__APPLE__)
@@ -5370,11 +5372,10 @@ short spawn( short j, short pn )
     return i;
 }
 
-
 void animatesprites(int32_t x,int32_t y,short a,int32_t smoothratio)
 {
     short i, j, k, p, sect;
-    intptr_t l, t1,t3,t4;
+    int32_t l, t1,t3,t4;
     spritetype *s,*t;
 
     for(j=0;j < spritesortcnt; j++)
@@ -5859,7 +5860,7 @@ void animatesprites(int32_t x,int32_t y,short a,int32_t smoothratio)
 
         if( actorscrptr[s->picnum] )
         {
-            if(t4>10000)
+            if(t4<0)
 				// FIX_00093: fixed crashbugs in multiplayer (mine/blimp)
 				// This is the mine issue (confusion bug in hittype[i].temp_data[4] usage)
 				// close to blimp bug (search for BLIMP)
@@ -5872,8 +5873,10 @@ void animatesprites(int32_t x,int32_t y,short a,int32_t smoothratio)
 				// at the bottom of the chain. Crashes when it's about to respawn.
 				// Lame fix. ok for w32. Doesn't work for other plateform.
 				// How to make a differene between a timer and an address??
+				// 
+				// tanguyf: encoded script ptr are now negative.
             {
-                l = *(intptr_t *)(t4+sizeof(intptr_t)*2);
+                l = *(decodescriptptr(t4) + 2);
 
                 switch( l )
                 {
@@ -5921,7 +5924,7 @@ void animatesprites(int32_t x,int32_t y,short a,int32_t smoothratio)
                         break;
                 }
 
-                t->picnum += k + ( *(intptr_t *)t4 ) + l * t3;
+                t->picnum += k + (*decodescriptptr(t4)) + l * t3;
 
                 if(l > 0)
                     while(tiles[t->picnum].dim.width == 0 && t->picnum > 0 )
@@ -7685,16 +7688,14 @@ void ShutDown( void )
 
 void compilecons(void)
 {
-	char  userconfilename[512];
+    char  userconfilename[512];
 
-   mymembuf = (char  *)hittype;
-   labelcode = (intptr_t *)&sector[0];
-   label = (char  *)sprite;
+    mymembuf = (char*)hittype;
+    labelcode = (int32_t*)&sector[0];
+    label = (char*)sprite;
 
-	sprintf(userconfilename, "%s", confilename);
-
-   loadefs(userconfilename,mymembuf, 0);  
-
+    sprintf(userconfilename, "%s", confilename);
+    loadefs(userconfilename, mymembuf, 0);
 }
 
 

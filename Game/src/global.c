@@ -28,6 +28,7 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
+#include <time.h>
 #include <errno.h>
 #include "global.h"
 #include "duke3d.h"
@@ -148,8 +149,8 @@ uint8_t  playerreadyflag[MAXPLAYERS],ready2send;
 uint8_t  playerquitflag[MAXPLAYERS];
 int32_t vel, svel, angvel, horiz, ototalclock, respawnactortime=768, respawnitemtime=768, groupfile;
 
-intptr_t script[MAXSCRIPTSIZE],*scriptptr,*insptr,*labelcode,labelcnt;
-intptr_t *actorscrptr[MAXTILES],*parsing_actor;
+int32_t script[MAXSCRIPTSIZE],*scriptptr,*insptr,*labelcode,labelcnt;
+int32_t*actorscrptr[MAXTILES],*parsing_actor;
 char  *label,*textptr,error,warning ;
 uint8_t killit_flag;
 uint8_t  *music_pointer;
