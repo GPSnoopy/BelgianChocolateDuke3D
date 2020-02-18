@@ -17,11 +17,10 @@ After reading both Fabien Sanglard's Game Engine Black Books on [Wolfenstein 3D]
 * Ported to SDL2.
 * Ported to vcpkg and CMake.
 * Added continuous integration (via GitHub Actions).
-* Added 64-bit support.
+* Added 64-bit support (savegames are compatible between 32-bit and 64-bit).
 
 ### Known Issues
 
-* Save games are not compatible between 32-bit and 64-bit (due to serialization of `intptr_t` values).
 * Linux: MIDI does not play (vcpkg does not configure sdl2-mixer for it).
 * Engine: Leaning left/right falls back to low-res rendering.
 * Engine: Minimap has rendering glitches when fully-textured.
