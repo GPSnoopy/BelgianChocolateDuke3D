@@ -367,15 +367,7 @@ int loadplayer(int8_t spot)
     kdfread(&cloudx[0], sizeof(short) << 7, 1, fil);
     kdfread(&cloudy[0], sizeof(short) << 7, 1, fil);
 
-    //kdfread(&scriptptrs[0], 1, MAXSCRIPTSIZE, fil);
     kdfread(&script[0], 4, MAXSCRIPTSIZE, fil);
-    //for (i = 0; i < MAXSCRIPTSIZE; i++)
-    //    if (scriptptrs[i])
-    //    {
-    //        j = (intptr_t)script[i] + (intptr_t)&script[0];
-    //        script[i] = j;
-    //    }
-
     kdfread(&ptrbuf[0], 4, MAXTILES, fil);
     for (i = 0; i < MAXTILES; i++)
         if (ptrbuf[i])
@@ -383,25 +375,14 @@ int loadplayer(int8_t spot)
             actorscrptr[i] = (int32_t*)((intptr_t)&script[0] + ptrbuf[i]);
         }
 
-    //kdfread(&scriptptrs[0], 1, MAXSPRITES, fil);
     kdfread(&hittype[0], sizeof(struct weaponhit), MAXSPRITES, fil);
-
-    //for (i = 0; i < MAXSPRITES; i++)
-    //{
-    //    j = (intptr_t)(&script[0]);
-    //    if (scriptptrs[i] & 1) T2 += j;
-    //    if (scriptptrs[i] & 2) T5 += j;
-    //    if (scriptptrs[i] & 4) T6 += j;
-    //}
-
     kdfread(&lockclock, sizeof(lockclock), 1, fil);
     kdfread(&pskybits, sizeof(pskybits), 1, fil);
     kdfread(&pskyoff[0], sizeof(pskyoff[0]), MAXPSKYTILES, fil);
 
     kdfread(&animatecnt, sizeof(animatecnt), 1, fil);
     kdfread(&animatesect[0], 2, MAXANIMATES, fil);
-    //kdfread(&animateptr[0], 4, MAXANIMATES, fil);
-    kdfread(&ptrbuf[0], 4, MAXANIMATES, fil);
+	kdfread(&ptrbuf[0], 4, MAXANIMATES, fil);
     for (i = animatecnt - 1; i >= 0; i--)
     {
         animateptr[i] = (int32_t*)((intptr_t)&sector[0] + ptrbuf[i]);
@@ -659,28 +640,9 @@ int saveplayer(int8_t spot)
     dfwrite(&cloudx[0], sizeof(short) << 7, 1, fil);
     dfwrite(&cloudy[0], sizeof(short) << 7, 1, fil);
 
-    //for (i = 0; i < MAXSCRIPTSIZE; i++)
-    //{
-    //    if (script[i] >= (intptr_t)(&script[0]) && script[i] < (intptr_t)(&script[MAXSCRIPTSIZE]))
-    //    {
-    //        scriptptrs[i] = 1;
-    //        j = script[i] - (intptr_t)&script[0];
-    //        script[i] = j;
-    //    }
-    //    else scriptptrs[i] = 0;
-    //}
-
-    //dfwrite(&scriptptrs[0], 1, MAXSCRIPTSIZE, fil);
     dfwrite(&script[0], 4, MAXSCRIPTSIZE, fil);
 
-    //for (i = 0; i < MAXSCRIPTSIZE; i++)
-    //    if (scriptptrs[i])
-    //    {
-    //        j = script[i] + (intptr_t)&script[0];
-    //        script[i] = j;
-    //    }
-
-    memset(ptrbuf, 0, sizeof(ptrbuf));
+	memset(ptrbuf, 0, sizeof(ptrbuf));
     for (i = 0; i < MAXTILES; i++)
         if (actorscrptr[i])
         {
@@ -688,47 +650,7 @@ int saveplayer(int8_t spot)
         }
     dfwrite(&ptrbuf[0], 4, MAXTILES, fil);
 
-    //for (i = 0; i < MAXSPRITES; i++)
-    //{
-    //    scriptptrs[i] = 0;
-
-    //    if (actorscrptr[PN] == 0) continue;
-
-    //    j = (intptr_t)&script[0];
-
-    //    if (T2 >= j && T2 < (intptr_t)(&script[MAXSCRIPTSIZE]))
-    //    {
-    //        scriptptrs[i] |= 1;
-    //        T2 -= j;
-    //    }
-    //    if (T5 >= j && T5 < (intptr_t)(&script[MAXSCRIPTSIZE]))
-    //    {
-    //        scriptptrs[i] |= 2;
-    //        T5 -= j;
-    //    }
-    //    if (T6 >= j && T6 < (intptr_t)(&script[MAXSCRIPTSIZE]))
-    //    {
-    //        scriptptrs[i] |= 4;
-    //        T6 -= j;
-    //    }
-    //}
-
-    //dfwrite(&scriptptrs[0], 1, MAXSPRITES, fil);
-    dfwrite(&hittype[0], sizeof(struct weaponhit), MAXSPRITES, fil);
-
-    //for (i = 0; i < MAXSPRITES; i++)
-    //{
-    //    if (actorscrptr[PN] == 0) continue;
-    //    j = (intptr_t)&script[0];
-
-    //    if (scriptptrs[i] & 1)
-    //        T2 += j;
-    //    if (scriptptrs[i] & 2)
-    //        T5 += j;
-    //    if (scriptptrs[i] & 4)
-    //        T6 += j;
-    //}
-
+	dfwrite(&hittype[0], sizeof(struct weaponhit), MAXSPRITES, fil);
     dfwrite(&lockclock, sizeof(lockclock), 1, fil);
     dfwrite(&pskybits, sizeof(pskybits), 1, fil);
     dfwrite(&pskyoff[0], sizeof(pskyoff[0]), MAXPSKYTILES, fil);

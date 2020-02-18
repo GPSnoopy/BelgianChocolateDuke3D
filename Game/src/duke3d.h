@@ -26,23 +26,6 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 #ifndef _INCL_DUKE3D_H_
 #define _INCL_DUKE3D_H_
 
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-
-
-
-#include "platform.h"
-#if !PLATFORM_MACOSX
-#include <malloc.h>
-#endif
-
-#include <inttypes.h>
-
-#include <fcntl.h>
-#include <time.h>
-#include <ctype.h>
-
 #include "build.h"
 
 #if (!defined MAX_PATH)
@@ -67,7 +50,6 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 #include "dukewin.h"
 #endif
 
-#include "function.h"
 
 //  FIX_00022: Automatically recognize the shareware grp (v1.3) + full version (1.3d) +
 //             atomic (1.4/1.5 grp) and the con files version (either 1.3 or 1.4) (JonoF's idea)

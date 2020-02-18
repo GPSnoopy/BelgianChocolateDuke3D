@@ -20,7 +20,6 @@
 #endif
 
 #include <inttypes.h>
-#define __int64 int64_t
 
 #define O_BINARY 0
 

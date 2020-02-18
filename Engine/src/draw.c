@@ -859,8 +859,8 @@ void setupslopevlin(int32_t i1, intptr_t i2, int32_t i3)
 extern int32_t reciptable[2048];
 extern int32_t globalx3, globaly3;
 extern int32_t fpuasm;
-#define low32(a) ((a&0xffffffff))
-#define high32(a) ((int)(((__int64)a&(__int64)0xffffffff00000000)>>32))
+#define low32(a) (((a)&0xffffffff))
+#define high32(a) ((int)(((int64_t)(a)&(int64_t)0xffffffff00000000)>>32))
 
 //FCS: Render RENDER_SLOPPED_CEILING_AND_FLOOR
 void slopevlin(intptr_t i1, uint32_t i2, intptr_t* i3, uint32_t index, int32_t i4, int32_t i5, int32_t i6)
@@ -871,8 +871,8 @@ void slopevlin(intptr_t i1, uint32_t i2, intptr_t* i3, uint32_t index, int32_t i
 //This is so bad to cast asm3 to int then float :( !!!
     float a = (float)(int32_t) asm3 + asm2_f;
     i1 -= slopemach_ecx;
-    esi = i5 + low32((__int64)globalx3 * (__int64)(i2<<3));
-    edi = i6 + low32((__int64)globaly3 * (__int64)(i2<<3));
+    esi = i5 + low32((int64_t)globalx3 * (int64_t)(i2<<3));
+    edi = i6 + low32((int64_t)globaly3 * (int64_t)(i2<<3));
     ebx = i4;
 
 	if (!RENDER_SLOPPED_CEILING_AND_FLOOR)
@@ -895,8 +895,8 @@ void slopevlin(intptr_t i1, uint32_t i2, intptr_t* i3, uint32_t index, int32_t i
 	    edx = i2;
 	    i2 = eax;
 	    eax -= edx;
-	    ecx = low32((__int64)globalx3 * (__int64)eax);
-	    eax = low32((__int64)globaly3 * (__int64)eax);
+	    ecx = low32((int64_t)globalx3 * (int64_t)eax);
+	    eax = low32((int64_t)globaly3 * (int64_t)eax);
 	    a += asm2_f;
 
 	    asm4 = ebx;
