@@ -360,6 +360,7 @@ extern int32_t msx[2048],msy[2048];
 extern short cyclers[MAXCYCLERS][6],numcyclers;
 extern char  myname[2048];
 
+#pragma pack(push, 4)
 struct user_defs
 {
     uint8_t  god,warp_on,cashman,eog,showallmap;
@@ -378,19 +379,19 @@ struct user_defs
     int32_t camera_time,folfvel,folavel,folx,foly,fola;
     int32_t reccnt;
 
-    int32 entered_name,screen_tilting,shadows,fta_on,executions,auto_run;
-    int32 coords,tickrate,m_coop,coop,screen_size,extended_screen_size,lockout,crosshair,showweapons;
-    int32 mywchoice[MAX_WEAPONS],wchoice[MAXPLAYERS][MAX_WEAPONS],playerai;
+    int32_t entered_name,screen_tilting,shadows,fta_on,executions,auto_run;
+    int32_t coords,tickrate,m_coop,coop,screen_size,extended_screen_size,lockout,crosshair,showweapons;
+    int32_t mywchoice[MAX_WEAPONS],wchoice[MAXPLAYERS][MAX_WEAPONS],playerai;
 
-    int32 respawn_monsters,respawn_items,respawn_inventory,recstat,monsters_off,brightness;
-    int32 m_respawn_items,m_respawn_monsters,m_respawn_inventory,m_recstat,m_monsters_off,detail;
+    int32_t respawn_monsters,respawn_items,respawn_inventory,recstat,monsters_off,brightness;
+    int32_t m_respawn_items,m_respawn_monsters,m_respawn_inventory,m_recstat,m_monsters_off,detail;
 	// FIX_00082: /q option taken off when playing a demo (multimode_bot)    
-	int32 m_ffire,ffire,m_player_skill,m_level_number,m_volume_number,multimode,multimode_bot;
-    int32 player_skill,level_number,volume_number,m_marker,marker,mouseflip;
+    int32_t m_ffire,ffire,m_player_skill,m_level_number,m_volume_number,multimode,multimode_bot;
+    int32_t player_skill,level_number,volume_number,m_marker,marker,mouseflip;
 
-	int32 showcinematics, hideweapon;
-	int32 auto_aim, gitdat_mdk; //AutoAim toggle variable.
-	int32 weaponautoswitch;
+    int32_t showcinematics, hideweapon;
+    int32_t auto_aim, gitdat_mdk; //AutoAim toggle variable.
+    int32_t weaponautoswitch;
 
 	// FIX_00015: Backward compliance with older demos (down to demos v27, 28, 116 and 117 only)
 	uint8_t  playing_demo_rev;
@@ -405,6 +406,7 @@ struct user_defs
 	uint32_t exeCRC[MAXPLAYERS];
 	uint32_t conCRC[MAXPLAYERS];
 };
+#pragma pack(pop)
 
 struct player_orig
 {
@@ -430,6 +432,7 @@ void add_ammo( short, short, short, short );
 
 extern int32_t fricxv,fricyv;
 
+#pragma pack(push, 4)
 struct player_struct
 {
     int32_t zoom,exitx,exity,loogiex[64],loogiey[64],numloogs,loogcnt;
@@ -440,7 +443,7 @@ struct player_struct
     int32_t bobcounter,weapon_sway;
     int32_t pals_time,randomflamex,crack_time;
 
-    int32 aim_mode;
+    int32_t aim_mode;
 
     short ang,oang,angvel,cursectnum,look_ang,last_extra,subweapon;
     short ammo_amount[MAX_WEAPONS],wackedbyactor,frag,fraggedself;
@@ -474,7 +477,14 @@ struct player_struct
     uint8_t  scuba_on,footprintpal,heat_on;
 
     uint8_t   holster_weapon,falling_counter;
-    uint8_t   gotweapon[MAX_WEAPONS],refresh_inventory,*palette;
+    uint8_t   gotweapon[MAX_WEAPONS],refresh_inventory;
+
+	// tanguyf: fix the palette pointer size being 32/64-bit dependent. For some reason this is serialised into savegames.
+    union
+    {
+	    uint8_t* palette;
+        uint64_t _palette_padding;
+    };
 
     uint8_t  toggle_key_flag,knuckle_incs; // ,select_dir;
     uint8_t  walking_snd_toggle, palookup, hard_landing;
@@ -484,15 +494,16 @@ struct player_struct
 	// local but synch variables (ud is local but not synch):
 
 	// FIX_00023: Moved Addfaz's autoaim handler to synch variables (to avoid out of synch)
-	int32 auto_aim; //AutoAim toggle variable.
+    int32_t auto_aim; //AutoAim toggle variable.
 
 	// FIX_00012: added "weapon autoswitch" toggle allowing to turn the autoswitch off
 	//            when picking up new weapons. The weapon sound on pickup will remain on, to not 
 	//           affect the opponent's gameplay (so he can still hear you picking up new weapons)
-	int32 weaponautoswitch;
+    int32_t weaponautoswitch;
 
-	uint8_t  fakeplayer;
+	uint8_t fakeplayer;
 };
+#pragma pack(pop)
 
 extern uint8_t  tempbuf[2048];
 extern uint8_t packbuf[576];
@@ -542,6 +553,7 @@ extern short camsprite;
 extern uint8_t  inspace(short sectnum);
 
 
+#pragma pack(push, 4)
 struct weaponhit
 {
     uint8_t  cgg;
@@ -551,6 +563,7 @@ struct weaponhit
     int32_t floorz,ceilingz,lastvx,lastvy,bposx,bposy,bposz;
     int32_t temp_data[6];
 };
+#pragma pack(pop)
 
 extern struct weaponhit hittype[MAXSPRITES];
 

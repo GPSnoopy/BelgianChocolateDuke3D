@@ -603,6 +603,9 @@ void kdfread(void *buffer, size_t dasizeof, size_t count, int32_t fil)
 		k += dasizeof;
 		ptr += dasizeof;
 	}
+
+    assert(k == kgoal);
+	
 	lzwbuflock[0] = lzwbuflock[1] = lzwbuflock[2] = lzwbuflock[3] = lzwbuflock[4] = 1;
 }
 

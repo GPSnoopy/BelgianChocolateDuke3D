@@ -229,6 +229,8 @@ int loadplayer(int8_t spot)
 
     assert(MAXTILES > MAXANIMATES);
 
+    int off = offsetof(struct player_struct, fakeplayer);
+
     if (spot < 0)
     {
         multiflag = 1;
