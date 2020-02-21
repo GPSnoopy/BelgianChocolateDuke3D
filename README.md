@@ -8,7 +8,7 @@ A **port** that:
 2. Portable and compiling in one click on Windows, OS X and Linux.
 3. Aimed at education, with lots of comments and documentation added in order to help programmers to understand and learn.
 
-<img src="screenshot0.png" width="49%"></img>
+<img src="screenshot0.png" width="95%"></img>
 
 ## Belgian Chocolate Duke3D
 
@@ -23,6 +23,7 @@ After reading both Fabien Sanglard's Game Engine Black Books on [Wolfenstein 3D]
 
 ### Known Issues
 
+* Linux: savegames do not work or crash the engine.
 * Engine: Leaning left/right falls back to low-res rendering.
 * Engine: Minimap has rendering glitches when fully-textured (i.e. sprites).
 * Engine: Pixel imprecision when rendering health/ammo numbers in the status bar, leaving ghost pixels.
