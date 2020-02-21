@@ -44,6 +44,4 @@
 #include <dirent.h>
 #include <string.h>
 
-#define USER_DUMMY_NETWORK 1
-
 #endif

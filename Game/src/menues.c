@@ -541,7 +541,6 @@ int loadplayer(int8_t spot)
 int saveplayer(int8_t spot)
 {
     int32_t i;
-    intptr_t j;
     char  fn[] = "game0.sav";
     char  mpfn[] = "gameA_00.sav";
     char* fnptr, scriptptrs[MAXSCRIPTSIZE];
