@@ -123,6 +123,6 @@ add_executable(${project_name}
 )
 
 set_target_properties(${project_name} PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
-target_link_libraries(${project_name} PRIVATE Engine ${ENET_LIBRARIES} SDL2::SDL2main SDL2::SDL2-static SDL2::SDL2_mixer)
+target_link_libraries(${project_name} PRIVATE Engine ${ENET_LIBRARIES} ${SDL2_ALL_LIBRARIES})
 set_target_properties(${project_name} PROPERTIES OUTPUT_NAME "ChocoDuke3D${project_suffix}")
 set_target_properties(${project_name} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")

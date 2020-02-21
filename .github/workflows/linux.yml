@@ -9,6 +9,10 @@ jobs:
     
     steps:
     - uses: actions/checkout@v2
+    - name: Install Ubuntu dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install libenet-dev libsdl2-mixer-dev
     - name: Compile vcpkg dependencies
       run: ./vcpkg_linux.sh
     - name: Compile Duke3D
