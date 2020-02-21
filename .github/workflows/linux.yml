@@ -13,7 +13,5 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install libenet-dev libsdl2-mixer-dev
-    - name: Compile vcpkg dependencies
-      run: ./vcpkg_linux.sh
     - name: Compile Duke3D
       run: ./build_linux.sh
