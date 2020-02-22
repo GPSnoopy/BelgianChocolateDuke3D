@@ -399,55 +399,49 @@ void setupvlineasm(int32_t i1)
 }
 
 //FCS This is used to fill the inside of a wall (so it draws VERTICAL column, always).
-void vlineasm4(int32_t columnIndex, intptr_t framebuffer)
+void vlineasm4(int32_t columnIndex, uint8_t* framebuffer)
 {
-
 	if (!RENDER_DRAW_WALL_INSIDE)
-		return ;
+		return;
 
-    {
-        int i;
-        uint32_t temp;
-        
-        uintptr_t index = (framebuffer + ylookup[columnIndex]);
-        uint8_t  *dest= (uint8_t *)(-ylookup[columnIndex]);
-//        uint8_t  *dest= (uint8_t *)framebuffer;
-//        uint32_t index = 0;
-//        uint32_t length = ylookup[columnIndex];
+	int i;
+	uint32_t temp;
+    uint32_t index = 0;
+    uint32_t length = ylookup[columnIndex];
 
-        do {
-            for (i = 0; i < 4; i++)
-            {
-				
-        	    temp = ((uint32_t)vplce[i]) >> mach3_al;
-        	    temp = (((uint8_t *)(bufplce[i]))[temp]);
+	do {
+		for (i = 0; i < 4; i++)
+		{
+			temp = ((uint32_t)vplce[i]) >> mach3_al;
+			temp = (((uint8_t*)(bufplce[i]))[temp]);
 
 #if RENDER_LIMIT_PIXELS
-				if (pixelsAllowed-- > 0)
+			if (pixelsAllowed-- > 0)
 #endif
-        			dest[index+i] = palookupoffse [i] [temp];
-                
-	            vplce[i] += vince[i];
-            }
-            dest += bytesperline;
-        } while (((uint32_t)dest - bytesperline) < ((uint32_t)dest));
-    }
-} 
+				framebuffer[index + i] = palookupoffse[i][temp];
+
+			vplce[i] += vince[i];
+		}
+		index += bytesperline;
+	} while (index < length);
+}
 
 
 void setupmvlineasm(int32_t i1)
 {
     //Only keep 5 first bits
     machmv = (i1&0x1f);
-} 
+}
 
-
-void mvlineasm4(int32_t column, intptr_t framebufferOffset)
+void mvlineasm4(int32_t columnIndex, uint8_t* framebuffer)
 {
     int i;
     uint32_t temp;
-    uintptr_t index = (framebufferOffset + ylookup[column]);
-    uint8_t  *dest = (uint8_t *)(-ylookup[column]);
+    //uintptr_t index = (framebufferOffset + ylookup[column]);
+    //uint8_t  *dest = (uint8_t *)(-ylookup[columnIndex]);
+
+	uint32_t index = 0;
+	uint32_t length = ylookup[columnIndex];
 
     do {
 
@@ -466,42 +460,15 @@ void mvlineasm4(int32_t column, intptr_t framebufferOffset)
 #if RENDER_LIMIT_PIXELS
 			  if (pixelsAllowed-- > 0)
 #endif
-				dest[index+i] = palookupoffse[i][temp];
+				  framebuffer[index+i] = palookupoffse[i][temp];
 		  }
 	      vplce[i] += vince[i];
         }
-        dest += bytesperline;
+        index += bytesperline;
 
-    } while (((uint32_t)dest - bytesperline) < ((uint32_t)dest));
+    } while (index < length);
 } 
 /* END ---------------  WALLS RENDERING METHOD (USED TO BE HIGHLY OPTIMIZED ASSEMBLY) ----------------------------*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 /* ---------------  SPRITE RENDERING METHOD (USED TO BE HIGHLY OPTIMIZED ASSEMBLY) ----------------------------*/
