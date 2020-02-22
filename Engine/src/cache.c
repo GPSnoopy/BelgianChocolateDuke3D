@@ -208,7 +208,7 @@ void reportandexit(char  *errormessage)
 	for(i=0;i<cacnum;i++)
 	{
 		printf("%d- ",i);
-		printf("ptr: 0x%x, ",(int8_t)*cac[i].hand);
+		printf("ptr: 0x%p, ", *cac[i].hand);
 		printf("leng: %d, ",cac[i].leng);
 		printf("lock: %d\n",*cac[i].lock);
 		j += cac[i].leng;
