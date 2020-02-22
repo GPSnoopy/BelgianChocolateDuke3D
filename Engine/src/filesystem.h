@@ -9,10 +9,8 @@
 #ifndef Duke3D_filesystem_h
 #define Duke3D_filesystem_h
 
-#include "stdio.h"
-#include "platform.h"
-
-
+#include <stdint.h>
+#include <stdio.h>
 
 #define MAXGROUPFILES 4     /* Warning: Fix groupfil if this is changed */
 

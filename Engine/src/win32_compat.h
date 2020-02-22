@@ -18,23 +18,6 @@
 #ifndef _INCLUDE_WIN32_COMPAT_H_
 #define _INCLUDE_WIN32_COMPAT_H_
 
-#include <stdio.h>
-
-#if (!defined _MSC_VER)
-	#include <unistd.h>
-#else
-	#include <fcntl.h>
-    #include <sys/stat.h>
-#endif
-
-#include <stdlib.h>
-#include <io.h>
-#include <direct.h>
-#include <conio.h>
-#include <dos.h>
-#include <assert.h>
-#include <string.h>
-
 #ifndef max
 #define max(x, y)  (((x) > (y)) ? (x) : (y))
 #endif
@@ -57,10 +40,7 @@
 #define S_IRDWR _S_IRDWR
 #endif /* defined _MSC_VER */
 
-#define snprintf _snprintf
 #define strncasecmp strnicmp
-
-#include <inttypes.h>
 
 #endif
 

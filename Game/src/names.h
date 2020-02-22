@@ -24,6 +24,8 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 */
 //-------------------------------------------------------------------------
 
+#pragma once
+
 #define SECTOREFFECTOR 1
 #define ACTIVATOR 2
 #define TOUCHPLATE 3

@@ -217,7 +217,6 @@ void cleanup(void);
 	{
 		long i;
 		gcomtype *retval;
-		int k;
 
 		// DO NOT DO THIS - it screws up the networking
 		//srand(enet_time_get_raw());

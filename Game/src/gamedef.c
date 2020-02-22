@@ -24,8 +24,19 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 */
 //-------------------------------------------------------------------------
 
-#include "duke3d.h"
+#if WIN32
+	#include <conio.h>
+#endif
+
 #include <ctype.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "duke3d.h"
+#include "engine.h"
+#include "keyboard.h"
+#include "soundefs.h"
 
 extern short otherp;
 

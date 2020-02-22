@@ -25,13 +25,19 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 //-------------------------------------------------------------------------
 
 #include <stdio.h>
-#include <string.h>
-#include "../../Game/src/types.h"
-#include "util_lib.h"
-#include "duke3d.h"
-#include "global.h"
-#include "filesystem.h"
+#include <stdlib.h>
 
+#include "duke3d.h"
+#include "../../Game/src/types.h"
+#include "audiolib/fx_man.h"
+#include "audiolib/music.h"
+#include "audiolib/sndcards.h"
+#include "control.h"
+#include "engine.h"
+#include "filesystem.h"
+#include "global.h"
+#include "sounds.h"
+#include "soundefs.h"
 
 #define LOUDESTVOLUME 150
 

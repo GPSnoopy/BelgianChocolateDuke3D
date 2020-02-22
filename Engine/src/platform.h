@@ -1,6 +1,8 @@
 #ifndef _INCLUDE_PLATFORM_H_
 #define _INCLUDE_PLATFORM_H_
 
+#include <stdint.h>
+
 #if (defined WIN32)
     #include "win32_compat.h"
 #elif (defined UNIX)

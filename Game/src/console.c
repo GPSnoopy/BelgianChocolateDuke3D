@@ -1,11 +1,17 @@
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
 #include "duke3d.h"
 #include "console.h"
+#include "control.h"
 #include "cvars.h"
 #include "cvar_defs.h"
-#include <stdarg.h>
-
-// For autoexec.cfg
-#include <stdio.h>
+#include "engine.h"
+#include "names.h"
+#include "function.h"
 
 #define MAX_STRING_LENGTH 64
 #define MAX_CONSOLE_STRING_LENGTH 70

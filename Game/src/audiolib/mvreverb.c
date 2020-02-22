@@ -257,7 +257,7 @@ void MV_FPReverbFree(void)
 	SDL_mutexV(reverbMutex);
 }
 
-void MV_16BitDownmix(char *dest, int count)
+void MV_16BitDownmix(uint8_t *dest, int count)
 {
 	int i;
 
@@ -272,7 +272,7 @@ void MV_16BitDownmix(char *dest, int count)
 	}
 }
 
-void MV_8BitDownmix(char *dest, int count)
+void MV_8BitDownmix(uint8_t*dest, int count)
 {
 	int i;
 
@@ -285,7 +285,7 @@ void MV_8BitDownmix(char *dest, int count)
 	}
 }
 
-void MV_16BitReverbFast( const char *src, char *dest, int count, int shift )
+void MV_16BitReverbFast( const uint8_t*src, uint8_t*dest, int count, int shift )
 {
 	int i;
 
@@ -297,7 +297,7 @@ void MV_16BitReverbFast( const char *src, char *dest, int count, int shift )
 	}
 }
 
-void MV_8BitReverbFast( const signed char *src, signed char *dest, int count, int shift )
+void MV_8BitReverbFast( const int8_t *src, int8_t *dest, int count, int shift )
 {
 	int i;
 

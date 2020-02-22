@@ -23,10 +23,17 @@ Original Source: 1996 - Todd Replogle
 Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 */
 //-------------------------------------------------------------------------
+#include <stdio.h>
+#include <string.h>
+
 #include "duke3d.h"
+#include "config.h"
 #include "control.h"
-#include "mouse.h"
+#include "display.h"
+#include "engine.h"
+#include "function.h"
 #include "joystick.h"
+#include "mouse.h"
 
 //***************************************************************************
 //

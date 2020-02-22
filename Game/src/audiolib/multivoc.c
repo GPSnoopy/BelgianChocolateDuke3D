@@ -102,7 +102,7 @@ static volatile VoiceNode VoicePool;
 /*static*/ int MV_MixPage      = 0;
 static int MV_VoiceHandle  = MV_MinVoiceHandle;
 
-static void ( *MV_CallBackFunc )( unsigned long ) = NULL;
+static void ( *MV_CallBackFunc )( int32_t ) = NULL;
 static void ( *MV_RecordFunc )( char *ptr, int length ) = NULL;
 static void ( *MV_MixFunction )( VoiceNode *voice);
 
@@ -1097,7 +1097,6 @@ int MV_VoiceAvailable
    {
    VoiceNode   *voice;
    VoiceNode   *node;
-   unsigned    flags;
 
    // Check if we have any free voices
    if ( !LL_Empty( &VoicePool, next, prev ) )
@@ -1572,7 +1571,6 @@ void MV_StopPlayback
    {
    VoiceNode   *voice;
    VoiceNode   *next;
-   unsigned    flags;
 
    DSL_StopPlayback();
 

@@ -5,6 +5,7 @@
  * This file has been modified from Ken Silverman's original release
  */
 
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 

@@ -26,7 +26,16 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 
 // Savage Baggage Masters
 
+#include <stdlib.h>
+
 #include "duke3d.h"
+#include "audiolib/fx_man.h"
+#include "config.h"
+#include "control.h"
+#include "engine.h"
+#include "function.h"
+#include "sounds.h"
+#include "soundefs.h"
 
 int32 turnheldtime; //MED
 int32 lastcontroltime; //MED

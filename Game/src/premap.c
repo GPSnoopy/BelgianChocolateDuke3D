@@ -24,10 +24,19 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 */
 //-------------------------------------------------------------------------
 
-#include "duke3d.h"
-#include "filesystem.h"
-#include "game.h"
+#include <stdlib.h>
+#include <string.h>
 
+#include "duke3d.h"
+#include "audiolib/fx_man.h"
+#include "audiolib/music.h"
+#include "engine.h"
+#include "filesystem.h"
+#include "file_lib.h"
+#include "game.h"
+#include "keyboard.h"
+#include "names.h"
+#include "sounds.h"
 
 extern uint8_t  everyothertime;
 short which_palookup = 9;

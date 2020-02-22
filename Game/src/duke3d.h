@@ -124,26 +124,8 @@ extern int BYTEVERSION_1_3;
 struct player_struct;
 
 #include "../../Game/src/types.h"
-#include "file_lib.h"
-#include "develop.h"
 #include "gamedefs.h"
-#include "keyboard.h"
-#include "util_lib.h"
-#include "function.h"
-#include "audiolib/fx_man.h"
-#include "config.h"
-#include "sounds.h"
-#include "control.h"
-#include "_rts.h"
-#include "rts.h"
-#include "soundefs.h"
 
-#include "audiolib/music.h"
-
-#include "names.h"
-
-#include "../../Engine/src/engine.h"
-#include "fixedPoint_math.h"
 
 //#define TICRATE (120)
 //#define TICSPERFRAME (TICRATE/26)

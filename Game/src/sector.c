@@ -25,6 +25,13 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 //-------------------------------------------------------------------------
 
 #include "duke3d.h"
+#include "audiolib/fx_man.h"
+#include "audiolib/music.h"
+#include "fixedPoint_math.h"
+#include "engine.h"
+#include "keyboard.h"
+#include "sounds.h"
+#include "soundefs.h"
 
 // PRIMITIVE
 

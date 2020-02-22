@@ -28,10 +28,18 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
-#include "duke3d.h"
-#include "scriplib.h"
-#include "build.h"
 
+#include "duke3d.h"
+#include "audiolib/sndcards.h"
+#include "build.h"
+#include "config.h"
+#include "control.h"
+#include "engine.h"
+#include "file_lib.h"
+#include "function.h"
+#include "keyboard.h"
+#include "scriplib.h"
+#include "util_lib.h"
 
 // we load this in to get default button and key assignments
 // as well as setting up function mappings

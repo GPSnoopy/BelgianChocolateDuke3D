@@ -24,9 +24,17 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 */
 //-------------------------------------------------------------------------
 
-#include "duke3d.h"
-#include "global.h"
 #include <malloc.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+#include "duke3d.h"
+#include "_rts.h"
+#include "cache.h"
+#include "global.h"
+#include "file_lib.h"
+#include "util_lib.h"
 
 //=============
 // STATICS

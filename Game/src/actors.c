@@ -25,6 +25,10 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 //-------------------------------------------------------------------------
 
 #include "duke3d.h"
+#include "audiolib/fx_man.h"
+#include "engine.h"
+#include "soundefs.h"
+#include "sounds.h"
 
 extern int32_t numenvsnds;
 uint8_t  actor_tog;

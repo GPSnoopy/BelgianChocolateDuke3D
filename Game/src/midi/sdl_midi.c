@@ -6,10 +6,12 @@
 //  Copyright (c) 2012 fabien sanglard. All rights reserved.
 //
 
-#include "../audiolib/music.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
 #include <stdio.h>
+
+#include "../audiolib/music.h"
+#include "engine.h"
 
 /*
  Because the music is stored in a GRP file that is never fully loaded in RAM

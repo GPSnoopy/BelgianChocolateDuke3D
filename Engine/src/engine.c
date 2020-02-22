@@ -9,22 +9,20 @@
 
 #define ENGINE
 
-#include <string.h>
+#if WIN32
+#include "io.h"
+#endif
 
+#include <fcntl.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <fcntl.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+
 #include "platform.h"
-
-#if !PLATFORM_MACOSX
-#include <malloc.h>
-#endif
-
 #include "build.h"
-
 #include "engine.h"
 #include "tiles.h"
 
@@ -8185,7 +8183,7 @@ void makepalookup(int32_t palnum, uint8_t  *remapbuf, int8_t r,
     {
         /* Allocate palookup buffer */
         if ((palookup[palnum] = (uint8_t  *)malloc(numpalookups<<8)) == NULL)
-            allocache((int32_t *)&palookup[palnum],numpalookups<<8,&permanentlock);
+            allocache(&palookup[palnum],numpalookups<<8,&permanentlock);
     }
 
     if (dastat == 0) return;

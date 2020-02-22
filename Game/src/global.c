@@ -24,14 +24,23 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 */
 //-------------------------------------------------------------------------
 
+#if WIN32
+	#include <fcntl.h>
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
-#include <time.h>
-#include <errno.h>
-#include "global.h"
+
 #include "duke3d.h"
+#include "global.h"
+#include "names.h"
+#include "platform.h"
+#include "util_lib.h"
+
+#include <errno.h>
+#include <time.h>
 
 char  *mymembuf;
 uint8_t  MusicPtr[72000];

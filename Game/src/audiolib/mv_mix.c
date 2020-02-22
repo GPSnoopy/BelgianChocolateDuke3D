@@ -392,7 +392,7 @@ void MV_MixFPMono8( uint32_t position,
 }
 
 void MV_MixFPStereo8( uint32_t position,
-   uint32_t rate, const char *start, uint32_t length )
+   uint32_t rate, const uint8_t *start, uint32_t length )
 {
 	const unsigned char *src;
 	double *dest;
@@ -422,7 +422,7 @@ void MV_MixFPStereo8( uint32_t position,
 }
 
 void MV_MixFPMono16( uint32_t position,
-   uint32_t rate, const char *start, uint32_t length )
+   uint32_t rate, const uint8_t *start, uint32_t length )
 {
 	const short *src;
 	double *dest;
@@ -448,7 +448,7 @@ void MV_MixFPMono16( uint32_t position,
 }
 
 void MV_MixFPStereo16( uint32_t position,
-   uint32_t rate, const char *start, uint32_t length )
+   uint32_t rate, const uint8_t *start, uint32_t length )
 {
 	const short *src;
 	double *dest;

@@ -1,24 +1,21 @@
 #include <stdlib.h>
 
-#include "cvars.h"
-#include "cvar_defs.h"
-#include "console.h"
-
-// Required for certain cvars
-#include "../../Game/src/types.h"
-#include "build.h"
-#include "funct.h"
-
 //We need a way to access duke to change the level
 #include "duke3d.h"
 
-
-//We need to access debug soundinfo
-#include "sounddebugdefs.h"
-
-#include "joystick.h"
-
 #include "audiolib/music.h"
+#include "cvars.h"
+#include "cvar_defs.h"
+#include "console.h"
+#include "control.h"
+#include "engine.h"
+
+// Required for certain cvars
+#include "funct.h"
+
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
 
 // Bind our Cvars at startup. You can still add bindings after this call, but
 // it is recommanded that you bind your default CVars here.

@@ -5,12 +5,12 @@
  * This file has been modified from Ken Silverman's original release
  */
 
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
 #include <ctype.h>
-#include <time.h>
 
 #include "mmulti_unstable.h"
 

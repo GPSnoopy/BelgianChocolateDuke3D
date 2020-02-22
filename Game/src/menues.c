@@ -24,15 +24,27 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 */
 //-------------------------------------------------------------------------
 
-#include "duke3d.h"
-#include "mouse.h"
-#include "animlib.h"
-#include "control.h"
+#if WIN32
+	#include <fcntl.h>
+#endif
 
-#include "filesystem.h"
-#include "SDL2/SDL.h"
-#include "premap.h"
+#include <SDL2/SDL.h>
+
+#include "duke3d.h"
+#include "audiolib/fx_man.h"
+#include "audiolib/music.h"
+#include "animlib.h"
+#include "config.h"
+#include "control.h"
 #include "display.h"
+#include "engine.h"
+#include "filesystem.h"
+#include "function.h"
+#include "mouse.h"
+#include "premap.h"
+#include "sounds.h"
+#include "soundefs.h"
+
 
 extern SDL_Surface *surface;
 extern short inputloc;
@@ -222,7 +234,7 @@ int loadplayer(int8_t spot)
     short k, music_changed;
     char  fn[] = "game0.sav";
     char  mpfn[] = "gameA_00.sav";
-    char* fnptr, scriptptrs[MAXSCRIPTSIZE];
+    char* fnptr;
     int32_t fil, bv, i, x;
     int32 nump;
     int32 ptrbuf[MAXTILES];
@@ -543,7 +555,7 @@ int saveplayer(int8_t spot)
     int32_t i;
     char  fn[] = "game0.sav";
     char  mpfn[] = "gameA_00.sav";
-    char* fnptr, scriptptrs[MAXSCRIPTSIZE];
+    char* fnptr;
     FILE* fil;
     int32_t bv = BYTEVERSION;
     char  fullpathsavefilename[16];

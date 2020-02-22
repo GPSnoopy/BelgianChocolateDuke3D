@@ -94,34 +94,34 @@ typedef struct VoiceNode
    struct VoiceNode *prev;
 
    wavedata      wavetype;
-   char          bits;
+   uint8_t          bits;
 
    playbackstatus ( *GetSound )( struct VoiceNode *voice );
 
-   void ( *mix )( unsigned long position, unsigned long rate,
-      uint8_t *start, unsigned long length );
+   void ( *mix )( uint32_t position, uint32_t rate,
+      uint8_t *start, uint32_t length );
 
    uint8_t      *NextBlock;
    uint8_t      *LoopStart;
    uint8_t      *LoopEnd;
    unsigned      LoopCount;
-   unsigned long LoopSize;
-   unsigned long BlockLength;
+   uint32_t LoopSize;
+   uint32_t BlockLength;
 
-   unsigned long PitchScale;
-   unsigned long FixedPointBufferSize;
+   uint32_t PitchScale;
+   uint32_t FixedPointBufferSize;
 
    uint8_t       *sound;
-   unsigned long length;
+   uint32_t length;
    uint32_t SamplingRate;
-   unsigned long RateScale;
-   unsigned long position;
+   uint32_t RateScale;
+   uint32_t position;
    int           Playing;
 
    int           handle;
    int           priority;
 
-   void          ( *DemandFeed )( char **ptr, uint32_t *length );
+   void          ( *DemandFeed )( uint8_t **ptr, uint32_t *length );
 
    int           LeftVolume;
    int           RightVolume;
@@ -130,7 +130,7 @@ typedef struct VoiceNode
    int           GPos;
    int           GVal[4];
 
-   unsigned long callbackval;
+   uint32_t callbackval;
 
    } VoiceNode;
 
@@ -142,12 +142,12 @@ typedef struct
 
 typedef struct
    {
-   unsigned char left;
-   unsigned char right;
+   uint8_t left;
+   uint8_t right;
    } Pan;
 
 typedef signed short MONO16;
-typedef signed char  MONO8;
+typedef int8_t  MONO8;
 
 typedef struct
    {
@@ -167,39 +167,39 @@ typedef struct
    {
 //   MONO8 left;
 //   MONO8 right;
-   char left;
-   char right;
+   uint8_t left;
+   uint8_t right;
    } STEREO8;
 
 typedef struct
    {
-   char          RIFF[ 4 ];
-   unsigned long file_size;
-   char          WAVE[ 4 ];
-   char          fmt[ 4 ];
-   unsigned long format_size;
+   uint8_t          RIFF[ 4 ];
+   uint32_t file_size;
+   uint8_t          WAVE[ 4 ];
+   uint8_t          fmt[ 4 ];
+   uint32_t format_size;
    } riff_header;
 
 typedef struct
    {
    unsigned short wFormatTag;
    unsigned short nChannels;
-   unsigned long  nSamplesPerSec;
-   unsigned long  nAvgBytesPerSec;
+   uint32_t  nSamplesPerSec;
+   uint32_t  nAvgBytesPerSec;
    unsigned short nBlockAlign;
    unsigned short nBitsPerSample;
    } format_header;
 
 typedef struct
    {
-   char DATA[ 4 ];
-   unsigned long size;
+   uint8_t DATA[ 4 ];
+   uint32_t size;
    } data_header;
 
 typedef MONO8  VOLUME8[ 256 ];
 typedef MONO16 VOLUME16[ 256 ];
 
-// typedef char HARSH_CLIP_TABLE_8[ MV_NumVoices * 256 ];
+// typedef uint8_t HARSH_CLIP_TABLE_8[ MV_NumVoices * 256 ];
 
 //static void MV_Mix( VoiceNode *voice);
 //static void MV_PlayVoice( VoiceNode *voice );
@@ -223,62 +223,62 @@ typedef MONO16 VOLUME16[ 256 ];
 
 void       MV_SetVoiceMixMode( VoiceNode *voice );
 
-//static void       MV_SetVoicePitch( VoiceNode *voice, unsigned long rate, int pitchoffset );
+//static void       MV_SetVoicePitch( VoiceNode *voice, uint32_t rate, int pitchoffset );
 //static void       MV_CalcVolume( int MaxLevel );
 //static void       MV_CalcPanTable( void );
 
 void ClearBuffer_DW( void *ptr, unsigned data, int length );
 
 /*
-void MV_Mix8BitMono( unsigned long position, unsigned long rate,
-   const char *start, unsigned long length );
+void MV_Mix8BitMono( uint32_t position, uint32_t rate,
+   const uint8_t *start, uint32_t length );
 
-void MV_Mix8BitStereo( unsigned long position,
-   unsigned long rate, const char *start, unsigned long length );
+void MV_Mix8BitStereo( uint32_t position,
+   uint32_t rate, const uint8_t *start, uint32_t length );
 
-void MV_Mix16BitMono( unsigned long position,
-   unsigned long rate, const char *start, unsigned long length );
+void MV_Mix16BitMono( uint32_t position,
+   uint32_t rate, const uint8_t *start, uint32_t length );
 
-void MV_Mix16BitStereo( unsigned long position,
-   unsigned long rate, const char *start, unsigned long length );
+void MV_Mix16BitStereo( uint32_t position,
+   uint32_t rate, const uint8_t *start, uint32_t length );
 
-void MV_Mix16BitMono16( unsigned long position,
-   unsigned long rate, const char *start, unsigned long length );
+void MV_Mix16BitMono16( uint32_t position,
+   uint32_t rate, const uint8_t *start, uint32_t length );
 
-void MV_Mix8BitMono16( unsigned long position, unsigned long rate,
-   const char *start, unsigned long length );
+void MV_Mix8BitMono16( uint32_t position, uint32_t rate,
+   const uint8_t *start, uint32_t length );
 
-void MV_Mix8BitStereo16( unsigned long position,
-   unsigned long rate, const char *start, unsigned long length );
+void MV_Mix8BitStereo16( uint32_t position,
+   uint32_t rate, const uint8_t *start, uint32_t length );
 
-void MV_Mix16BitStereo16( unsigned long position,
-   unsigned long rate, const char *start, unsigned long length );
+void MV_Mix16BitStereo16( uint32_t position,
+   uint32_t rate, const uint8_t *start, uint32_t length );
 */
 
-void MV_MixFPMono8( unsigned long position, unsigned long rate,
-   const char *start, unsigned long length );
+void MV_MixFPMono8( uint32_t position, uint32_t rate,
+   const uint8_t *start, uint32_t length );
 
-void MV_MixFPMono16( unsigned long position, unsigned long rate,
-   const char *start, unsigned long length );
+void MV_MixFPMono16( uint32_t position, uint32_t rate,
+   const uint8_t *start, uint32_t length );
 
-void MV_MixFPStereo8( unsigned long position, unsigned long rate,
-   const char *start, unsigned long length );
+void MV_MixFPStereo8( uint32_t position, uint32_t rate,
+   const uint8_t *start, uint32_t length );
 
-void MV_MixFPStereo16( unsigned long position, unsigned long rate,
-   const char *start, unsigned long length );
+void MV_MixFPStereo16( uint32_t position, uint32_t rate,
+   const uint8_t *start, uint32_t length );
 
 void MV_FPReverb(int volume);
 
 void MV_FPReverbFree(void);
 
-void MV_16BitDownmix(char *dest, int count);
+void MV_16BitDownmix(uint8_t *dest, int count);
 
-void MV_8BitDownmix(char *dest, int count);
+void MV_8BitDownmix(uint8_t *dest, int count);
 
 /*
-void MV_16BitReverbFast( const char *src, char *dest, int count, int shift );
+void MV_16BitReverbFast( const uint8_t *src, uint8_t *dest, int count, int shift );
 
-void MV_8BitReverbFast( const signed char *src, signed char *dest, int count, int shift );
+void MV_8BitReverbFast( const int8_t *src, int8_t *dest, int count, int shift );
 */
 
 #endif

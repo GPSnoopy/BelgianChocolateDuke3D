@@ -6,6 +6,9 @@
 //  Copyright (c) 2012 fabien sanglard. All rights reserved.
 //
 
+#include <stdlib.h>
+#include <string.h>
+
 #include "tiles.h"
 #include "engine.h"
 #include "draw.h"

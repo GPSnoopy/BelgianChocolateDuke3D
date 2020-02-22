@@ -24,38 +24,41 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 */
 //-------------------------------------------------------------------------
 
+#include <stdio.h>
 #include <time.h>
+#include <stdlib.h>
 
 #ifdef _WIN32
-  #include <windows.h>
+	#include <conio.h>
+	#include <direct.h>
+	#include <fcntl.h>
+	#include <windows.h>
 #elif defined(__APPLE__)
   #include "SDL.h"
 #endif
 
 #include "types.h"
 
-#include "develop.h"
-#include "scriplib.h"
+#include "duke3d.h"
+#include "audiolib/fx_man.h"
+#include "audiolib/music.h"
+#include "audiolib/sndcards.h"
+#include "config.h"
+#include "console.h"
+#include "engine.h"
 #include "file_lib.h"
 #include "gamedefs.h"
+#include "global.h"
 #include "keyboard.h"
 #include "util_lib.h"
 #include "function.h"
 #include "control.h"
 #include "sounds.h"
-#include "config.h"
-#include "audiolib/sndcards.h"
-
-#include "duke3d.h"
-
-#include "console.h"
-#include "cvars.h"
-#include "cvar_defs.h"
+#include "soundefs.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#include "global.h"
 
 
 #define MINITEXT_BLUE	0

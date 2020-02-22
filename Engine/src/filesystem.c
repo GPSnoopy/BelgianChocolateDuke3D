@@ -6,12 +6,25 @@
 //  Copyright (c) 2012 fabien sanglard. All rights reserved.
 //
 
+#include <assert.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
+#if WIN32
+	#include <fcntl.h>
+	#include <io.h>
+	#include <sys/stat.h>
+#endif
+
 #include "filesystem.h"
 
 #include "platform.h"
 #include "cache.h"
 #include "fixedPoint_math.h"
 #include "../../Game/src/global.h"
+
+
 
 char game_dir[512];
 
