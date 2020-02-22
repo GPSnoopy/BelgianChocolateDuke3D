@@ -10597,7 +10597,7 @@ void takescreenshot(void)
 			else
 				strcat(text, " vs ");
 		}	
-		tempbuf[strlen(text)-4]=0; // remove last vs
+        text[strlen(text)-4]=0; // remove last vs
 		strcat(text, "]");
 	}
 	strcat(text, ".bmp");
@@ -10608,23 +10608,23 @@ void takescreenshot(void)
 	{
 		sprintf(szFilename, "%s\\%s", getGameDir(), SCREENSHOTPATH);
 		mkdir(szFilename);
-		sprintf(szFilename, "%s\\%s\\%s", getGameDir(), SCREENSHOTPATH, tempbuf);
+		sprintf(szFilename, "%s\\%s\\%s", getGameDir(), SCREENSHOTPATH, text);
 	}
 	// otherwise let's save it to the root.
 	else
 	{
 		mkdir(SCREENSHOTPATH);
-		sprintf(szFilename, "%s\\%s", SCREENSHOTPATH, tempbuf);
+		sprintf(szFilename, "%s\\%s", SCREENSHOTPATH, text);
 	}
 
 	if(SafeFileExists(szFilename) == 0)
 	{
-		screencapture(szFilename,0);
+		screencapture(szFilename);
 		sprintf(fta_quotes[103],"SCREEN SAVED");  
 		sound(EXITMENUSOUND);
 	}
 	else
-		sprintf(fta_quotes[103],"CAN'T WRITE FILE!");
+		sprintf(fta_quotes[103],"CAN'T WRITE FILE! FILE ALREADY EXISTS!");
 
 	FTA(103,&ps[screenpeek],1);
 

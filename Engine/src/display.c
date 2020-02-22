@@ -690,15 +690,17 @@ void _platform_init(int argc, char  **argv, const char  *title, const char  *ico
 }
 
 // Capture BMP of the current frame
-int screencapture(char  *filename, uint8_t  inverseit)
+void screencapture(char  *filename)
 {
 //  FIX_00006: better naming system for screenshots + message when pic is taken. 
 //  Use ./screenshots folder. Screenshot code rerwritten. Faster and
 //  makes smaller files. Doesn't freeze or lag the game anymore.
   
-	SDL_SaveBMP(surface, filename);  
-	return 0;
-} /* screencapture */
+	if (SDL_SaveBMP(surface, filename))
+	{
+		printf("SDL failed to save screenshot '%s' (%s)\n", filename, SDL_GetError());
+	}
+}
 
 
 void setvmode(int mode)

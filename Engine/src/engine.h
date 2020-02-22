@@ -69,7 +69,7 @@ int saveboard(char  *filename, int32_t *daposx, int32_t *daposy, int32_t *daposz
 void plotpixel(int32_t x, int32_t y, uint8_t  col);
 uint8_t  getpixel(int32_t x, int32_t y);
 void setbrightness(uint8_t  dabrightness, uint8_t  *dapal);
-int screencapture(char  *filename, uint8_t  inverseit);
+void screencapture(char  *filename);
 void getmousevalues(int16_t *mousx, int16_t *mousy, int16_t *bstatus);
 int clipmove (int32_t *x, int32_t *y, int32_t *z, int16_t *sectnum, int32_t xvect,int32_t yvect, int32_t walldist, int32_t ceildist,int32_t flordist, uint32_t  cliptype);
 void getzrange(int32_t x, int32_t y, int32_t z, int16_t sectnum,int32_t *ceilz, int32_t *ceilhit, int32_t *florz, int32_t *florhit,int32_t walldist, uint32_t  cliptype);
