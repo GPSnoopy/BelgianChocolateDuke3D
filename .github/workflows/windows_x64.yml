@@ -1,4 +1,4 @@
-name: Windows CI
+name: Windows x64 CI
 
 on: [push, pull_request]
 
@@ -9,7 +9,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Compile vcpkg dependencies
-      run: vcpkg_windows.bat
+      run: vcpkg_windows_x64.bat
       shell: cmd
     # This is where GitHub actions on Windows get really nonsensical.
     # MSBuild is not on the path by default, despite this running on a Windows / Visual Studio 2019 docker image.
@@ -17,9 +17,6 @@ jobs:
     # Comedy bonus: GitHub is now owned by Microsoft.
     - name: Setup MSBuild
       uses: warrenbuckley/Setup-MSBuild@v1
-    - name: Compile Duke3D x86
-      run: build_windows_x86.bat
-      shell: cmd
-    - name: Compile Duke3D x64
+    - name: Compile Duke3D
       run: build_windows_x64.bat
       shell: cmd

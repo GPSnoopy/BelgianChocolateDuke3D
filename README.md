@@ -34,9 +34,15 @@ An original copy of [Duke Nukem 3D](https://3drealms.com/catalog/duke-nukem-3d_2
 
 ## Build
 
-**Windows (Visual Studio 2019 x64 solution)** [![Windows CI Status](https://github.com/GPSnoopy/BelgianChocolateDuke3D/workflows/Windows%20CI/badge.svg)](https://github.com/GPSnoopy/BelgianChocolateDuke3D/actions?query=workflow%3A%22Windows+CI%22)
+**Windows (Visual Studio 2019 x86 solution)** [![Windows CI Status](https://github.com/GPSnoopy/BelgianChocolateDuke3D/workflows/Windows%20x86%20CI/badge.svg)](https://github.com/GPSnoopy/BelgianChocolateDuke3D/actions?query=workflow%3A%22Windows+x86+CI%22)
 ```
-> vcpkg_windows.bat
+> vcpkg_windows_x86.bat
+> build_windows_x86.bat
+```
+
+**Windows (Visual Studio 2019 x64 solution)** [![Windows CI Status](https://github.com/GPSnoopy/BelgianChocolateDuke3D/workflows/Windows%20x64%20CI/badge.svg)](https://github.com/GPSnoopy/BelgianChocolateDuke3D/actions?query=workflow%3A%22Windows+x64+CI%22)
+```
+> vcpkg_windows_x64.bat
 > build_windows_x64.bat
 ```
 
