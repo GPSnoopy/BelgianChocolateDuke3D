@@ -51,7 +51,7 @@ endif ()
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)
 	set(project_suffix ".64")
 elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
-    set(project_suffix ".32")
+	set(project_suffix ".32")
 endif()
 
 find_package(ENet REQUIRED)
@@ -62,7 +62,7 @@ if (VCPKG_TARGET_TRIPLET)
 	find_path(SDL2_INCLUDE_DIR SDL2/SDL.h NO_SYSTEM_ENVIRONMENT_PATH)
 	find_package(SDL2-mixer CONFIG REQUIRED)
 	set(SDL2_ALL_LIBRARIES SDL2::SDL2main SDL2::SDL2-static SDL2::SDL2_mixer)
-else
+else()
 	# On Linux we have to rely on the package system (e.g. apt-get).
 	# Otherwise we are likely to be missing some SDL-mixer components (e.g. proper MIDI sound support).
 	find_path(SDL2_INCLUDE_DIR SDL2/SDL.h)
