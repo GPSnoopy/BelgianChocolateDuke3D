@@ -56,7 +56,7 @@ Depending on your operating system, your music experience and general MIDI play 
 
 **Windows**
 
-Out of the box, MIDI music will play fine on Windows. By default, it will use [Microsoft GS Wavetable Synth](https://impossible-music.fandom.com/wiki/Microsoft_GS_Wavetable_Synth), which sounds surprisingly okay. However if you want to use another soundfont (such as the one above), install [OmniMIDI](https://officialblackmidi.fandom.com/wiki/OmniMIDI), load the soundfont and select the OmniMIDI mapper via `Tools -> ??? -> ???`.
+Out of the box, MIDI music will play fine on Windows. By default, it will use [Microsoft GS Wavetable Synth](https://impossible-music.fandom.com/wiki/Microsoft_GS_Wavetable_Synth), which sounds surprisingly okay. However if you want to use another soundfont (such as the one above), install [OmniMIDI](https://officialblackmidi.fandom.com/wiki/OmniMIDI), load the soundfont and select the OmniMIDI mapper via `Extensions -> OmniMapper control panel -> Map mapper to device -> OmniMIDI`.
 
 **Linux**
 
