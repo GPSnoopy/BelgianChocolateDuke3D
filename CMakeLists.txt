@@ -57,14 +57,12 @@ endif()
 find_package(ENet REQUIRED)
 find_package(SDL2 CONFIG REQUIRED)
 
-if (WIN32)
-	# On Windows we can use vcpkg to build all the dependencies.
+if (VCPKG_TARGET_TRIPLET)
+	# On Windows and MacOS we can use vcpkg to build all the dependencies.
 	find_path(SDL2_INCLUDE_DIR SDL2/SDL.h NO_SYSTEM_ENVIRONMENT_PATH)
 	find_package(SDL2-mixer CONFIG REQUIRED)
 	set(SDL2_ALL_LIBRARIES SDL2::SDL2main SDL2::SDL2-static SDL2::SDL2_mixer)
-endif()
-
-if (UNIX)
+else
 	# On Linux we have to rely on the package system (e.g. apt-get).
 	# Otherwise we are likely to be missing some SDL-mixer components (e.g. proper MIDI sound support).
 	find_path(SDL2_INCLUDE_DIR SDL2/SDL.h)
