@@ -6,10 +6,10 @@
 //  Copyright (c) 2012 fabien sanglard. All rights reserved.
 //
 
-#include <stdio.h>
 #include "../audiolib/music.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
+#include <stdio.h>
 
 /*
  Because the music is stored in a GRP file that is never fully loaded in RAM
@@ -116,7 +116,7 @@ int MUSIC_PlaySong(char  *songFilename, int loopflag)
     fileSize = kfilelength( fd );
     if(fileSize >= sizeof(musicDataBuffer))
     {
-        printf("The music '%s' was found but is too big (%dKB)to fit in the buffer (%luKB).\n",songFilename,fileSize/1024,sizeof(musicDataBuffer)/1024);
+        printf("The music '%s' was found but is too big (%dKB)to fit in the buffer (%lluKB).\n",songFilename,fileSize/1024,sizeof(musicDataBuffer)/1024);
         kclose(fd);
         return 0;
     }
