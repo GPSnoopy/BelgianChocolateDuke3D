@@ -437,9 +437,6 @@ void mvlineasm4(int32_t columnIndex, uint8_t* framebuffer)
 {
     int i;
     uint32_t temp;
-    //uintptr_t index = (framebufferOffset + ylookup[column]);
-    //uint8_t  *dest = (uint8_t *)(-ylookup[columnIndex]);
-
 	uint32_t index = 0;
 	uint32_t length = ylookup[columnIndex];
 
