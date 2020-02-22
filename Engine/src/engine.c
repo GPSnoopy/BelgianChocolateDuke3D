@@ -11,8 +11,6 @@
 
 #include <string.h>
 
-
-
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -3856,8 +3854,7 @@ static void dorotatesprite (int32_t sx, int32_t sy, int32_t z, short a, short pi
         xv2 = xv;
         yv2 = yv;
     }
-
-    
+        
     //Taking care of the Y coordinates.
     pvWalls[0].cameraSpaceCoo[0][VEC_Y] = sy - (yv*xoff + xv*yoff);
     pvWalls[1].cameraSpaceCoo[0][VEC_Y] = pvWalls[0].cameraSpaceCoo[0][VEC_Y] + yv * tileWidht;
@@ -3907,13 +3904,6 @@ static void dorotatesprite (int32_t sx, int32_t sy, int32_t z, short a, short pi
         (pvWalls[3].cameraSpaceCoo[0][VEC_X]>i))
         return;
     
-    
-    
-    
-    
-    
-    
-
     gx1 = pvWalls[0].cameraSpaceCoo[0][VEC_X];
     gy1 = pvWalls[0].cameraSpaceCoo[0][VEC_Y];   /* back up these before clipping */
 
@@ -4262,22 +4252,12 @@ static void dorotatesprite (int32_t sx, int32_t sy, int32_t z, short a, short pi
     }
     else
     {
-        if ((dastat&1) == 0)
-        {
-            if (dastat&64)
-                setupspritevline(palookupoffs,(xv>>16)*tileHeight,xv<<16,tileHeight,yv,0L);
-            else
-                msetupspritevline(palookupoffs,(xv>>16)*tileHeight,xv<<16,tileHeight,yv,0L);
-        }
-        else
-        {
-            tsetupspritevline(palookupoffs,(xv>>16)*tileHeight,xv<<16,tileHeight,yv);
+        tsetupspritevline(palookupoffs,(xv>>16)*tileHeight,xv<<16,tileHeight,yv);
 
-            if (dastat&32) 
-				settrans(TRANS_REVERSE);
-            else 
-				settrans(TRANS_NORMAL);
-        }
+        if (dastat&32) 
+			settrans(TRANS_REVERSE);
+        else 
+			settrans(TRANS_NORMAL);
 
         for(x=x1; x<x2; x++)
         {
@@ -4316,18 +4296,9 @@ static void dorotatesprite (int32_t sx, int32_t sy, int32_t z, short a, short pi
 
             p = ylookup[y1]+x+frameplace;
 
-            if ((dastat&1) == 0)
-            {
-                if (dastat&64)
-                    spritevline(0L,by<<16,y2-y1+1,bx<<16,(bx>>16)*tileHeight+(by>>16)+bufplc,p);
-                else
-                    mspritevline(0L,by<<16,y2-y1+1,bx<<16,(bx>>16)*tileHeight+(by>>16)+bufplc,p);
-            }
-            else
-            {
-                DrawSpriteVerticalLine(by<<16,y2-y1+1,bx<<16,(bx>>16)*tileHeight+(by>>16)+bufplc,p);
-                transarea += (y2-y1);
-            }
+            DrawSpriteVerticalLine(by<<16,y2-y1+1,bx<<16,(bx>>16)*tileHeight+(by>>16)+bufplc,p);
+            transarea += (y2-y1);
+        	
             faketimerhandler();
         }
     }

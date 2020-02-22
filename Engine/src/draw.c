@@ -469,127 +469,6 @@ void mvlineasm4(int32_t columnIndex, uint8_t* framebuffer)
 
 
 /* ---------------  SPRITE RENDERING METHOD (USED TO BE HIGHLY OPTIMIZED ASSEMBLY) ----------------------------*/
-static int32_t spal_eax;
-static int32_t smach_eax;
-static int32_t smach2_eax;
-static int32_t smach5_eax;
-static int32_t smach_ecx;
-void setupspritevline(int32_t i1, int32_t i2, int32_t i3, int32_t i4, int32_t i5, int32_t i6)
-{
-    spal_eax = i1;
-    smach_eax = (i5<<16);
-    smach2_eax = (i5>>16)+i2;
-    smach5_eax = smach2_eax + i4;
-    smach_ecx = i3;
-} 
-
-
-void spritevline(int32_t i1, uint32_t i2, int32_t i3, uint32_t i4, uint8_t* source, uint8_t* dest)
-{
-    
-
-setup:
-
-    i2 += smach_eax;
-    i1 = (i1&0xffffff00) | (*source&0xff);
-    if ((i2 - smach_eax) > i2) 
-		source += smach2_eax + 1;
-    else 
-		source += smach2_eax;
-
-    while(1) {
-        
-        i1 = (i1&0xffffff00) | (((uint8_t  *)spal_eax)[i1]&0xff);
-
-#if RENDER_LIMIT_PIXELS
-        if (pixelsAllowed-- > 0)
-#endif
-            *dest = i1;
-        
-        dest += bytesperline;
-
-        i4 += smach_ecx;
-        i4--;
-        if (!((i4 - smach_ecx) > i4) && i4 != 0)
-            goto setup;
-        
-        if (i4 == 0) 
-            return;
-        
-        i2 += smach_eax;
-        
-        i1 = (i1&0xffffff00) | (*source&0xff);
-        
-        if ((i2 - smach_eax) > i2) 
-            source += smach5_eax + 1;
-        else 
-            source += smach5_eax;
-    }
-}
-
-
-static int32_t mspal_eax;
-static int32_t msmach_eax;
-static int32_t msmach2_eax;
-static int32_t msmach5_eax;
-static int32_t msmach_ecx;
-void msetupspritevline(int32_t i1, int32_t i2, int32_t i3, int32_t i4, int32_t i5, int32_t i6)
-{
-    mspal_eax = i1;
-    msmach_eax = (i5<<16);
-    msmach2_eax = (i5>>16)+i2;
-    msmach5_eax = smach2_eax + i4;
-    msmach_ecx = i3;
-} 
-
-
-void mspritevline(int32_t colorIndex, int32_t i2, int32_t i3, int32_t i4, uint8_t  * source, uint8_t  * dest)
-{
- 
-setup:
-    i2 += smach_eax;
-    
-    colorIndex = (colorIndex&0xffffff00) | (*source&0xff);
-    
-    if ((i2 - smach_eax) > i2) 
-        source += smach2_eax + 1;
-    else 
-        source += smach2_eax;
-
-	while(1){
-    
-        //Skip transparent pixels (index=255)
-        if ((colorIndex&0xff) != 255)
-        {
-            colorIndex = (colorIndex&0xffffff00) | (((uint8_t  *)spal_eax)[colorIndex]&0xff);
-
-#if RENDER_LIMIT_PIXELS
-            if (pixelsAllowed-- > 0)
-#endif
-                *dest = colorIndex;
-        }
-   
-        dest += bytesperline;
-        i4 += smach_ecx;
-        i4--;
-    
-        if (!((i4 - smach_ecx) > i4) && i4 != 0)
-            goto setup;
-   
-        if (i4 == 0) 
-            return;
-    
-        i2 += smach_eax;
-    
-        colorIndex = (colorIndex&0xffffff00) | (*source&0xff);
-    
-        if ((i2 - smach_eax) > i2) 
-            source += smach5_eax + 1;
-        else 
-            source += smach5_eax;
-    }
-}
-
 
 uint8_t * tspal;
 uint32_t tsmach_eax1;
@@ -604,7 +483,6 @@ void tsetupspritevline(uint8_t * palette, int32_t i2, int32_t i3, int32_t i4, in
 	tsmach_eax3 = adder + i4;
 	tsmach_ecx = i3;
 } 
-
 
 /*
  FCS: Draw a sprite vertical line of pixels.
