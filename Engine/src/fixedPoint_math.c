@@ -1,13 +1,33 @@
 // converted from asm to c by Jonof
 
 #include <stdio.h>
+#include <string.h>
 #include "platform.h"
 #include "fixedPoint_math.h"
 
 void clearbuf(void *d, int32_t c, int32_t a)
 {
-	int32_t *p = (int32_t*)d;
-	while ((c--) > 0) *(p++) = a;
+    // tanguyf: this completely violates strict-aliasing.
+	//int32_t *p = (int32_t*)d;
+	//while ((c--) > 0) *(p++) = a;
+
+	union
+    {
+	    struct { uint8_t a,b,c,d; };
+	    int32_t value;
+    } src;
+
+	src.value = a;
+
+	uint8_t* dst = (uint8_t*) d;
+
+	for (int32_t i = 0; i < c; ++i)
+    {
+	    dst[i*4 + 0] = src.a;
+        dst[i*4 + 1] = src.b;
+        dst[i*4 + 2] = src.c;
+        dst[i*4 + 3] = src.d;
+    }
 }
 
 void clearbufbyte(void *D, int32_t c, int32_t a)
@@ -24,8 +44,10 @@ void clearbufbyte(void *D, int32_t c, int32_t a)
 
 void copybuf(void *s, void *d, int32_t c)
 {
-	int32_t *p = (int32_t*)s, *q = (int32_t*)d;
-	while ((c--) > 0) *(q++) = *(p++);
+    // tanguyf: this completely violates strict-aliasing.
+	//int32_t *p = (int32_t*)s, *q = (int32_t*)d;
+	//while ((c--) > 0) *(q++) = *(p++);
+	memcpy(d, s, c * sizeof(int32_t));
 }
 
 void copybufbyte(void *S, void *D, int32_t c)

@@ -41,6 +41,11 @@ if (UNIX)
 	add_definitions(-DUNIX)
 	add_compile_options("-Wall")
 
+	# Duke 3D source code is not at all thought out for strict aliasing.
+	# Really not! It's full of dangerous pointer casting.
+	# Without this option, game will crash at random places when compiled with -O2 or-O3.
+	add_compile_options("-fno-strict-aliasing") 
+
 endif ()
 
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)
