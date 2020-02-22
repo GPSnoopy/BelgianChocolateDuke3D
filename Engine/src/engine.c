@@ -1531,25 +1531,25 @@ static void maskwallscan(int32_t x1, int32_t x2,
 
         if ((bad > 0) || (u4 >= d4))
         {
-            if (!(bad&1)) mvlineasm1(vince[0],palookupoffse[0],y2ve[0]-y1ve[0],vplce[0],bufplce[0],ylookup[y1ve[0]]+p+0);
-            if (!(bad&2)) mvlineasm1(vince[1],palookupoffse[1],y2ve[1]-y1ve[1],vplce[1],bufplce[1],ylookup[y1ve[1]]+p+1);
-            if (!(bad&4)) mvlineasm1(vince[2],palookupoffse[2],y2ve[2]-y1ve[2],vplce[2],bufplce[2],ylookup[y1ve[2]]+p+2);
-            if (!(bad&8)) mvlineasm1(vince[3],palookupoffse[3],y2ve[3]-y1ve[3],vplce[3],bufplce[3],ylookup[y1ve[3]]+p+3);
+            if (!(bad&1)) mvlineasm1(vince[0],palookupoffse[0],y2ve[0]-y1ve[0],vplce[0],(const uint8_t*)bufplce[0],ylookup[y1ve[0]]+p+0);
+            if (!(bad&2)) mvlineasm1(vince[1],palookupoffse[1],y2ve[1]-y1ve[1],vplce[1],(const uint8_t*)bufplce[1],ylookup[y1ve[1]]+p+1);
+            if (!(bad&4)) mvlineasm1(vince[2],palookupoffse[2],y2ve[2]-y1ve[2],vplce[2],(const uint8_t*)bufplce[2],ylookup[y1ve[2]]+p+2);
+            if (!(bad&8)) mvlineasm1(vince[3],palookupoffse[3],y2ve[3]-y1ve[3],vplce[3],(const uint8_t*)bufplce[3],ylookup[y1ve[3]]+p+3);
             continue;
         }
 
-        if (u4 > y1ve[0]) vplce[0] = mvlineasm1(vince[0],palookupoffse[0],u4-y1ve[0]-1,vplce[0],bufplce[0],ylookup[y1ve[0]]+p+0);
-        if (u4 > y1ve[1]) vplce[1] = mvlineasm1(vince[1],palookupoffse[1],u4-y1ve[1]-1,vplce[1],bufplce[1],ylookup[y1ve[1]]+p+1);
-        if (u4 > y1ve[2]) vplce[2] = mvlineasm1(vince[2],palookupoffse[2],u4-y1ve[2]-1,vplce[2],bufplce[2],ylookup[y1ve[2]]+p+2);
-        if (u4 > y1ve[3]) vplce[3] = mvlineasm1(vince[3],palookupoffse[3],u4-y1ve[3]-1,vplce[3],bufplce[3],ylookup[y1ve[3]]+p+3);
+        if (u4 > y1ve[0]) vplce[0] = mvlineasm1(vince[0],palookupoffse[0],u4-y1ve[0]-1,vplce[0],(const uint8_t*)bufplce[0],ylookup[y1ve[0]]+p+0);
+        if (u4 > y1ve[1]) vplce[1] = mvlineasm1(vince[1],palookupoffse[1],u4-y1ve[1]-1,vplce[1],(const uint8_t*)bufplce[1],ylookup[y1ve[1]]+p+1);
+        if (u4 > y1ve[2]) vplce[2] = mvlineasm1(vince[2],palookupoffse[2],u4-y1ve[2]-1,vplce[2],(const uint8_t*)bufplce[2],ylookup[y1ve[2]]+p+2);
+        if (u4 > y1ve[3]) vplce[3] = mvlineasm1(vince[3],palookupoffse[3],u4-y1ve[3]-1,vplce[3],(const uint8_t*)bufplce[3],ylookup[y1ve[3]]+p+3);
 
         if (d4 >= u4) mvlineasm4(d4-u4+1,ylookup[u4]+p);
 
         i = p+ylookup[d4+1];
-        if (y2ve[0] > d4) mvlineasm1(vince[0],palookupoffse[0],y2ve[0]-d4-1,vplce[0],bufplce[0],i+0);
-        if (y2ve[1] > d4) mvlineasm1(vince[1],palookupoffse[1],y2ve[1]-d4-1,vplce[1],bufplce[1],i+1);
-        if (y2ve[2] > d4) mvlineasm1(vince[2],palookupoffse[2],y2ve[2]-d4-1,vplce[2],bufplce[2],i+2);
-        if (y2ve[3] > d4) mvlineasm1(vince[3],palookupoffse[3],y2ve[3]-d4-1,vplce[3],bufplce[3],i+3);
+        if (y2ve[0] > d4) mvlineasm1(vince[0],palookupoffse[0],y2ve[0]-d4-1,vplce[0],(const uint8_t*)bufplce[0],(uint8_t*)i+0);
+        if (y2ve[1] > d4) mvlineasm1(vince[1],palookupoffse[1],y2ve[1]-d4-1,vplce[1],(const uint8_t*)bufplce[1],(uint8_t*)i+1);
+        if (y2ve[2] > d4) mvlineasm1(vince[2],palookupoffse[2],y2ve[2]-d4-1,vplce[2],(const uint8_t*)bufplce[2],(uint8_t*)i+2);
+        if (y2ve[3] > d4) mvlineasm1(vince[3],palookupoffse[3],y2ve[3]-d4-1,vplce[3],(const uint8_t*)bufplce[3],(uint8_t*)i+3);
     }
     for(; x<=x2; x++,p++)
     {
@@ -3137,9 +3137,9 @@ static void transmaskvline2 (int32_t x)
     if (y1ve[0] != y1ve[1])
     {
         if (y1ve[0] < y1)
-            vplce[0] = tvlineasm1(vince[0],palookupoffse[0],y1-y1ve[0]-1,vplce[0],bufplce[0],ylookup[y1ve[0]]+i);
+            vplce[0] = tvlineasm1(vince[0],palookupoffse[0],y1-y1ve[0]-1,vplce[0],(const uint8_t*)bufplce[0],(uint8_t*)ylookup[y1ve[0]]+i);
         else
-            vplce[1] = tvlineasm1(vince[1],palookupoffse[1],y1-y1ve[1]-1,vplce[1],bufplce[1],ylookup[y1ve[1]]+i+1);
+            vplce[1] = tvlineasm1(vince[1],palookupoffse[1],y1-y1ve[1]-1,vplce[1],(const uint8_t*)bufplce[1],(uint8_t*)ylookup[y1ve[1]]+i+1);
     }
 
     if (y2 > y1)
@@ -3156,9 +3156,9 @@ static void transmaskvline2 (int32_t x)
     }
 
     if (y2ve[0] > y2ve[1])
-        tvlineasm1(vince[0],palookupoffse[0],y2ve[0]-y2-1,asm1,bufplce[0],ylookup[y2+1]+i);
+        tvlineasm1(vince[0],palookupoffse[0],y2ve[0]-y2-1,asm1,(const uint8_t*)bufplce[0],(uint8_t*)ylookup[y2+1]+i);
     else if (y2ve[0] < y2ve[1])
-        tvlineasm1(vince[1],palookupoffse[1],y2ve[1]-y2-1,asm2,bufplce[1],ylookup[y2+1]+i+1);
+        tvlineasm1(vince[1],palookupoffse[1],y2ve[1]-y2-1,asm2,(const uint8_t*)bufplce[1],(uint8_t*)ylookup[y2+1]+i+1);
 
     faketimerhandler();
 }
@@ -4038,60 +4038,60 @@ static void dorotatesprite (int32_t sx, int32_t sy, int32_t z, short a, short pi
                     if ((bad != 0) || (u4 >= d4))
                     {
                         if (!(bad&1)) 
-                            prevlineasm1(vince[0],palookupoffse[0],y2ve[0]-y1ve[0],vplce[0],bufplce[0],ylookup[y1ve[0]]+p+0);
+                            prevlineasm1(vince[0],palookupoffse[0],y2ve[0]-y1ve[0],vplce[0],(const uint8_t*)bufplce[0],ylookup[y1ve[0]]+p+0);
                         if (!(bad&2)) 
-                            prevlineasm1(vince[1],palookupoffse[1],y2ve[1]-y1ve[1],vplce[1],bufplce[1],ylookup[y1ve[1]]+p+1);
+                            prevlineasm1(vince[1],palookupoffse[1],y2ve[1]-y1ve[1],vplce[1],(const uint8_t*)bufplce[1],ylookup[y1ve[1]]+p+1);
                         if (!(bad&4)) 
-                            prevlineasm1(vince[2],palookupoffse[2],y2ve[2]-y1ve[2],vplce[2],bufplce[2],ylookup[y1ve[2]]+p+2);
+                            prevlineasm1(vince[2],palookupoffse[2],y2ve[2]-y1ve[2],vplce[2],(const uint8_t*)bufplce[2],ylookup[y1ve[2]]+p+2);
                         if (!(bad&8)) 
-                            prevlineasm1(vince[3],palookupoffse[3],y2ve[3]-y1ve[3],vplce[3],bufplce[3],ylookup[y1ve[3]]+p+3);
+                            prevlineasm1(vince[3],palookupoffse[3],y2ve[3]-y1ve[3],vplce[3],(const uint8_t*)bufplce[3],ylookup[y1ve[3]]+p+3);
                         continue;
                     }
 
                     if (u4 > y1ve[0]) 
-                        vplce[0] = prevlineasm1(vince[0],palookupoffse[0],u4-y1ve[0]-1,vplce[0],bufplce[0],ylookup[y1ve[0]]+p+0);
+                        vplce[0] = prevlineasm1(vince[0],palookupoffse[0],u4-y1ve[0]-1,vplce[0],(const uint8_t*)bufplce[0],ylookup[y1ve[0]]+p+0);
                     if (u4 > y1ve[1]) 
-                        vplce[1] = prevlineasm1(vince[1],palookupoffse[1],u4-y1ve[1]-1,vplce[1],bufplce[1],ylookup[y1ve[1]]+p+1);
+                        vplce[1] = prevlineasm1(vince[1],palookupoffse[1],u4-y1ve[1]-1,vplce[1],(const uint8_t*)bufplce[1],ylookup[y1ve[1]]+p+1);
                     if (u4 > y1ve[2]) 
-                        vplce[2] = prevlineasm1(vince[2],palookupoffse[2],u4-y1ve[2]-1,vplce[2],bufplce[2],ylookup[y1ve[2]]+p+2);
+                        vplce[2] = prevlineasm1(vince[2],palookupoffse[2],u4-y1ve[2]-1,vplce[2],(const uint8_t*)bufplce[2],ylookup[y1ve[2]]+p+2);
                     if (u4 > y1ve[3]) 
-                        vplce[3] = prevlineasm1(vince[3],palookupoffse[3],u4-y1ve[3]-1,vplce[3],bufplce[3],ylookup[y1ve[3]]+p+3);
+                        vplce[3] = prevlineasm1(vince[3],palookupoffse[3],u4-y1ve[3]-1,vplce[3],(const uint8_t*)bufplce[3],ylookup[y1ve[3]]+p+3);
 
                     if (d4 >= u4) vlineasm4(d4-u4+1,ylookup[u4]+p);
 
                     i = p+ylookup[d4+1];
                     if (y2ve[0] > d4) 
-                        prevlineasm1(vince[0],palookupoffse[0],y2ve[0]-d4-1,vplce[0],bufplce[0],i+0);
+                        prevlineasm1(vince[0],palookupoffse[0],y2ve[0]-d4-1,vplce[0],(const uint8_t*)bufplce[0],(uint8_t*)i+0);
                     if (y2ve[1] > d4) 
-                        prevlineasm1(vince[1],palookupoffse[1],y2ve[1]-d4-1,vplce[1],bufplce[1],i+1);
+                        prevlineasm1(vince[1],palookupoffse[1],y2ve[1]-d4-1,vplce[1],(const uint8_t*)bufplce[1],(uint8_t*)i+1);
                     if (y2ve[2] > d4) 
-                        prevlineasm1(vince[2],palookupoffse[2],y2ve[2]-d4-1,vplce[2],bufplce[2],i+2);
+                        prevlineasm1(vince[2],palookupoffse[2],y2ve[2]-d4-1,vplce[2],(const uint8_t*)bufplce[2],(uint8_t*)i+2);
                     if (y2ve[3] > d4) 
-                        prevlineasm1(vince[3],palookupoffse[3],y2ve[3]-d4-1,vplce[3],bufplce[3],i+3);
+                        prevlineasm1(vince[3],palookupoffse[3],y2ve[3]-d4-1,vplce[3],(const uint8_t*)bufplce[3],(uint8_t*)i+3);
                 }
                 else
                 {
                     if ((bad != 0) || (u4 >= d4))
                     {
-                        if (!(bad&1)) mvlineasm1(vince[0],palookupoffse[0],y2ve[0]-y1ve[0],vplce[0],bufplce[0],ylookup[y1ve[0]]+p+0);
-                        if (!(bad&2)) mvlineasm1(vince[1],palookupoffse[1],y2ve[1]-y1ve[1],vplce[1],bufplce[1],ylookup[y1ve[1]]+p+1);
-                        if (!(bad&4)) mvlineasm1(vince[2],palookupoffse[2],y2ve[2]-y1ve[2],vplce[2],bufplce[2],ylookup[y1ve[2]]+p+2);
-                        if (!(bad&8)) mvlineasm1(vince[3],palookupoffse[3],y2ve[3]-y1ve[3],vplce[3],bufplce[3],ylookup[y1ve[3]]+p+3);
+                        if (!(bad&1)) mvlineasm1(vince[0],palookupoffse[0],y2ve[0]-y1ve[0],vplce[0],(const uint8_t*)bufplce[0],ylookup[y1ve[0]]+p+0);
+                        if (!(bad&2)) mvlineasm1(vince[1],palookupoffse[1],y2ve[1]-y1ve[1],vplce[1],(const uint8_t*)bufplce[1],ylookup[y1ve[1]]+p+1);
+                        if (!(bad&4)) mvlineasm1(vince[2],palookupoffse[2],y2ve[2]-y1ve[2],vplce[2],(const uint8_t*)bufplce[2],ylookup[y1ve[2]]+p+2);
+                        if (!(bad&8)) mvlineasm1(vince[3],palookupoffse[3],y2ve[3]-y1ve[3],vplce[3],(const uint8_t*)bufplce[3],ylookup[y1ve[3]]+p+3);
                         continue;
                     }
 
-                    if (u4 > y1ve[0]) vplce[0] = mvlineasm1(vince[0],palookupoffse[0],u4-y1ve[0]-1,vplce[0],bufplce[0],ylookup[y1ve[0]]+p+0);
-                    if (u4 > y1ve[1]) vplce[1] = mvlineasm1(vince[1],palookupoffse[1],u4-y1ve[1]-1,vplce[1],bufplce[1],ylookup[y1ve[1]]+p+1);
-                    if (u4 > y1ve[2]) vplce[2] = mvlineasm1(vince[2],palookupoffse[2],u4-y1ve[2]-1,vplce[2],bufplce[2],ylookup[y1ve[2]]+p+2);
-                    if (u4 > y1ve[3]) vplce[3] = mvlineasm1(vince[3],palookupoffse[3],u4-y1ve[3]-1,vplce[3],bufplce[3],ylookup[y1ve[3]]+p+3);
+                    if (u4 > y1ve[0]) vplce[0] = mvlineasm1(vince[0],palookupoffse[0],u4-y1ve[0]-1,vplce[0],(const uint8_t*)bufplce[0],ylookup[y1ve[0]]+p+0);
+                    if (u4 > y1ve[1]) vplce[1] = mvlineasm1(vince[1],palookupoffse[1],u4-y1ve[1]-1,vplce[1],(const uint8_t*)bufplce[1],ylookup[y1ve[1]]+p+1);
+                    if (u4 > y1ve[2]) vplce[2] = mvlineasm1(vince[2],palookupoffse[2],u4-y1ve[2]-1,vplce[2],(const uint8_t*)bufplce[2],ylookup[y1ve[2]]+p+2);
+                    if (u4 > y1ve[3]) vplce[3] = mvlineasm1(vince[3],palookupoffse[3],u4-y1ve[3]-1,vplce[3],(const uint8_t*)bufplce[3],ylookup[y1ve[3]]+p+3);
 
                     if (d4 >= u4) mvlineasm4(d4-u4+1,ylookup[u4]+p);
 
                     i = p+ylookup[d4+1];
-                    if (y2ve[0] > d4) mvlineasm1(vince[0],palookupoffse[0],y2ve[0]-d4-1,vplce[0],bufplce[0],i+0);
-                    if (y2ve[1] > d4) mvlineasm1(vince[1],palookupoffse[1],y2ve[1]-d4-1,vplce[1],bufplce[1],i+1);
-                    if (y2ve[2] > d4) mvlineasm1(vince[2],palookupoffse[2],y2ve[2]-d4-1,vplce[2],bufplce[2],i+2);
-                    if (y2ve[3] > d4) mvlineasm1(vince[3],palookupoffse[3],y2ve[3]-d4-1,vplce[3],bufplce[3],i+3);
+                    if (y2ve[0] > d4) mvlineasm1(vince[0],palookupoffse[0],y2ve[0]-d4-1,vplce[0],(const uint8_t*)bufplce[0],(uint8_t*)i+0);
+                    if (y2ve[1] > d4) mvlineasm1(vince[1],palookupoffse[1],y2ve[1]-d4-1,vplce[1],(const uint8_t*)bufplce[1],(uint8_t*)i+1);
+                    if (y2ve[2] > d4) mvlineasm1(vince[2],palookupoffse[2],y2ve[2]-d4-1,vplce[2],(const uint8_t*)bufplce[2],(uint8_t*)i+2);
+                    if (y2ve[3] > d4) mvlineasm1(vince[3],palookupoffse[3],y2ve[3]-d4-1,vplce[3],(const uint8_t*)bufplce[3],(uint8_t*)i+3);
                 }
 
                 faketimerhandler();

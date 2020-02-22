@@ -1952,8 +1952,8 @@ int MV_PlayLoopedVOC
    voice->GVal[2]     = 0;
    voice->GVal[3]     = 0;
    voice->callbackval = callbackval;
-   voice->LoopStart   = ( char * )loopstart;
-   voice->LoopEnd     = ( char * )loopend;
+   voice->LoopStart   = ( uint8_t* )loopstart;
+   voice->LoopEnd     = ( uint8_t* )loopend;
    voice->LoopSize    = loopend - loopstart + 1;
 
    if ( loopstart < 0 )

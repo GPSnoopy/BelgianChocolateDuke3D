@@ -30,8 +30,8 @@ extern int32_t asm4;
 
 static uint8_t machxbits_al;
 static uint8_t bitsSetup;
-static uint8_t * textureSetup;
-void sethlinesizes(int32_t i1, int32_t _bits, uint8_t * textureAddress)
+static const uint8_t * textureSetup;
+void sethlinesizes(int32_t i1, int32_t _bits, const uint8_t * textureAddress)
 {
     machxbits_al = i1;
     bitsSetup = _bits;
@@ -45,7 +45,7 @@ void hlineasm4(int32_t numPixels, int32_t shade, uint32_t i4, uint32_t i5, uint8
     int32_t shifter = ((256-machxbits_al) & 0x1f);
     uint32_t source;
     
-    uint8_t * texture = textureSetup;
+    const uint8_t * texture = textureSetup;
     uint8_t bits = bitsSetup;
     
     shade = shade & 0xffffff00;
@@ -78,10 +78,10 @@ void hlineasm4(int32_t numPixels, int32_t shade, uint32_t i4, uint32_t i5, uint8
 static int32_t rmach_eax;
 static int32_t rmach_ebx;
 static int32_t rmach_ecx;
-static uint8_t* rmach_edx;
+static const uint8_t* rmach_edx;
 static int32_t rmach_esi;
 
-void setuprhlineasm4(int32_t i1, int32_t i2, int32_t i3, uint8_t* i4, int32_t i5, int32_t i6)
+void setuprhlineasm4(int32_t i1, int32_t i2, int32_t i3, const uint8_t* i4, int32_t i5, int32_t i6)
 {
     rmach_eax = i1;
     rmach_ebx = i2;
@@ -91,7 +91,7 @@ void setuprhlineasm4(int32_t i1, int32_t i2, int32_t i3, uint8_t* i4, int32_t i5
 } 
 
 
-void rhlineasm4(int32_t i1, uint8_t* texture, int32_t i3, uint32_t i4, uint32_t i5, uint8_t* dest)
+void rhlineasm4(int32_t i1, const uint8_t* texture, int32_t i3, uint32_t i4, uint32_t i5, uint8_t* dest)
 {
     uint32_t ebp = 0;
     int32_t numPixels;
@@ -127,9 +127,9 @@ void rhlineasm4(int32_t i1, uint8_t* texture, int32_t i3, uint32_t i4, uint32_t 
 static int32_t rmmach_eax;
 static int32_t rmmach_ebx;
 static int32_t rmmach_ecx;
-static uint8_t* rmmach_edx;
+static const uint8_t* rmmach_edx;
 static int32_t setupTileHeight;
-void setuprmhlineasm4(int32_t i1, int32_t i2, int32_t i3, uint8_t* i4, int32_t tileHeight, int32_t i6)
+void setuprmhlineasm4(int32_t i1, int32_t i2, int32_t i3, const uint8_t* i4, int32_t tileHeight, int32_t i6)
 {
     rmmach_eax = i1;
     rmmach_ebx = i2;
@@ -140,7 +140,7 @@ void setuprmhlineasm4(int32_t i1, int32_t i2, int32_t i3, uint8_t* i4, int32_t t
 
 
 //FCS: ????
-void rmhlineasm4(int32_t i1, uint8_t* shade, int32_t colorIndex, int32_t i4, int32_t i5, uint8_t* dest)
+void rmhlineasm4(int32_t i1, const uint8_t* shade, int32_t colorIndex, int32_t i4, int32_t i5, uint8_t* dest)
 {
     uint32_t ebp = 0;
     int32_t numPixels;
@@ -194,7 +194,7 @@ void setBytesPerLine(int32_t _bytesperline)
 static uint8_t  mach3_al;
 
 //FCS:  RENDER TOP AND BOTTOM COLUMN
-int32_t prevlineasm1(int32_t i1, uint8_t* palette, int32_t i3, int32_t i4, uint8_t  *source, uint8_t  *dest)
+int32_t prevlineasm1(int32_t i1, const uint8_t* palette, int32_t i3, int32_t i4, const uint8_t  *source, uint8_t  *dest)
 {
     if (i3 == 0)
     {
@@ -218,7 +218,7 @@ int32_t prevlineasm1(int32_t i1, uint8_t* palette, int32_t i3, int32_t i4, uint8
 
 
 //FCS: This is used to draw wall border vertical lines
-int32_t vlineasm1(int32_t vince, uint8_t* palookupoffse, int32_t numPixels, int32_t vplce, uint8_t* texture, uint8_t* dest)
+int32_t vlineasm1(int32_t vince, const uint8_t* palookupoffse, int32_t numPixels, int32_t vplce, const uint8_t* texture, uint8_t* dest)
 {
     uint32_t temp;
 
@@ -245,7 +245,7 @@ int32_t vlineasm1(int32_t vince, uint8_t* palookupoffse, int32_t numPixels, int3
 } 
 
 
-int32_t tvlineasm1(int32_t i1, uint8_t  * texture, int32_t numPixels, int32_t i4, uint8_t  *source, uint8_t  *dest)
+int32_t tvlineasm1(int32_t i1, const uint8_t *texture, int32_t numPixels, int32_t i4, const uint8_t  *source, uint8_t  *dest)
 {
     uint8_t shiftValue = (globalshiftval & 0x1f);
     
@@ -284,9 +284,9 @@ int32_t tvlineasm1(int32_t i1, uint8_t  * texture, int32_t numPixels, int32_t i4
 
 
 static uint8_t  tran2shr;
-static uint8_t* tran2pal_ebx;
-static uint8_t* tran2pal_ecx;
-void setuptvlineasm2(int32_t i1, uint8_t* i2, uint8_t* i3)
+static const uint8_t* tran2pal_ebx;
+static const uint8_t* tran2pal_ecx;
+void setuptvlineasm2(int32_t i1, const uint8_t* i2, const uint8_t* i3)
 {
 	tran2shr = (i1&0x1f);
 	tran2pal_ebx = i2;
@@ -369,7 +369,7 @@ void tvlineasm2(uint32_t i1, uint32_t i2, uintptr_t i3, uintptr_t i4, uint32_t i
 
 
 static uint8_t  machmv;
-int32_t mvlineasm1(int32_t vince, uint8_t* palookupoffse, int32_t i3, int32_t vplce, uint8_t* texture, uint8_t  *dest)
+int32_t mvlineasm1(int32_t vince, const uint8_t* palookupoffse, int32_t i3, int32_t vplce, const uint8_t* texture, uint8_t  *dest)
 {
     uint32_t temp;
 
@@ -470,12 +470,12 @@ void mvlineasm4(int32_t columnIndex, uint8_t* framebuffer)
 
 /* ---------------  SPRITE RENDERING METHOD (USED TO BE HIGHLY OPTIMIZED ASSEMBLY) ----------------------------*/
 
-uint8_t * tspal;
+const uint8_t * tspal;
 uint32_t tsmach_eax1;
 uint32_t adder;
 uint32_t tsmach_eax3;
 uint32_t tsmach_ecx;
-void tsetupspritevline(uint8_t * palette, int32_t i2, int32_t i3, int32_t i4, int32_t i5)
+void tsetupspritevline(const uint8_t * palette, int32_t i2, int32_t i3, int32_t i4, int32_t i5)
 {
 	tspal = palette;
 	tsmach_eax1 = i5 << 16;
@@ -487,7 +487,7 @@ void tsetupspritevline(uint8_t * palette, int32_t i2, int32_t i3, int32_t i4, in
 /*
  FCS: Draw a sprite vertical line of pixels.
  */
-void DrawSpriteVerticalLine(int32_t i2, int32_t numPixels, uint32_t i4, uint8_t  * texture, uint8_t  * dest)
+void DrawSpriteVerticalLine(int32_t i2, int32_t numPixels, uint32_t i4, const uint8_t  * texture, uint8_t  * dest)
 {
     uint8_t colorIndex;
     
