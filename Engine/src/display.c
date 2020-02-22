@@ -113,6 +113,7 @@ static void init_new_res_vars()
 
 	printf("init_new_res_vars %d %d\n",xdim,ydim);
 
+	numpages = 1; // we always expose the same surface to the drawing engine.
 	bytesperline = surface->w;
 	vesachecked = 1;
 	vgacompatible = 1;
