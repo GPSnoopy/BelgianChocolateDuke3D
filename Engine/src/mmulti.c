@@ -576,16 +576,17 @@ void callcommit(void)
 #  define sockettype SOCKET
 #  define socketclose(x) closesocket(x)
 #else
-#  include <sys/types.h>
-#  include <sys/socket.h>
-#  include <netinet/in.h>
 #  include <arpa/inet.h>
-#  include <netdb.h>
-#  include <sys/uio.h>
+#  include <netinet/in.h>
+#  include <netinet/ip.h>
 #  include <sys/ioctl.h>
+#  include <sys/socket.h>
 #  include <sys/time.h>
+#  include <sys/types.h>
+#  include <sys/uio.h>
 #  include <errno.h>
 #  include <fcntl.h>
+#  include <netdb.h>
 #  include <time.h>
 #  define netstrerror() strerror(errno)
 #  define neterrno() errno
