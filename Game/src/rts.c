@@ -24,7 +24,10 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 */
 //-------------------------------------------------------------------------
 
-#include <malloc.h>
+#if !__APPLE__
+	#include <malloc.h>
+#endif
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
