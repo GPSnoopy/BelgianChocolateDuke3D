@@ -671,9 +671,9 @@ void _platform_init(int argc, char  **argv, const char  *title, const char  *ico
 		}
 	}
 
-#ifdef __APPLE__
-	SDL_putenv("SDL_VIDEODRIVER=Quartz");
-#endif  	
+//#ifdef __APPLE__
+//	SDL_putenv("SDL_VIDEODRIVER=Quartz");
+//#endif  	
 
 	SDL_CHECK_SUCCESS( SDL_Init(SDL_INIT_VIDEO) );
 	
