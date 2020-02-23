@@ -576,16 +576,17 @@ void callcommit(void)
 #  define sockettype SOCKET
 #  define socketclose(x) closesocket(x)
 #else
-#  include <sys/types.h>
-#  include <sys/socket.h>
-#  include <netinet/in.h>
 #  include <arpa/inet.h>
-#  include <netdb.h>
-#  include <sys/uio.h>
+#  include <netinet/in.h>
+#  include <netinet/ip.h>
 #  include <sys/ioctl.h>
+#  include <sys/socket.h>
 #  include <sys/time.h>
+#  include <sys/types.h>
+#  include <sys/uio.h>
 #  include <errno.h>
 #  include <fcntl.h>
+#  include <netdb.h>
 #  include <time.h>
 #  define netstrerror() strerror(errno)
 #  define neterrno() errno
@@ -959,7 +960,12 @@ static int open_udp_socket(int ip, int port)
 	printf("Stun is currently %s\n", (g_bStun) ? "Enabled":"Disabled");
 
     udpsocket = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
+
+#if WIN32
+	if (udpsocket == INVALID_SOCKET)
+#else
     if (udpsocket == -1)
+#endif
     {
         printf("socket creation failed: %s\n", netstrerror());
         return(0);
@@ -968,7 +974,7 @@ static int open_udp_socket(int ip, int port)
     if (!set_socket_blockmode(0))
         return(0);
 
-    #if !WIN32
+    #if !WIN32 && !__APPLE__
     {
         /* !!! FIXME: Might be Linux (not Unix, not BSD, not WinSock) specific. */
         int flags = 1;

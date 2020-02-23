@@ -1,0 +1,15 @@
+name: MacOS X CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: macos-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    - name: Compile vcpkg dependencies
+      run: ./vcpkg_macosx.sh
+    - name: Compile Duke3D
+      run: ./build_macosx.sh
