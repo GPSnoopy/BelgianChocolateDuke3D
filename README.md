@@ -25,7 +25,6 @@ After reading both Fabien Sanglard's Game Engine Black Books on [Wolfenstein 3D]
 
 * Engine: Leaning left/right falls back to low-res rendering.
 * Engine: Pixel imprecision when rendering health/ammo numbers in the status bar, leaving ghost pixels.
-* Game: Duke is always running, no matter whether SHIFT is pressed or not.
 
 ## Requirements
 
