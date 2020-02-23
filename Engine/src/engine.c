@@ -8393,23 +8393,26 @@ static int clippoly (int32_t npoints, int32_t clipstat)
                 pvWalls[z].screenSpaceCoo[0][VEC_COL] = -1;
                 s1 = s2;
                 s2 = cx1-pvWalls[zz].cameraSpaceCoo[0][VEC_X];
-                if (s1 < 0){
+            	
+                if (s1 < 0)
+                {
                     pvWalls[npoints2].cameraSpaceCoo[1][VEC_X] = pvWalls[z].cameraSpaceCoo[0][VEC_X];
                     pvWalls[npoints2].cameraSpaceCoo[1][VEC_Y] = pvWalls[z].cameraSpaceCoo[0][VEC_Y];
                     pvWalls[npoints2].screenSpaceCoo[1][VEC_COL] = npoints2+1;
                     npoints2++;
                 }
                 
-                if ((s1^s2) < 0){
+                if ((s1 ^ s2) < 0) 
+                {
                     pvWalls[npoints2].cameraSpaceCoo[1][VEC_X] =
-                    pvWalls[z].cameraSpaceCoo[0][VEC_X]+scale(pvWalls[zz].cameraSpaceCoo[0][VEC_X]-pvWalls[z].cameraSpaceCoo[0][VEC_X],s1,s1-s2);
+                        pvWalls[z].cameraSpaceCoo[0][VEC_X] + scale(pvWalls[zz].cameraSpaceCoo[0][VEC_X] - pvWalls[z].cameraSpaceCoo[0][VEC_X], s1, s1 - s2);
                     pvWalls[npoints2].cameraSpaceCoo[1][VEC_Y] =
-                    pvWalls[z].cameraSpaceCoo[0][VEC_Y]+scale(pvWalls[zz].cameraSpaceCoo[0][VEC_Y]-pvWalls[z].cameraSpaceCoo[0][VEC_Y],s1,s1-s2);
-                    
+                        pvWalls[z].cameraSpaceCoo[0][VEC_Y] + scale(pvWalls[zz].cameraSpaceCoo[0][VEC_Y] - pvWalls[z].cameraSpaceCoo[0][VEC_Y], s1, s1 - s2);
+
                     if (s1 < 0)
                         bunchWallsList[splitcnt++] = npoints2;
-                    
-                    pvWalls[npoints2].screenSpaceCoo[1][VEC_COL] = npoints2+1;
+
+                    pvWalls[npoints2].screenSpaceCoo[1][VEC_COL] = npoints2 + 1;
                     npoints2++;
                 }
                 z = zz;
@@ -8632,7 +8635,7 @@ static int clippoly (int32_t npoints, int32_t clipstat)
 }
 
 
-void drawmapview(int32_t dax, int32_t day, int32_t zoome, short ang)
+void drawmapview(int32_t dax, int32_t day, int32_t zoome, int16_t ang)
 {
     walltype *wal;
     sectortype *sec;
@@ -8879,7 +8882,7 @@ void drawmapview(int32_t dax, int32_t day, int32_t zoome, short ang)
             pvWalls[2].cameraSpaceCoo[0][VEC_Y] = y;
 
             x = pvWalls[0].cameraSpaceCoo[0][VEC_X]+pvWalls[2].cameraSpaceCoo[0][VEC_X]-pvWalls[1].cameraSpaceCoo[0][VEC_X];
-            y = pvWalls[3].cameraSpaceCoo[0][VEC_Y]+pvWalls[2].cameraSpaceCoo[0][VEC_Y]-pvWalls[1].cameraSpaceCoo[0][VEC_Y];
+            y = pvWalls[0].cameraSpaceCoo[0][VEC_Y]+pvWalls[2].cameraSpaceCoo[0][VEC_Y]-pvWalls[1].cameraSpaceCoo[0][VEC_Y];
             i |= getclipmask(x-cx1,cx2-x,y-cy1,cy2-y);
             pvWalls[3].cameraSpaceCoo[0][VEC_X] = x;
             pvWalls[3].cameraSpaceCoo[0][VEC_Y] = y;
