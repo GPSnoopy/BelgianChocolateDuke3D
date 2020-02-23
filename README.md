@@ -34,13 +34,13 @@ An original copy of [Duke Nukem 3D](https://3drealms.com/catalog/duke-nukem-3d_2
 
 ## Build
 
-**Windows (Visual Studio 2019 x86 solution)** [![Windows CI Status](https://github.com/GPSnoopy/BelgianChocolateDuke3D/workflows/Windows%20x86%20CI/badge.svg)](https://github.com/GPSnoopy/BelgianChocolateDuke3D/actions?query=workflow%3A%22Windows+x86+CI%22)
+**Windows (Visual Studio 2019 x86 solution)** [![Windows x86 CI Status](https://github.com/GPSnoopy/BelgianChocolateDuke3D/workflows/Windows%20x86%20CI/badge.svg)](https://github.com/GPSnoopy/BelgianChocolateDuke3D/actions?query=workflow%3A%22Windows+x86+CI%22)
 ```
 > vcpkg_windows_x86.bat
 > build_windows_x86.bat
 ```
 
-**Windows (Visual Studio 2019 x64 solution)** [![Windows CI Status](https://github.com/GPSnoopy/BelgianChocolateDuke3D/workflows/Windows%20x64%20CI/badge.svg)](https://github.com/GPSnoopy/BelgianChocolateDuke3D/actions?query=workflow%3A%22Windows+x64+CI%22)
+**Windows (Visual Studio 2019 x64 solution)** [![Windows x64 CI Status](https://github.com/GPSnoopy/BelgianChocolateDuke3D/workflows/Windows%20x64%20CI/badge.svg)](https://github.com/GPSnoopy/BelgianChocolateDuke3D/actions?query=workflow%3A%22Windows+x64+CI%22)
 ```
 > vcpkg_windows_x64.bat
 > build_windows_x64.bat
@@ -53,8 +53,11 @@ An original copy of [Duke Nukem 3D](https://3drealms.com/catalog/duke-nukem-3d_2
 ```
 Here we do not use vcpkg but instead rely on the distro packages for ENet and SDL2. Unfortunately vcpkg SDL2 (and mixer) still depends on some development packages to be installed, and the MIDI subsystem is not correctly configured.
 
-**MacOS**
-_Not yet supported._
+**MacOS** [![MacOS X CI Status](https://github.com/GPSnoopy/BelgianChocolateDuke3D/workflows/MacOS%20X%20CI/badge.svg)](https://github.com/GPSnoopy/BelgianChocolateDuke3D/actions?query=workflow%3A%22MacOS+X+CI%22)
+```
+> ./vcpkg_macosx.sh
+> ./build_macosx.sh
+```
 
 ## Music (MIDI)
 
@@ -72,7 +75,8 @@ Out of the box, you will not get any music unless you have a default soundfont i
 ```
 
 **MacOs**
-_Not yet supported._
+
+_Not yet tested._
 
 ## Contributors
 
