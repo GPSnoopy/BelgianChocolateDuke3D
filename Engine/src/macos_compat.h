@@ -22,13 +22,10 @@
 #include <inttypes.h>
 
 #define O_BINARY 0
-
-#define UDP_NETWORKING 1
-
 #define PLATFORM_MACOSX 1
-
-#define SOL_IP SOL_SOCKET
-#define IP_RECVERR  SO_BROADCAST
+//
+//#define SOL_IP SOL_SOCKET
+//#define IP_RECVERR  SO_BROADCAST
 
 #define stricmp strcasecmp
 #define strcmpi strcasecmp
@@ -40,7 +37,5 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <string.h>
-
-#define USER_DUMMY_NETWORK 1
 
 #endif

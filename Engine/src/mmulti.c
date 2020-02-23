@@ -960,7 +960,12 @@ static int open_udp_socket(int ip, int port)
 	printf("Stun is currently %s\n", (g_bStun) ? "Enabled":"Disabled");
 
     udpsocket = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
+
+#if WIN32
+	if (udpsocket == INVALID_SOCKET)
+#else
     if (udpsocket == -1)
+#endif
     {
         printf("socket creation failed: %s\n", netstrerror());
         return(0);
@@ -969,7 +974,7 @@ static int open_udp_socket(int ip, int port)
     if (!set_socket_blockmode(0))
         return(0);
 
-    #if !WIN32
+    #if !WIN32 && !__APPLE__
     {
         /* !!! FIXME: Might be Linux (not Unix, not BSD, not WinSock) specific. */
         int flags = 1;
