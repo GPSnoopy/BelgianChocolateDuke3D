@@ -83,7 +83,7 @@ _Not yet tested._
 * **Project Initiator:** [Fabien Sanglard](https://github.com/fabiensanglard)
 * **Linux Integration:** [Juan Manuel Borges Caño](https://github.com/juanmabc)
 * **64-bit Port:** [Rohit Nirmal](https://github.com/rohit-n)
-* **64-bit Port:** [Jonathon Fowler] (https://github.com/jonof/jfduke3d)
+* **64-bit Port:** [Jonathon Fowler](https://github.com/jonof/jfduke3d)
 * **Belgian Chocolate fork:** [Tanguy Fautre](https://github.com/GPSnoopy/)
 
 ## More Information
