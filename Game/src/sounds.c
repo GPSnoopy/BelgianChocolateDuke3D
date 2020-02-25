@@ -58,30 +58,21 @@ void SoundStartup(void)
     // if they chose None lets return
     if (FXDevice == SC_Unknown) return;
 
-    if (eightytwofifty && numplayers > 1)
-    {
-        status = FX_Init(FXDevice, min(NumVoices, 4), 1, 8, 8000);
-    }
-    else
-    {
-        status = FX_Init(FXDevice, NumVoices, NumChannels, NumBits, MixRate);
-    }
-    if (status == FX_Ok)
-    {
-
-        FX_SetVolume(FXVolume);
-        if (ReverseStereo == 1)
-        {
-            FX_SetReverseStereo(!FX_GetReverseStereo());
-        }
-    }
+    status = FX_Init(FXDevice, NumVoices, NumChannels, NumBits, MixRate);
+	
     if (status != FX_Ok)
     {
         Error(EXIT_FAILURE, FX_ErrorString(FX_Error));
     }
 
-    status = FX_SetCallBack(TestCallBack);
+    FX_SetVolume(FXVolume);
+    if (ReverseStereo == 1)
+    {
+        FX_SetReverseStereo(!FX_GetReverseStereo());
+    }
 
+    status = FX_SetCallBack(TestCallBack);
+	
     if (status != FX_Ok)
     {
         Error(EXIT_FAILURE, FX_ErrorString(FX_Error));
@@ -119,32 +110,32 @@ void SoundShutdown( void )
 ===================
 */
 
-void MusicStartup( void )
-   {
-   int32 status;
+void MusicStartup(void)
+{
+    int32 status;
 
-   // if they chose None lets return
-   if ((MusicDevice == SC_Unknown) || (eightytwofifty && numplayers > 1) )
-      return;
+    // if they chose None lets return
+    if (MusicDevice == SC_Unknown)
+        return;
 
-   status = MUSIC_Init( MusicDevice, MidiPort );
+    status = MUSIC_Init(MusicDevice, MidiPort);
 
-   if ( status == MUSIC_Ok )
-      {
-      MUSIC_SetVolume( MusicVolume );
-      }
-   else
-   {
-      SoundShutdown();
-      uninittimer();
-      uninitengine();
-      CONTROL_Shutdown();
-      CONFIG_WriteSetup();
-      KB_Shutdown();
-      uninitgroupfile();
-      unlink("duke3d.tmp");
-      Error(EXIT_FAILURE, "Couldn't find selected sound card, or, error w/ sound card itself\n");
-   }
+    if (status == MUSIC_Ok)
+    {
+        MUSIC_SetVolume(MusicVolume);
+    }
+    else
+    {
+        SoundShutdown();
+        uninittimer();
+        uninitengine();
+        CONTROL_Shutdown();
+        CONFIG_WriteSetup();
+        KB_Shutdown();
+        uninitgroupfile();
+        unlink("duke3d.tmp");
+        Error(EXIT_FAILURE, "Couldn't find selected sound card, or, error w/ sound card itself\n");
+    }
 }
 
 /*
@@ -155,20 +146,20 @@ void MusicStartup( void )
 ===================
 */
 
-void MusicShutdown( void )
-   {
-   int32 status;
+void MusicShutdown(void)
+{
+    int32 status;
 
-   // if they chose None lets return
-   if ((MusicDevice == SC_Unknown) || (eightytwofifty && numplayers > 1) )
-      return;
+    // if they chose None lets return
+    if (MusicDevice == SC_Unknown)
+        return;
 
-   status = MUSIC_Shutdown();
-   if ( status != MUSIC_Ok )
-      {
-      //Error( MUSIC_ErrorString( MUSIC_ErrorCode ));
-      }
-   }
+    status = MUSIC_Shutdown();
+    if (status != MUSIC_Ok)
+    {
+        //Error( MUSIC_ErrorString( MUSIC_ErrorCode ));
+    }
+}
 
 
 int USRHOOKS_GetMem(void  **ptr, uint32_t size )

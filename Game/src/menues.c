@@ -2472,8 +2472,7 @@ else
 
 				case 1:
 
-                    if(eightytwofifty == 0 || numplayers < 2)
-                        if(MusicDevice != SC_Unknown)
+                    if(MusicDevice != SC_Unknown)
                     {
                         MusicToggle = 1-MusicToggle;
                         if( MusicToggle == 0 ) 
@@ -2516,12 +2515,15 @@ else
                     break;
             }
 
-            if(SoundToggle && FXDevice != SC_Unknown) menutext(c+160+40,43,0,(FXDevice == SC_Unknown),"ON");
-            else menutext(c+160+40,43,0,(FXDevice == SC_Unknown),"OFF");
+            if(SoundToggle && FXDevice != SC_Unknown) 
+                menutext(c+160+40,43,0,(FXDevice == SC_Unknown),"ON");
+            else 
+                menutext(c+160+40,43,0,(FXDevice == SC_Unknown),"OFF");
 
-            if(MusicToggle && (MusicDevice != SC_Unknown) && (!eightytwofifty||numplayers<2))
+            if(MusicToggle && MusicDevice != SC_Unknown)
                 menutext(c+160+40,43+16,0,(MusicDevice == SC_Unknown),"ON");
-            else menutext(c+160+40,43+16,0,(MusicDevice == SC_Unknown),"OFF");
+            else 
+                menutext(c+160+40,43+16,0,(MusicDevice == SC_Unknown),"OFF");
 
             menutext(c,43,SHX(-2),(FXDevice == SC_Unknown),"SOUND");
             menutext(c,43+16+16,SHX(-4),(FXDevice==SC_Unknown)||SoundToggle==0,"SOUND VOLUME");
@@ -2535,14 +2537,14 @@ else
                     FX_SetVolume( (short) FXVolume );
             }
             menutext(c,43+16,SHX(-3),(MusicDevice==SC_Unknown),"MUSIC");
-            menutext(c,43+16+16+16,SHX(-5),(MusicDevice==SC_Unknown)||(numplayers > 1 && eightytwofifty)||MusicToggle==0,"MUSIC VOLUME");
+            menutext(c,43+16+16+16,SHX(-5),(MusicDevice==SC_Unknown)||MusicToggle==0,"MUSIC VOLUME");
             {
                 l = MusicVolume;
                 MusicVolume >>= 2;
                 bar(c+167+40,43+16+16+16,
                     (short *)&MusicVolume,4,
-                    (eightytwofifty==0||numplayers < 2) && (MusicDevice!=SC_Unknown) && x==3,SHX(-5),
-                    (numplayers > 1 && eightytwofifty)||MusicToggle==0||(MusicDevice==SC_Unknown));
+                    (MusicDevice!=SC_Unknown) && x==3,SHX(-5),
+                    (MusicToggle==0)||(MusicDevice==SC_Unknown));
                 MusicVolume <<= 2;
                 if(l != MusicVolume)
                 {

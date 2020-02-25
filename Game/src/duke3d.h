@@ -628,7 +628,7 @@ extern int32_t syncvalhead[MAXPLAYERS], syncvaltail, syncvaltottail;
 extern int32_t numfreezebounces,rpgblastradius,pipebombblastradius,tripbombblastradius,shrinkerblastradius,morterblastradius,bouncemineblastradius,seenineblastradius;
 // CTW - MODIFICATION
 // extern uint8_t  stereo,eightytwofifty,playerswhenstarted,playonten,everyothertime;
-extern uint8_t  stereo,eightytwofifty,playerswhenstarted,everyothertime;
+extern uint8_t  stereo,playerswhenstarted,everyothertime;
 // CTW END - MODIFICATION
 extern int32_t myminlag[MAXPLAYERS], mymaxlag, otherminlag, bufferjitter;
 

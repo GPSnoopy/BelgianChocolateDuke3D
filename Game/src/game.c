@@ -77,7 +77,6 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 #define TIMERUPDATESIZ 32
 
 int32_t cameradist = 0, cameraclock = 0;
-uint8_t  eightytwofifty = 0;
 uint8_t  playerswhenstarted;
 uint8_t  qe,cp;
 
@@ -7193,13 +7192,6 @@ void checkcommandline(int argc,char  **argv)
                 continue;
             }
 
-            if(*c == '-')
-            {
-                if( *(c+1) == '8' ) eightytwofifty = 1;
-                i++;
-                continue;
-            }
-
             if(*c == '?')
             {
                 comlinehelp(argv);
@@ -8240,19 +8232,6 @@ int main(int argc,char  **argv)
 
 
     Startup();
-
-    if( eightytwofifty && numplayers > 1 && (MusicDevice != SC_Unknown) )
-    {
-        puts("\n=========================================================================");
-        puts("WARNING: 8250 UART detected.");
-        puts("Music is being disabled and lower quality sound is being set.  We apologize");
-        puts("for this, but it is necessary to maintain high frame rates while trying to");
-        puts("play the game on an 8250.  We suggest upgrading to a 16550 or better UART");
-        puts("for maximum performance.  Press any key to continue.");
-        puts("=========================================================================\n");
-
-        while( !KB_KeyWaiting() ) getpackets();
-    }
 
 	if(g_bStun)
 	{
