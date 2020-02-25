@@ -88,8 +88,9 @@ static char *titleName = NULL;
 
 #define print_tf_state(str, val) printf("%s: {%s}\n", str, (val) ? "true" : "false" )
 
-void* get_framebuffer(void){
-	return((Uint8 *) surface->pixels);
+void* get_framebuffer(void)
+{
+	return surface->pixels;
 }
 
 /*
@@ -111,7 +112,7 @@ static void init_new_res_vars()
 	xdim = xres = surface->w;
 	ydim = yres = surface->h;
 
-	printf("init_new_res_vars %d %d\n",xdim,ydim);
+	printf("init_new_res_vars %d %d\n", xdim, ydim);
 
 	numpages = 1; // we always expose the same surface to the drawing engine.
 	bytesperline = surface->w;
@@ -126,40 +127,39 @@ static void init_new_res_vars()
 
 	if (screen != NULL)
 	{
-		if (screenalloctype == 0) free((void *)screen);
-		if (screenalloctype == 1) suckcache((int32_t *)screen);
+		if (screenalloctype == 0) free((void*)screen);
+		if (screenalloctype == 1) suckcache((int32_t*)screen);
 		screen = NULL;
 	} /* if */
 
 
-		switch(vidoption)
-		{
-			case 1:i = xdim*ydim; break;
-			case 2: xdim = 320; ydim = 200; i = xdim*ydim; break;
+	switch (vidoption)
+	{
+	case 1:i = xdim * ydim; break;
+	case 2: xdim = 320; ydim = 200; i = xdim * ydim; break;
+	default: assert(0);
+	}
+	j = ydim * 4 * sizeof(int32_t);  /* Leave room for horizlookup&horizlookup2 */
 
-			default: assert(0);
-		}
-		j = ydim*4*sizeof(int32_t);  /* Leave room for horizlookup&horizlookup2 */
+	if (horizlookup)
+		free(horizlookup);
 
-		if(horizlookup)
-			free(horizlookup);
+	if (horizlookup2)
+		free(horizlookup2);
 
-		if(horizlookup2)
-			free(horizlookup2);
-		
-		horizlookup = (int32_t*)malloc(j);
-		horizlookup2 = (int32_t*)malloc(j);
+	horizlookup = (int32_t*)malloc(j);
+	horizlookup2 = (int32_t*)malloc(j);
 
 	j = 0;
 
 	//Build lookup table (X screespace -> frambuffer offset.
-	for(i = 0; i <= ydim; i++)
+	for (i = 0; i <= ydim; i++)
 	{
 		ylookup[i] = j;
 		j += bytesperline;
 	}
 
-	horizycent = ((ydim*4)>>1);
+	horizycent = ((ydim * 4) >> 1);
 
 	/* Force drawrooms to call dosetaspect & recalculate stuff */
 	oxyaspect = oxdimen = oviewingrange = -1;
@@ -168,13 +168,13 @@ static void init_new_res_vars()
 	setBytesPerLine(bytesperline);
 
 
-	setview(0L,0L,xdim-1,ydim-1);
+	setview(0L, 0L, xdim - 1, ydim - 1);
 
 	setbrightness(curbrightness, palette);
 
 	if (searchx < 0) {
 		searchx = halfxdimen;
-		searchy = (ydimen>>1);
+		searchy = (ydimen >> 1);
 	}
 }
 
@@ -217,10 +217,14 @@ static void go_to_new_vid_mode(int w, int h)
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	SDL_CHECK_NOT_NULL(renderer, "create renderer");
 
-	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
-	SDL_SetHint(SDL_HINT_RENDER_VSYNC, "0");
+	SDL_RendererInfo rendererInfo;
+	SDL_CHECK_SUCCESS(SDL_GetRendererInfo(renderer, &rendererInfo));
+	printf("SDL Renderer: '%s'.\n", rendererInfo.name);
+
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
+	//SDL_SetHint(SDL_HINT_RENDER_VSYNC, "1");
 	
-	SDL_CHECK_SUCCESS( SDL_RenderSetLogicalSize(renderer, w, h) );
+	SDL_CHECK_SUCCESS(SDL_RenderSetLogicalSize(renderer, w, h));
 
 	texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, w, h);
 	SDL_CHECK_NOT_NULL(texture, "create texture");
@@ -237,6 +241,15 @@ static void go_to_new_vid_mode(int w, int h)
 	SDL_CHECK_NOT_NULL(surface_rgba, "create RGBA surface");
 
 	init_new_res_vars();
+}
+
+static void present_framebuffer(void)
+{
+	SDL_CHECK_SUCCESS(SDL_BlitSurface(surface, NULL, surface_rgba, NULL));
+	SDL_CHECK_SUCCESS(SDL_UpdateTexture(texture, NULL, surface_rgba->pixels, surface_rgba->pitch));
+	SDL_CHECK_SUCCESS(SDL_RenderClear(renderer));
+	SDL_CHECK_SUCCESS(SDL_RenderCopy(renderer, texture, NULL, NULL));
+	SDL_RenderPresent(renderer);
 }
 
 static inline int sdl_mouse_button_filter(SDL_MouseButtonEvent const *event)
@@ -671,10 +684,6 @@ void _platform_init(int argc, char  **argv, const char  *title, const char  *ico
 		}
 	}
 
-//#ifdef __APPLE__
-//	SDL_putenv("SDL_VIDEODRIVER=Quartz");
-//#endif  	
-
 	SDL_CHECK_SUCCESS( SDL_Init(SDL_INIT_VIDEO) );
 	
 	if (title == NULL)
@@ -686,7 +695,7 @@ void _platform_init(int argc, char  **argv, const char  *title, const char  *ico
 
 	output_sdl_versions();
 
-	printf("Video Driver: '%s'.\n", SDL_GetCurrentVideoDriver());
+	printf("SDL Video Driver: '%s'.\n", SDL_GetCurrentVideoDriver());
 }
 
 // Capture BMP of the current frame
@@ -1150,10 +1159,7 @@ void VBE_presentPalette()
 {
 	// tanguyf: updating the palette is not immediate with a buffered surface, screen needs updating as well.
 	// Call this function if nextpage() is not called. E.g. static intro logo.
-	SDL_CHECK_SUCCESS(SDL_BlitSurface(surface, NULL, surface_rgba, NULL));
-	SDL_CHECK_SUCCESS(SDL_UpdateTexture(texture, NULL, surface_rgba->pixels, surface_rgba->pitch));
-	SDL_CHECK_SUCCESS(SDL_RenderCopy(renderer, texture, NULL, NULL));
-	SDL_RenderPresent(renderer);
+	present_framebuffer();
 }
 
 void _uninitengine(void)
@@ -1231,10 +1237,7 @@ void _nextpage(void)
 
 	_handle_events();
 
-	SDL_CHECK_SUCCESS( SDL_BlitSurface(surface, NULL, surface_rgba, NULL) );
-	SDL_CHECK_SUCCESS( SDL_UpdateTexture(texture, NULL, surface_rgba->pixels, surface_rgba->pitch) );
-	SDL_CHECK_SUCCESS( SDL_RenderCopy(renderer, texture, NULL, NULL) );
-	SDL_RenderPresent(renderer);
+	present_framebuffer();
 
 	//sprintf(bmpName,"%d.bmp",counter++);
 	//SDL_SaveBMP(surface,bmpName);
