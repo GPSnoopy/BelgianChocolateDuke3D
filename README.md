@@ -73,7 +73,7 @@ Out of the box, you will not get any music unless you have a default soundfont i
 
 **MacOS X**
 
-_Not yet tested._
+Out of the box, MIDI music will play fine on MacOS X (pending [vcpkg Issue/PR #10201being merged](https://github.com/microsoft/vcpkg/pull/10201)).
 
 ## Contributors
 
