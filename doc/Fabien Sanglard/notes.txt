@@ -1,0 +1,474 @@
+Duke Nukem 3D Code Review sesssion by Fabien Sanglard:
+===========================
+
+Build has some neat new features compared to Doom.
+
+    - Destructible environments.
+    - Sloppy walls
+    - Mirrors
+    - Underwater effects
+
+Can't wait to read that.
+
+Wow, the code is a mess:
+   
+ - Two mega-behemote files:
+       * Engine.c (8506 lines of code).
+       * game.c (11029 lines of code).
+ - method naming convention is unconsistent (Capital,camel case, random mess).
+ - game engine was not designed with filesystem/input/screen abstraction for cross-compiling in mind.
+ - No comments
+ - No modularity.
+ - Crytic variable name (u,t, playerswhenstarted)...
+ - Cryptic function names (nextpage, _nextpage, se40code,   cacheit (premap.c)....and docacheit (premac.c), weaponnum and weaponnum999).
+ - No usage of MACRO DEF (if (bad&12) line 1728. )
+ - Confusing variable names: game.c "wal" and "wall" variables.
+
+This is going to be REALLY HARD to read. Even harder than prince of persia for Apple IIe. 
+
+drawsprite method starts at 4341 -> 5231: 890 lines of code method !!!!
+
+
+Oh......snap.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		static long xb1[MAXWALLSB], yb1[MAXWALLSB], xb2[MAXWALLSB], yb2[MAXWALLSB];
+		static long rx1[MAXWALLSB], ry1[MAXWALLSB], rx2[MAXWALLSB], ry2[MAXWALLSB];
+		static short p2[MAXWALLSB], thesector[MAXWALLSB], thewall[MAXWALLSB];
+		
+		static short bunchfirst[MAXWALLSB], bunchlast[MAXWALLSB];
+		
+		static short smost[MAXYSAVES], smostcnt;
+		static short smoststart[MAXWALLSB];
+		static char smostwalltype[MAXWALLSB];
+		static long smostwall[MAXWALLSB], smostwallcnt = -1L;
+		
+		static short maskwall[MAXWALLSB], maskwallcnt;
+		static long spritesx[MAXSPRITESONSCREEN];
+		static long spritesy[MAXSPRITESONSCREEN+1];
+		static long spritesz[MAXSPRITESONSCREEN];
+		static spritetype *tspriteptr[MAXSPRITESONSCREEN];
+		
+		short umost[MAXXDIM+1], dmost[MAXXDIM+1];
+		static short bakumost[MAXXDIM+1], bakdmost[MAXXDIM+1];
+		short uplc[MAXXDIM+1], dplc[MAXXDIM+1];
+		static short uwall[MAXXDIM+1], dwall[MAXXDIM+1];
+		static long swplc[MAXXDIM+1], lplc[MAXXDIM+1];
+		static long swall[MAXXDIM+1], lwall[MAXXDIM+4];
+		long xdimen = -1, xdimenrecip, halfxdimen, xdimenscale, xdimscale;
+		long wx1, wy1, wx2, wy2, ydimen;
+		long viewoffset;
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+Global variables, global variables everywhere...what is everything doing ?????!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+ scansector just broke my brain , look at those variables:
+   
+   xb2 array,yb2 array,z, p2 array "the" prefix
+   
+      for(z=numscansbefore;z&gt;numscans;z++)
+      if ((wall[thewall[z]].point2 != thewall[p2[z]]) || (xb2[z] >= xb1[p2[z]]))
+        bunchfirst[numbunches++] = p2[z], p2[z] = -1;
+
+
+int main(int argc,char **argv) is in game.c (line 8909)
+
+Hey not so bad at least I found the starting point !
+
+
+John Carmack opinion of Build (form Masters of Doom): "held together with bubble gum" is starting
+to make a lot of sense. After emailing him he nuanced his opinion, starting that the game "provided value.".
+
+Code statistics :
+=================
+
+cloc duke3dsource/
+
+     161 text files.
+     157 unique files.                                          
+      12 files ignored.
+
+http://cloc.sourceforge.net v 1.56  T=1.0 s (149.0 files/s, 97904.0 lines/s)
+-------------------------------------------------------------------------------
+Language                     files          blank        comment           code
+-------------------------------------------------------------------------------
+C++                             39          10759           4141          60910
+C/C++ Header                   109           2814           4909          14333
+make                             1              4              3             31
+-------------------------------------------------------------------------------
+SUM:                           149          13577           9053          75274
+-------------------------------------------------------------------------------
+
+
+75,274 is HUGE compared to Doom codebase:
+
+http://cloc.sourceforge.net v 1.56  T=1.0 s (126.0 files/s, 55018.0 lines/s)
+-------------------------------------------------------------------------------
+Language                     files          blank        comment           code
+-------------------------------------------------------------------------------
+C                               62           7459           6332          31299
+C/C++ Header                    62           1845           2901           4804
+Assembly                         1             51             42            190
+make                             1              8             11             76
+-------------------------------------------------------------------------------
+SUM:                           126           9363           9286          36369
+-------------------------------------------------------------------------------
+
+It is twice as much.
+
+
+
+Ok to it seems Engine.C is providing services to Game.c.
+
+Game.c contains the main method and starts by loading PCX palette (BUILD.PCX).
+
+TODO: Generate a PNG for the PCX palette and compare it to Doom
+
+
+
+Anti-copy mecanism where the game checks the .exe CRC and then again in RAM.
+
+
+
+GRP magic number is "kensilverman". That is how a .GRP GAME asset archive MUST start.
+
+On top of the lack of namespacing, the abscence of camelCase or underscore for space makes function names and variables difficult to understand.
+
+
+
+
+
+
+
+
+I had very high expectations from the Build engine. One of the greatest game of all time promised to be a fantastic read.
+In the end I will recommend gamers to keep on buying and playing this gem....but programmers to stay away from a VERY hostile 
+codebase. 
+
+It is a sad statement but I feel like the genius of the Build engine is lost to the next generation of programmers.
+
+:( ! 
+
+
+:( !
+
+
+:( !
+
+
+Pain is everywhere.
+
+There are very few comments in the code but this website:
+http://wiki.eduke32.com/wiki/Map
+is a good source of information, especially describing the structure fields.
+
+Hey maybe this is not all that bad, I found the documentation for the ART and MAP format:
+
+http://www.advsys.net/ken/buildsrc/kenbuild.zip, file buildinf.txt in src.zip .
+
+I was too quick to scream about the last of documenation: Ken Silverman did a good job of documenating the externam functions.
+ - Good documentation ... but only for external usage. The internals are undocumented.
+ Documents are in KenBuild.zio
+
+
+Multiples comma separated statement, hard to read:
+
+j = 0; for(i=0;i<=k;i++) ylookup[i] = j, j += bytesperline;
+
+Two variables instead of a struct WHY ?:
+
+windowx1 = x1; wx1 = (x1<<12);
+windowy1 = y1; wy1 = (y1<<12);
+windowx2 = x2; wx2 = ((x2+1)<<12);
+windowy2 = y2; wy2 = ((y2+1)<<12);
+
+
+
+Decyphering variables names :
+=============================
+
+rx1,rx2,ry1,ry2: Does 'r' stands for 'Rendition' ? But walls are only
+potentially visible.
+
+xb1,xb2,yb1,yb2: Does 'b' stands for 'Boundaries' ?
+
+
+Fixed point precision is never explicit:
+
+sometimes Values are manipulated with 16 bits for the fraction, sometimes 6. The only way to know is to loop at the macro used to manipulate the values.
+
+
+wallmost and owallmost calculate uplc[] and dplc[] : the rasterized tops and bottoms of walls.
+
+Ken Silverman posted on http://www.jonof.id.au/ and explained a few things like the bunch system.
+.
+.
+.
+..
+.
+Shit the forum has been taken down due to span or something....
+
+
+game module features a nice types.h, precursor of inttypes.h that help portability. Sadly the Engine side does not use it. 
+Nice attempts but the Game.c load_duke3d_groupfile is packed with native win32 calls (FindFirstFile,FindNextFile,FindClose):( !!
+
+The DOS timer replication is actually nice to read.
+
+Working with the 11000 lines Game.c induces serious slowdown on Xcode.
+
+Some comments translate frustration from earlier developers :
+#pragma message("game.c this is So lame")
+#include "cache1d.h"
+
+	/*
+     * Make all variables in BUILD.H defined in the ENGINE,
+	 *  and externed in GAME
+     * (dear lord.  --ryan.)
+     */
+
+
+More win32 only functions: mkdir called without the parameters requested on Windows
+
+My MacOSX Port:
+The timer and filesystem have been patched in a very inflexible way just to see if things are working.
+The sound engine is still a problen at this point…maybe I will just use dummy function ?
+
+Ok, sound engine is a stub…..and now same problem with MIDI only !!!
+
+Usage of getch() which is bad (replaced with get char)/
+
+Usage of non-standard itoa, replace with nprintf
+Usage of noo-standard ltoa, replaced with print
+
+WTF Two multi implementation ?!?!?!? stable and unstable…..with function points.
+Thanks for the comment:
+[Fix this horrible networking mess. Function pointers not happy]
+But…..really ?!!?
+
+Xcode is slow and now UNRESPONSIVE trying to edit this UGLY 11,000 lines game.C !!
+
+XCode crashed. Dude....
+
+I have hardcoded the location of the GRP file for now:
+
+/Users/fabiensanglard/Desktop/
+
+In order to be able to render stuff on the screen, the game module has access the to the "pages": The two framebuffer: visible and the one being drawn.
+
+
+The renderer does not rely on recursive function (the way Doom did when walking the BSP). Instead a stack and a loop is used (for sector flooding)
+
+Example of updatesector no documentation. With a comment or bette variable of struct
+a person willing to learn will take 1 minute to understand the function instead of 50.
+
+From 500 warnings in Xcode, I am down to 395.
+
+This is more the port issue than original duke issue: Usage of "playmusic" and "Playmusic"…
+
+Game modules uses potpourri variable (tmpBuffer is a 64kB array that is used for pretty much anything byte,strings,ints:( !
+
+I agree very much: #pragma message("game.c this is So lame")
+
+gane.c features a few dangling effects issues.
+
+
+Beginning conversion to inttypes of the engine module. Ken silverman used long everywhere because he thought long were 32 bits all the time.
+
+Difference of style: Game uses int and Engine uses long for no reason :( !
+
+
+Redefined char to uint8_t: Crashing bug and Visual bug are now GONE !!!! YES YES YES YES YES YES YES YES YES YES YES YES YES 
+
+char used to be unsigned in Watcom. On xCode they were signed and this led to pretty bad things.
+
+Game module feature an abstraction layer on top of the audiolib. That is nice.
+Fixed the stub audio lib (had to fake successfully playing a sound returning FX_Ok instead of 1.
+The game now runs on Mac OS X !!! I just killed my first monster !
+
+The port was botchered with little consideration for Unix/Mac OS X. Use of separator path \ that are problematic on *nix platforms instead of / which works everywhere.
+
+Yep !! I have sound effect working, only missing the MIDI playback now !!!
+
+vidoption uses magic number….WHY NOT and ENUM or a MACRO ?
+
+Super build (#ifdef SUPERBUILD) seems to be the Voxel stuff. 
+
+Even build formatting is horrible…
+
+Mixing the char,signed char,unsigned char was a mess. A replaceALL is far from ideal
+since it will messed up the string function that MUST us a char. int8_t and uint8_t 
+must be used only for math variables.
+
+--Dear god
+extern char  buf[80]; //My own generic input buffer
+
+
+There is some text about Duke Nukem V at the bottom of game.c ! Includes features and code samples. Kinda cool to see that.
+
+Why the code release failed to attract developers:
+
+1. Code not portable.
+2. Code complicated and discouraging hard to understand.
+
+
+
+
+Ok, time to run the code in PVS Static Code Analysis: Not too bad, only 95 hits.
+
+Level 1: 15
+Level 2: 20
+Level 3: 60
+
+PVS is Awesome it can find a lot of issues !! Really really clever things !!
+
+
+
+The game module renders sprites to a virtual device (hard coded dimension for a 320*200 display). The executing function then scale to the actual resolution:
+that is very good :) !
+
+
+Ken seems to be using the comma separated statment VERY often:
+
+if ((wall[z].point2 < z) && (scanfirst < numscans))
+				p2[numscans-1] = scanfirst, scanfirst = numscans;
+				
+I find it very confusing !!
+
+
+
+Just finished decyphering scansector, inside and now wallfront: 
+
+CROSS PRODUCT ARE EVEYWHERE !! This is interesting how Quake had dot product (floating point) everywhere compared to Duke fixed point cross-product
+
+
+Ok, I have reviewed:
+
+Inside:     Check
+scansector: I don't understand how the  portal cross test is working.
+wallfront:  Check
+bunchfront: Check
+
+
+
+
+Questions :
+===========
+What is this test that decide if A portal should be visited ?
+
+What is this double closer search in the bunch rendering ?
+
+bubblesort for sprites ordering
+
+why is this  reject ? I saw it everywhere...
+
+if (yp <= (4<<8)) return;
+
+End of questions .
+------------------
+
+
+I am going to create my own port: Chocolate Duke Nukem 3D.
+
+Refactorting started (git: 4fc2a94d73457d877c19faca96321d14690378f3):
+
+Moved global variable from global to stack.
+Renamed many variables.
+Created datastructure.
+
+
+Some parameters in the function calls were not even used anymore, I cleaned that up.
+It is not surprising that some waste remained, the drawing functions have MANY parameters !
+
+
+Many memory masking operation assume 32bits addresses (cache in loadpics(), 0xfffffff0 ).
+Cache is aligning on 16bits…
+
+//FCS: That is cute, the RAM was so limited that cache size was maxed via repeated calls to malloc !!
+    /*
+    cachesize = max(artsize,1048576);
+    while ((pic = (uint8_t  *)kkmalloc(cachesize)) == NULL)
+    {
+        cachesize -= 65536L;
+        if (cachesize < 65536)
+            return(-1);
+    }
+    */
+
+
+OMG so many many many comma separated statement….WHY not use blocks ? This is so confusing visually :( :( !
+Ragging over the variable naming tendency to have "da" prefix everywhere. Looks like university program when students
+add "the" or "my" in front of variables because they can't find a bette name.
+
+Mysterious lasts array….what does this do ? Bunch ?
+
+
+Why am I even reading this ? This is a nightmare.
+
+Down to 50 warnings. Mostly in audiolib that I don't really care about for now.
+
+faketimerhandler is called everywhere…but what is it doing ?
+   The timer is weird. 120 ticks per frame is a MUST ! Portability issues.
+
+Removed so much dead code and variables…. ('totalarea' variable was counting how many pixels had been transferred to screen).
+
+Q: What is the 'fixchain" variable ??!? 
+A: It was the bytesperline…
+
+I am doing a lot of variable renaming in a.c (bytesperline, transPalette, colorIndex
+
+
+OH THE HORROR OH THE HORROROH THE HORROROH THE HORROROH THE HORROROH THE HORROROH THE HORROROH THE HORROROH THE HORROR
+OH THE HORROROH THE HORROROH THE HORROROH THE HORROROH THE HORROROH THE HORROROH THE HORROROH THE HORROROH THE HORROR
+OH THE HORROROH THE HORROROH THE HORROROH THE HORROROH THE HORROROH THE HORROROH THE HORROROH THE HORROROH THE HORROR
+  
+  
+  Most asm drawing routines are using long (that was assumed to be 32bits at the time) in order to pass memory location.
+  Digging in compiler warning, it seems it is a generalized practice to use long instead of pointers. WHYYYYYYYYYYYYY ??!?!?!
+  
+  long WALOFF[MAXTILES] - the actual 32-bit offset pointing to the top-left corner of the tile.
+  
+  This works if long and mem address are the same length....but this is BAD practice.
+  
+  Make things clear is so hard...many binary operations are performed diretly on those 'long' memory location: This is not allowed in C.
+
+OH THE HORROR OH THE HORROROH THE HORROROH THE HORROROH THE HORROROH THE HORROROH THE HORROROH THE HORROROH THE HORROR
+OH THE HORROROH THE HORROROH THE HORROROH THE HORROROH THE HORROROH THE HORROROH THE HORROROH THE HORROROH THE HORROR
+OH THE HORROROH THE HORROROH THE HORROROH THE HORROROH THE HORROROH THE HORROROH THE HORROROH THE HORROROH THE HORROR
+
+
+
+
+ 
+
+Pretty cool VESA renderer abstraction
+
+Haha, just ran the game in 320x240 in a window……i cannot believe this was running fullscreen in 1996 !!!
+
+
+Ok, let's make an easy change in terms of struct:
+short tilesizx[MAXTILES], tilesizy[MAXTILES];
+typedef short dimensions[2];
+
+tsizx is changed to tileWidth
+tsizy is changed to tileHeight
+changed int32_t waloff[MAXTILES] to uint8_t* waloff[MAXTILES]
+
+Wow, that was a MAJOR CHANGE !!!!
+
+- Removed all WATCOM,DOS and OpenGL references.
+   
+
+- Finished creating a Tile Module. The game went pitch black until I found out that I messed up a global variable. This is so difficult.
+
+TODO: 
+   - Use struct in the VSD part of the engine.
+   - Use ANSI C to access the filesystem
+   - Use struct in the filesystem.
+   - Have a palette module
+   - Have a network module
+   - Try to remove useless header include via http://code.google.com/p/include-what-you-use/
+   - X Create a TILE module.
+   - Treat warnings as ERRORS. Total warings should be O.
+
+
+
+                              
