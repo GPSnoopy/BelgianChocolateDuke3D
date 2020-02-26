@@ -97,6 +97,7 @@ set(src_files
 
 if (WIN32)
 	set (resource_files chocolateDukeResources.rc)
+	set (socket_library ws2_32.lib)
 endif()
 
 source_group("AudioLib Header Files" FILES ${src_files_audiolib_headers})
@@ -123,6 +124,6 @@ add_executable(${project_name}
 )
 
 set_target_properties(${project_name} PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
-target_link_libraries(${project_name} PRIVATE Engine ${ENET_LIBRARIES} ${SDL2_ALL_LIBRARIES})
+target_link_libraries(${project_name} PRIVATE Engine ${SDL2_ALL_LIBRARIES} ${socket_library})
 set_target_properties(${project_name} PROPERTIES OUTPUT_NAME "ChocoDuke3D${project_suffix}")
 set_target_properties(${project_name} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")

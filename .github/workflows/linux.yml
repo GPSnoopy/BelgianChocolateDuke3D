@@ -12,6 +12,6 @@ jobs:
     - name: Install Ubuntu dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install libenet-dev libsdl2-mixer-dev
+        sudo apt-get install libsdl2-mixer-dev
     - name: Compile Duke3D
       run: ./build_linux.sh

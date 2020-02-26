@@ -45,7 +45,7 @@ An original copy of [Duke Nukem 3D](https://3drealms.com/catalog/duke-nukem-3d_2
 
 **Linux (GCC Makefile)** [![Linux CI Status](https://github.com/GPSnoopy/BelgianChocolateDuke3D/workflows/Linux%20CI/badge.svg)](https://github.com/GPSnoopy/BelgianChocolateDuke3D/actions?query=workflow%3A%22Linux+CI%22)
 ```bash
-> sudo apt-get install libenet-dev libsdl2-mixer-dev
+> sudo apt-get install libsdl2-mixer-dev
 > ./build_linux.sh
 ```
 Here we do not use vcpkg but instead rely on the distro packages for ENet and SDL2. Unfortunately vcpkg SDL2 (and mixer) still depends on some development packages to be installed, and the MIDI subsystem is not correctly configured.

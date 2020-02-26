@@ -8105,6 +8105,9 @@ int main(int argc,char  **argv)
 	
 	printf("*** Chocolate DukeNukem3D v%d.%d ***\n\n", CHOCOLATE_DUKE_REV_X, CHOCOLATE_DUKE_REV_DOT_Y);
 
+    for (int i = 0; i < argc; ++i)
+        printf("ARG %d: %s\n", i, argv[i]);
+
 	// FIX_00033: Fake multi and AI are now fully working
 	ud.multimode = 1;  // xduke: must be done before checkcommandline or that will prevent Fakeplayer and AI
 	

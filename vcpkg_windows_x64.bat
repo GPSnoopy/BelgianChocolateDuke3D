@@ -6,7 +6,6 @@ git checkout 2020.01 || goto :error
 call bootstrap-vcpkg.bat || goto :error
 
 vcpkg.exe install ^
-	enet:x64-windows-static ^
 	sdl2:x64-windows-static ^
 	sdl2-mixer:x64-windows-static ^
 	|| goto :error

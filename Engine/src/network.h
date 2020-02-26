@@ -11,9 +11,6 @@
 
 #include "platform.h"
 
-void Setup_UnstableNetworking();
-void Setup_StableNetworking();
-
 void callcommit(void);
 void initcrc(void);
 int32_t getcrc(uint8_t  *buffer, short bufleng);

@@ -9,6 +9,5 @@ git checkout 2020.01
 ./bootstrap-vcpkg.sh
 
 ./vcpkg install \
-	enet:x64-osx \
 	sdl2:x64-osx \
 	sdl2-mixer:x64-osx

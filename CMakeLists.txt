@@ -54,7 +54,6 @@ elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
 	set(project_suffix ".32")
 endif()
 
-find_package(ENet REQUIRED)
 find_package(SDL2 CONFIG REQUIRED)
 
 if (VCPKG_TARGET_TRIPLET)

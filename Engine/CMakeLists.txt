@@ -1,8 +1,6 @@
 
 set(project_name "Engine")
 
-add_definitions(-DUDP_NETWORKING)
-
 set(src_files
 	src/build.h
 	src/cache.c
@@ -20,8 +18,6 @@ set(src_files
 	src/icon.h
 	src/macos_compat.h
 	src/mmulti.c
-	src/mmulti_stable.cpp
-	src/mmulti_stable.h
 	src/mmulti_unstable.h
 	src/network.c
 	src/network.h

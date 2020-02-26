@@ -13,11 +13,7 @@
 #include <ctype.h>
 
 #include "mmulti_unstable.h"
-
-#include <enet/enet.h>
 #include "network.h"
-
-#include "fixedPoint_math.h"
 
 #define MAXPLAYERS 16
 #define BAKSIZ 16384
@@ -541,29 +537,11 @@ void unstable_genericmultifunction(long other, char *bufptr, long messleng, long
 
 	gcom->command = command;
 	gcom->numbytes = min(messleng,MAXPACKETSIZE);
-	copybuf(bufptr,gcom->buffer,(gcom->numbytes+3)>>2);
+	memcpy(bufptr,gcom->buffer,gcom->numbytes);
 	gcom->other = other+1;
 	callcommit();
 	
 }
-
-
-#if STUB_NETWORKING
-gcomtype *init_network_transport(char **ARGV, int argpos)
-{
-    printf("No networking support built in.\n");
-    return NULL;
-} /* init_network_transport */
-
-void deinit_network_transport(gcomtype *gcom)
-{
-}
-
-void callcommit(void)
-{
-}
-
-#elif UDP_NETWORKING
 
 #if WIN32
 #  include <winsock.h>
@@ -1674,10 +1652,3 @@ void unstable_callcommit(void)
             break;
     }
 }
-
-#else
-#error Please define a network transport for your platform.
-#endif
-
-/* end of mmulti.c ... */
-

@@ -659,30 +659,11 @@ static char  *string_dupe(const char  *str)
 
 void _platform_init(int argc, char  **argv, const char  *title, const char  *iconName)
 {
-	int i;
 	int64_t timeElapsed;
 
 	// FIX_00061: "ERROR: Two players have the same random ID" too frequent cuz of internet windows times
 	timeElapsed = SDL_GetTicks();
 	srand(timeElapsed&0xFFFFFFFF);
-
-	Setup_UnstableNetworking();
-
-	// Look through the command line args
-	for(i = 0; i < argc; i++)
-	{
-		if(argv[i][0] == '-' )
-		{
-			if(strcmpi(argv[i], "-netmode_stable") == 0)
-			{
-				//fullscreen = 1;
-				//TODO:
-//TODO ( "[Todo: handle -netmode <int>]" )
-				Setup_StableNetworking();
-					
-			}
-		}
-	}
 
 	SDL_CHECK_SUCCESS( SDL_Init(SDL_INIT_VIDEO) );
 	
