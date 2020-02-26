@@ -8,7 +8,7 @@ A **port** that:
 2. Portable and compiling in one click on Windows, OS X and Linux.
 3. Aimed at education, with lots of comments and documentation added in order to help programmers to understand and learn.
 
-<img src="screenshot0.png" width="95%"></img>
+<img src="doc/screenshot0.png" width="95%"></img>
 
 ## Belgian Chocolate Duke3D
 

@@ -1,0 +1,59 @@
+[tanguyf: 2020-02-26 Extract from duke3d_w32 (RancidMeat) documentation. This port was the base for xDuke3D. The network code has barely changed since.]
+
+
+Networking
+**********
+
+Duke3d_w32 is currently capable of networked multiplayer games over a UDP connection. For the most part, it's quite stable. Though, bugs do still exist. So, please keep that in mind. 
+ 
+There are two different methods for conducting a multiplayer game. The "Internet play" page describes a method that can be used for both Internet and LAN-based games. The "LAN play" page describes a shortcut method that may be used for games that will be played only on a LAN. 
+
+New to Build 19, a new, 2 player, more stable, networking option is available. By adding -netmode_stable to the command-line you can force duke3d_w32 to send all UDP packets as guaranteed. Currently, this only works correctly with 2 players. [tanguyf: 2020-02-26: I deleted the code for this mode. Nobody seemed to use it and it's complicating the Engine code.]
+
+
+Internet Play
+*************
+
+You need to pass a few command line parameters to duke3d to enable the networking.
+
+Example: 
+
+	duke3d_w32.exe /m /c1 /i1 -name Bargle -map spacepwr.map -net netcfg_player1.txt
+
+The next important piece is the netcfg text file. It contains the network address network mode, and all of the peer-to-peer client addresses that are going to attend the session. 
+ 
+The format of the file is this:
+
+	interface xxx.xxx.xxx.xxx:xxxx
+	mode peer
+	allow xxx.xxx.xxx.xxx:xxxx
+	allow xxx.xxx.xxx.xxx:xxxx
+	allow xxx.xxx.xxx.xxx:xxxx
+
+interface 
+- This is your ip adddress and the UDP port you want to use.  
+
+mode 
+- The network type. "peer" is currently the only valid value. "client" and "server" will be added later. 
+
+allow 
+- This is a list of all of the other client IP addresses that are going to be playing in the session. 
+
+ 
+Take a look at the example provided in the build: 
+ 
+An example has been created in the bin\nettest directory. You will find sample netcfg files as well as batch files which contain command line parameters. You will need to change the IP addresses to the values of the machines joining the game. The example is for two players. You could add more by making more netcfg files and proper batch files.
+
+
+LAN Play
+********
+
+There is an alternate method for LAN games. Instead of adding lines of "allows", you can add a "broadcast ". This allows you to name how many other players are going to be in the game. It will broadcast greeting messages until that number of players responds. 
+
+Example: 
+
+	interface 192.168.1.1:8500
+	mode peer
+	broadcast 1
+
+This will wait for one other player on the lan.
