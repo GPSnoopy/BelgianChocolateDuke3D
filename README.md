@@ -20,7 +20,7 @@ After reading both Fabien Sanglard's Game Engine Black Books on [Wolfenstein 3D]
 * Ported to vcpkg and CMake.
 * Added continuous integration (via GitHub Actions).
 * Added 64-bit support (savegames are compatible between 32-bit and 64-bit).
-* Removed +35K lines of code (mostly from Game) of obsolete, unused methods, and other dead code paths.
+* Removed +35K lines of obsolete, unused methods, and other dead code paths (mostly from Game).
 
 ### Known Issues
 
@@ -74,7 +74,7 @@ Out of the box, you will not get any music unless you have a default soundfont i
 
 **MacOS X**
 
-Out of the box, MIDI music will play fine on MacOS X (pending [vcpkg Issue/PR #10201being merged](https://github.com/microsoft/vcpkg/pull/10201)).
+Out of the box, MIDI music will play fine on MacOS X (pending [vcpkg Issue/PR #10201](https://github.com/microsoft/vcpkg/pull/10201) being merged).
 
 ## Contributors
 
