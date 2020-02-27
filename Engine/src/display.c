@@ -17,7 +17,6 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
-#include "platform.h"
 
 #define BUILD_NOMOUSEGRAB    "BUILD_NOMOUSEGRAB"
 #define BUILD_WINDOWED       "BUILD_WINDOWED"
@@ -34,7 +33,6 @@
 #include "display.h"
 #include "fixedPoint_math.h"
 #include "engine.h"
-#include "network.h"
 #include "sdl_util.h"
 #include "icon.h"
 #include "draw.h"

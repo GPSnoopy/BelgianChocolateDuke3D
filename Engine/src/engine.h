@@ -137,7 +137,7 @@ int clipinsidebox(int32_t x, int32_t y, int16_t wallnum, int32_t walldist);
 #include "display.h"
 #include "fixedPoint_math.h"
 #include "tiles.h"
-#include "network.h"
+#include "mmulti.h"
     
     
 //Exported for tile module

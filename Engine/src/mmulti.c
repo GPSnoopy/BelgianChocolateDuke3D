@@ -12,8 +12,7 @@
 #include <stdarg.h>
 #include <ctype.h>
 
-#include "mmulti_unstable.h"
-#include "network.h"
+#include "mmulti.h"
 
 #define MAXPLAYERS 16
 #define BAKSIZ 16384
@@ -117,13 +116,12 @@ enum ECommitCMDs
 //PacketQueue outgoingPacketQueue;
 //outgoingPacketQueue.reserve(128);
 
-gcomtype *init_network_transport(char **ARGV, int argpos);
-void deinit_network_transport(gcomtype *gcom);
-//void unstable_callcommit(void);
-void dosendpackets(long other);
+static gcomtype *init_network_transport(char **ARGV, int argpos);
+static void deinit_network_transport(gcomtype *gcom);
+static void dosendpackets(long other);
 
 
-void unstable_initcrc(void)
+void initcrc(void)
 {
 	long i, j, k, a;
 
@@ -143,20 +141,20 @@ void unstable_initcrc(void)
 }
 
 
-long unstable_getcrc(char *buffer, short bufleng)
+int32_t getcrc(uint8_t *buffer, short bufleng)
 {
-	long i, j;
+    int32_t i, j;
 
 	j = 0;
 	for(i=bufleng-1;i>=0;i--) updatecrc16(j,buffer[i]);
 	return(j&65535);
 }
 
-void unstable_initmultiplayers(char damultioption, char dacomrateoption, char dapriority)
+void initmultiplayers()
 {
 	long i;
 
-	unstable_initcrc();
+	initcrc();
 	for(i=0;i<MAXPLAYERS;i++)
 	{
 		incnt[i] = 0L;
@@ -209,7 +207,7 @@ void unstable_initmultiplayers(char damultioption, char dacomrateoption, char da
 }
 
 
-void dosendpackets(long other)
+static void dosendpackets(long other)
 {
 	long i, j, k, messleng;
 	unsigned short dacrc;
@@ -281,12 +279,12 @@ void dosendpackets(long other)
 #endif
 		{ 
 			gcom->command = COMMIT_CMD_SEND; 
-			unstable_callcommit(); 
+			callcommit(); 
 		}
 }
 
 
-void unstable_sendpacket(long other, char *bufptr, long messleng)
+void sendpacket(int32_t other, const uint8_t *bufptr, int32_t messleng)
 {
 	long i = 0;
     long j = 0;
@@ -318,7 +316,7 @@ void unstable_sendpacket(long other, char *bufptr, long messleng)
 }
 
 
-void unstable_setpackettimeout(long datimeoutcount, long daresendagaincount)
+void setpackettimeout(int32_t datimeoutcount, int32_t daresendagaincount)
 {
 	// Don't do this it keeps '/f4' from working
 	// Though /f4 feels weird on my mouse.... slugish is the word...
@@ -332,17 +330,17 @@ void unstable_setpackettimeout(long datimeoutcount, long daresendagaincount)
 }
 
 
-void unstable_uninitmultiplayers(void)
+void uninitmultiplayers(void)
 {
     deinit_network_transport(gcom);
     gcom = NULL;
 }
 
-void unstable_sendlogon(void)
+void sendlogon(void)
 {
 }
 
-void unstable_sendlogoff(void)
+void sendlogoff(void)
 {
 	long i;
 	char tempbuf[2];
@@ -354,17 +352,17 @@ void unstable_sendlogoff(void)
 			sendpacket(i,tempbuf,2L);
 }
 
-int unstable_getoutputcirclesize(void)
+int32_t getoutputcirclesize(void)
 {
 	return(0);
 }
 
-void unstable_setsocket(short newsocket)
+void setsocket(short newsocket)
 {
 }
 
 
-short unstable_getpacket (short *other, char *bufptr)
+short getpacket (short *other, uint8_t *bufptr)
 {
 	long i, messleng;
 	unsigned short dacrc;
@@ -401,7 +399,7 @@ short unstable_getpacket (short *other, char *bufptr)
 	}
 
 	gcom->command = COMMIT_CMD_GET;
-	unstable_callcommit();
+	callcommit();
 
 #if (SHOWGETPACKETS)
 	if (gcom->other != -1)
@@ -505,7 +503,7 @@ short unstable_getpacket (short *other, char *bufptr)
 	return(messleng);
 }
 
-void unstable_flushpackets()
+void flushpackets()
 {
 #if 0
 	long i;
@@ -531,13 +529,13 @@ void unstable_flushpackets()
 #endif
 }
 
-void unstable_genericmultifunction(long other, char *bufptr, long messleng, long command)
+void genericmultifunction(int32_t other, const uint8_t *bufptr, int32_t messleng, int32_t command)
 {
 	if (numplayers < 2) return;
 
 	gcom->command = command;
 	gcom->numbytes = min(messleng,MAXPACKETSIZE);
-	memcpy(bufptr,gcom->buffer,gcom->numbytes);
+	memcpy(gcom->buffer,bufptr,gcom->numbytes);
 	gcom->other = other+1;
 	callcommit();
 	
@@ -1474,7 +1472,7 @@ static int parse_udp_config(const char *cfgfile, gcomtype *gcom)
 }
 
 
-gcomtype *init_network_transport(char **ARGV, int argpos)
+static gcomtype *init_network_transport(char **ARGV, int argpos)
 {
     gcomtype *retval;
 
@@ -1515,7 +1513,7 @@ gcomtype *init_network_transport(char **ARGV, int argpos)
 }
 
 
-void deinit_network_transport(gcomtype *gcom)
+static void deinit_network_transport(gcomtype *gcom)
 {
     printf("UDP NETWORK TRANSPORT DEINITIALIZING...\n");
 
@@ -1540,7 +1538,7 @@ void deinit_network_transport(gcomtype *gcom)
 }
 
 
-void unstable_callcommit(void)
+static void callcommit(void)
 {
     int ip, i, rc;
     short port;

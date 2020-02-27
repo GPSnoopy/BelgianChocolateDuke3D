@@ -18,9 +18,7 @@ set(src_files
 	src/icon.h
 	src/macos_compat.h
 	src/mmulti.c
-	src/mmulti_unstable.h
-	src/network.c
-	src/network.h
+	src/mmulti.h
 	src/platform.h
 	src/sdl_util.h
 	src/tiles.c
