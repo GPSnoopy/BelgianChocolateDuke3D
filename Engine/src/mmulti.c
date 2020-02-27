@@ -119,9 +119,9 @@ enum ECommitCMDs
 static gcomtype *init_network_transport(char **ARGV, int argpos);
 static void deinit_network_transport(gcomtype *gcom);
 static void dosendpackets(long other);
+static void callcommit(void);
 
-
-void initcrc(void)
+static void initcrc(void)
 {
 	long i, j, k, a;
 
@@ -141,7 +141,7 @@ void initcrc(void)
 }
 
 
-int32_t getcrc(uint8_t *buffer, short bufleng)
+static int32_t getcrc(uint8_t *buffer, short bufleng)
 {
     int32_t i, j;
 
@@ -356,11 +356,6 @@ int32_t getoutputcirclesize(void)
 {
 	return(0);
 }
-
-void setsocket(short newsocket)
-{
-}
-
 
 short getpacket (short *other, uint8_t *bufptr)
 {

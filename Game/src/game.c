@@ -7739,7 +7739,7 @@ void Startup(void)
    tiles[MIRROR].dim.width = tiles[MIRROR].dim.height = 0;
 
    for(i=0;i<MAXPLAYERS;i++) playerreadyflag[i] = 0;
-   initmultiplayers(0,0,0);
+   initmultiplayers();
 
    if(numplayers > 1)
     puts("Multiplayer initialized.");
