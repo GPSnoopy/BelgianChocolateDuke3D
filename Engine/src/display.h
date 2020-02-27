@@ -100,10 +100,4 @@ uint32_t getticks();
 void drawline16(int32_t XStart, int32_t YStart, int32_t XEnd, int32_t YEnd, uint8_t  Color);
 void setcolor16(uint8_t color);
 
-
-
-void initmultiplayers(uint8_t  damultioption, uint8_t  dacomrateoption, uint8_t  dapriority);
-
 #endif
-
-

@@ -20,6 +20,7 @@ After reading both Fabien Sanglard's Game Engine Black Books on [Wolfenstein 3D]
 * Ported to vcpkg and CMake.
 * Added continuous integration (via GitHub Actions).
 * Added 64-bit support (savegames are compatible between 32-bit and 64-bit).
+* Removed +35K lines of code (mostly from Game) of obsolete, unused methods, and other dead code paths.
 
 ### Known Issues
 
