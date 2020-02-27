@@ -13,6 +13,7 @@
 #include <ctype.h>
 
 #include "mmulti.h"
+#include "platform.h"
 
 #define MAXPLAYERS 16
 #define BAKSIZ 16384
