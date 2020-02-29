@@ -14,12 +14,13 @@ A **port** that:
 
 This is a fork of Fabien Sanglard's project [Chocolate Duke Nukem 3D](https://github.com/fabiensanglard/chocolate_duke3D). As of January 2020, Fabien has archived his git repository.
 
-After reading both Fabien Sanglard's Game Engine Black Books on [Wolfenstein 3D](https://github.com/fabiensanglard/gebbwolf3) and [Doom](https://github.com/fabiensanglard/gebbdoom), I slowly got curious on how Duke 3D would perform on a modern computer (an Intel Core i9-9900K) with a modern Operating System (Windows 10 and Ubuntu 18.04). After cloning his Chocolate Duke 3D git repository, I had to spend a bit of time getting the project up and running. While doing that, I've been keeping on adding some improvements.
+After reading both Fabien Sanglard's Game Engine Black Books on [Wolfenstein 3D](https://github.com/fabiensanglard/gebbwolf3) and [Doom](https://github.com/fabiensanglard/gebbdoom), I slowly got curious on how Duke 3D would perform on a modern computer (an Intel Core i9-9900K). After cloning the Chocolate Duke 3D git repository, what should have been little effort to get the project compiling and running again, turned into a rather long list of improvements.
 
 * Ported to SDL2.
 * Ported to vcpkg and CMake.
 * Added continuous integration (via GitHub Actions).
 * Added 64-bit support (savegames are compatible between 32-bit and 64-bit).
+* Fixed visual regressions introduced by previous ports. 
 * Removed +35K lines of obsolete, unused methods, and other dead code paths (mostly from Game).
 
 ### Known Issues
@@ -49,7 +50,7 @@ An original copy of [Duke Nukem 3D](https://3drealms.com/catalog/duke-nukem-3d_2
 > sudo apt-get install libsdl2-mixer-dev
 > ./build_linux.sh
 ```
-Here we do not use vcpkg but instead rely on the distro packages for ENet and SDL2. Unfortunately vcpkg SDL2 (and mixer) still depends on some development packages to be installed, and the MIDI subsystem is not correctly configured.
+Here we do not use vcpkg but instead rely on the distro packages for SDL2 libraries. Unfortunately vcpkg SDL2 (and mixer) still depends on several local development packages to be installed, plus the MIDI subsystem is not correctly configured.
 
 **MacOS X (Clang Makefile)** [![MacOS X CI Status](https://github.com/GPSnoopy/BelgianChocolateDuke3D/workflows/MacOS%20X%20CI/badge.svg)](https://github.com/GPSnoopy/BelgianChocolateDuke3D/actions?query=workflow%3A%22MacOS+X+CI%22)
 ```
