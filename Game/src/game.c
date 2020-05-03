@@ -101,7 +101,7 @@ char  firstdemofile[80] = { '\0' };
 {                                                                          \
     rotatesprite(0,(200-34)<<16,65536L,0,BOTTOMSTATUSBAR,4,0,10+16+64+128, \
         scale(x1,xdim,320),scale(y1,ydim,200),                             \
-        scale(x2,xdim,320)-1,scale(y2,ydim,200)-1);                        \
+        scaleup(x2,xdim,320)-1,scaleup(y2,ydim,200)-1);                    \
 }
 
 void newint24( int errval, int ax, int bp, int si );

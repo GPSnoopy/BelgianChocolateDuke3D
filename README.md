@@ -23,10 +23,6 @@ After reading both Fabien Sanglard's Game Engine Black Books on [Wolfenstein 3D]
 * Fixed visual regressions introduced by previous ports. 
 * Removed +35K lines of obsolete, unused methods, and other dead code paths (mostly from Game).
 
-### Known Issues
-
-* Engine: Pixel imprecision when rendering health/ammo numbers in the status bar, leaving ghost pixels.
-
 ## Requirements
 
 An original copy of [Duke Nukem 3D](https://3drealms.com/catalog/duke-nukem-3d_27/). Specifically the DUKE3D.GRP file from the original CD in binary working directory.
@@ -52,7 +48,7 @@ An original copy of [Duke Nukem 3D](https://3drealms.com/catalog/duke-nukem-3d_2
 ```
 Here we do not use vcpkg but instead rely on the distro packages for SDL2 libraries. Unfortunately vcpkg SDL2 (and mixer) still depends on several local development packages to be installed, plus the MIDI subsystem is not correctly configured.
 
-**MacOS X (Clang Makefile)** [![MacOS X CI Status](https://github.com/GPSnoopy/BelgianChocolateDuke3D/workflows/MacOS%20X%20CI/badge.svg)](https://github.com/GPSnoopy/BelgianChocolateDuke3D/actions?query=workflow%3A%22MacOS+X+CI%22)
+**macOS (Clang Makefile)** [![macOS CI Status](https://github.com/GPSnoopy/BelgianChocolateDuke3D/workflows/MacOS%20X%20CI/badge.svg)](https://github.com/GPSnoopy/BelgianChocolateDuke3D/actions?query=workflow%3A%22MacOS+X+CI%22)
 ```
 > ./vcpkg_macosx.sh
 > ./build_macosx.sh
@@ -73,9 +69,9 @@ Out of the box, you will not get any music unless you have a default soundfont i
 > SDL_SOUNDFONTS=WeedsGM3.sf2 SDL_FORCE_SOUNDFONTS=1 ./ChocoDuke3D.64
 ```
 
-**MacOS X**
+**macOS**
 
-Out of the box, MIDI music will play fine on MacOS X (thanks to [vcpkg PR #10201](https://github.com/microsoft/vcpkg/pull/10201)).
+Out of the box, MIDI music will play fine on macOS (thanks to [vcpkg PR #10201](https://github.com/microsoft/vcpkg/pull/10201)).
 
 ## Contributors
 

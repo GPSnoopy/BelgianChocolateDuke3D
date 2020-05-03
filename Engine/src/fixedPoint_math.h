@@ -59,7 +59,24 @@ static inline int64_t mul32_64(int32_t i1,int32_t i2)
 }
 static inline int scale (int32_t input1, int32_t input2, int32_t input3)
 {
-	return (int)(mul32_64(input1,input2)/(int64_t)input3);
+	return (int)(mul32_64(input1,input2) /(int64_t)input3);
+}
+static inline int scaleup(int32_t input1, int32_t input2, int32_t input3)
+{
+	// tanguyf: 2020-05-03: when patchstatusbar() is called, it can sometimes not clear the entire area,
+	// leaving ghost pixels from the previous frame at certain resolutions (e.g. ammo counter leaving the bottom part of the previous
+	// digits).
+	//
+	// This does not append when the Y resolution is a multiple of 200 (from 320x200) and therefore the division has no remainder.
+	// Although not all non-multiple-of-200 resolutions seem to exhibit the problem.
+	// 
+	// I believe this is caused by division round-down vs round-up, and other inconsistencies in the engine
+	// (keep in mind that 4K resolution did not exist when this engine was created). But verifying it in a consistent manner
+	// would take quite a while.
+	//
+	// This is my attempt at fixing the problem, by making patchstatusbar() use round-up division here to always clear
+	// the boundary pixels in case the division has a remainder.
+	return (int)((mul32_64(input1, input2) + input3 - 1) / (int64_t)input3);
 }
 static inline int mulscale (int32_t input1, int32_t input2, int32_t input3)
 {
