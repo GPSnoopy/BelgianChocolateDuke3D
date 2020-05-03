@@ -3131,7 +3131,7 @@ else
 					break;
 
 				case 1:
-					BFullScreen = !BFullScreen;
+					FullScreen = !FullScreen;
 					_platform_init(0, NULL, "Duke Nukem 3D", "Duke3D");
 					_setgamemode(validmodexdim[current_resolution],validmodeydim[current_resolution]);
 					break;
@@ -3154,7 +3154,7 @@ else
 				menutext(c+150,43,0,1,text);
 
 			menutext(c,43+16*1,SHX(-3),PHX(-3),"FULLSCREEN");
-			menutext(c+160+40,43+16*1,0,0,BFullScreen?"ON":"OFF");
+			menutext(c+160+40,43+16*1,0,0,FullScreen?"ON":"OFF");
 			
 			menutext(c,43+16*2,SHX(-2),PHX(-2),"DETAIL");
 			menutext(c+160+40,43+16*2,0,0,ud.detail?"HIGH":"LOW");

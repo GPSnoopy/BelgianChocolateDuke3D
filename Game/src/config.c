@@ -67,7 +67,7 @@ int32 ReverseStereo;
 
 int32 ControllerType;
 int32 MouseAiming = 0;
-int32 BFullScreen = 0;
+int32 FullScreen = 0;
 
 //
 // Screen variables
@@ -653,7 +653,7 @@ void CONFIG_ReadSetup( void )
    SCRIPT_GetNumber( scripthandle, "Screen Setup", "Messages",&ud.fta_on);
    SCRIPT_GetNumber( scripthandle, "Screen Setup", "ScreenWidth",&ScreenWidth);
    SCRIPT_GetNumber( scripthandle, "Screen Setup", "ScreenHeight",&ScreenHeight);
-   // SCRIPT_GetNumber( scripthandle, "Screen Setup", "ScreenMode",&ScreenMode);
+   SCRIPT_GetNumber( scripthandle, "Screen Setup", "FullScreen",&FullScreen);
    SCRIPT_GetNumber( scripthandle, "Screen Setup", "ScreenGamma",&ud.brightness);
    SCRIPT_GetNumber( scripthandle, "Screen Setup", "ScreenSize",&ud.screen_size);
    SCRIPT_GetNumber( scripthandle, "Screen Setup", "ExtScreenSize",&ud.extended_screen_size);
@@ -786,7 +786,7 @@ void CONFIG_WriteSetup( void )
    SCRIPT_PutNumber( scripthandle, "Screen Setup", "ShowFPS",ud.tickrate&1,false,false);
    SCRIPT_PutNumber( scripthandle, "Screen Setup", "ScreenWidth",xdim,false,false);
    SCRIPT_PutNumber( scripthandle, "Screen Setup", "ScreenHeight",ydim,false,false);
-   SCRIPT_PutNumber( scripthandle, "Screen Setup", "Fullscreen",BFullScreen,false,false);
+   SCRIPT_PutNumber( scripthandle, "Screen Setup", "FullScreen",FullScreen,false,false);
    SCRIPT_PutNumber( scripthandle, "Sound Setup", "FXVolume",FXVolume,false,false);
    SCRIPT_PutNumber( scripthandle, "Sound Setup", "MusicVolume",MusicVolume,false,false);
    SCRIPT_PutNumber( scripthandle, "Sound Setup", "FXDevice",FXDevice,false,false);

@@ -68,7 +68,6 @@ static SDL_Texture* texture = NULL;
 static SDL_Surface* surface = NULL;
 static SDL_Surface* surface_rgba = NULL;
 
-static uint32_t sdl_flags = 0;
 static int32_t mouse_relative_x = 0;
 static int32_t mouse_relative_y = 0;
 static short mouse_buttons = 0;
@@ -196,7 +195,7 @@ static void go_to_new_vid_mode(int w, int h)
 		SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED,
 		w, h,
-		sdl_flags | SDL_WINDOW_ALLOW_HIGHDPI);
+		(FullScreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0) | SDL_WINDOW_ALLOW_HIGHDPI);
 
 	SDL_CHECK_NOT_NULL(window, "create window");
 
@@ -370,7 +369,7 @@ void fullscreen_toggle_and_change_driver(void)
 	x = surface->w;
 	y = surface->h;
 
-	BFullScreen =!BFullScreen;
+	FullScreen =!FullScreen;
 	_platform_init(0, NULL, "Duke Nukem 3D", "Duke3D");
 	_setgamemode(x,y);
 	//vscrn();
@@ -669,7 +668,6 @@ void _platform_init(int argc, char  **argv, const char  *title, const char  *ico
 		title = "BUILD";
 
 	titleName = string_dupe(title);
-	sdl_flags = BFullScreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0;
 	set_sdl_scancodes(scancodes, sizeof(scancodes) / sizeof(scancodes[0]));
 
 	output_sdl_versions();

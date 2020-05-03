@@ -42,7 +42,7 @@ extern int32_t xdimen, xdimenrecip, halfxdimen, xdimenscale, xdimscale;
 extern uint8_t  permanentlock;
 
 // defined in the game project:
-extern int32_t BFullScreen;  // defined in Game\src\config.c
+extern int32_t FullScreen;  // defined in Game\src\config.c
 
 /* these need to be implemented by YOUR driver. */
 void _platform_init(int argc, char  **argv, const char  *title, const char  *iconName);

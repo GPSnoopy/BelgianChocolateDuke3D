@@ -34,7 +34,7 @@ extern int32 ControllerType;
 extern int32 MouseAiming;
 extern int32 ScreenWidth;
 extern int32 ScreenHeight;
-extern int32 BFullScreen;
+extern int32 FullScreen;
 
 void CONFIG_ReadSetup( void );
 void CONFIG_GetSetupFilename( void );
