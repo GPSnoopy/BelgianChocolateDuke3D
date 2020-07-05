@@ -23,6 +23,10 @@ After reading both Fabien Sanglard's Game Engine Black Books on [Wolfenstein 3D]
 * Fixed visual regressions introduced by previous ports. 
 * Removed +35K lines of obsolete, unused methods, and other dead code paths (mostly from Game).
 
+## Known Issues
+
+* Incorrect demo playback in 64-bit on some compilers, e.g. Visual Studio 2019 Release build (strict aliasing is disabled in GCC).
+
 ## Requirements
 
 An original copy of [Duke Nukem 3D](https://3drealms.com/catalog/duke-nukem-3d_27/). Specifically the DUKE3D.GRP file from the original CD in binary working directory.
