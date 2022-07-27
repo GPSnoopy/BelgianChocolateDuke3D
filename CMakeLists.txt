@@ -46,6 +46,9 @@ if (UNIX)
 	# Without this option, game will crash at random places when compiled with -O2 or-O3.
 	add_compile_options("-fno-strict-aliasing") 
 
+	# Duke 3D source code has a few redefinitions of global types in its headers.
+	add_compile_options("-fcommon")
+
 endif ()
 
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)
