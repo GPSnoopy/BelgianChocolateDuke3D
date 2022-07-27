@@ -20,3 +20,7 @@ jobs:
     - name: Compile Duke3D
       run: build_windows_x86.bat
       shell: cmd
+    - uses: actions/upload-artifact@v3
+      with:
+        name: chocoduke3d_win32
+        path: bin/ChocoDuke3D.32.exe
