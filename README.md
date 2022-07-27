@@ -25,7 +25,7 @@ After reading both Fabien Sanglard's Game Engine Black Books on [Wolfenstein 3D]
 
 ## Known Issues
 
-* Incorrect demo playback in 64-bit on some compilers, e.g. Visual Studio 2019 Release build (strict aliasing is disabled in GCC).
+* Incorrect demo playback (different compilers give different demo playback, as well as Release vs Debug).
 
 ## Requirements
 
