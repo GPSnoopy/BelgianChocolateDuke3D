@@ -1,7 +1,7 @@
 cd build || goto :error
 mkdir windows.x86 || goto :error
 cd windows.x86 || goto :error
-cmake -D VCPKG_TARGET_TRIPLET=x86-windows-static -D CMAKE_TOOLCHAIN_FILE=../vcpkg.windows.x86/scripts/buildsystems/vcpkg.cmake -G "Visual Studio 16 2019" -A "Win32" ../.. || goto :error
+cmake -D VCPKG_TARGET_TRIPLET=x86-windows-static -D CMAKE_TOOLCHAIN_FILE=../vcpkg.windows.x86/scripts/buildsystems/vcpkg.cmake -G "Visual Studio 17 2022" -A "Win32" ../.. || goto :error
 msbuild BelgianChocolateDuke3D.sln /t:Rebuild /p:Configuration=Release /p:Platform=Win32 || goto :error
 cd ..
 cd ..
