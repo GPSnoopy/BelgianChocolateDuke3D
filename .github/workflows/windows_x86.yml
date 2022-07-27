@@ -16,7 +16,7 @@ jobs:
     # We currently use 3rd party action to avoid hard coding the path to MSBuild.
     # Comedy bonus: GitHub is now owned by Microsoft.
     - name: Setup MSBuild
-      uses: warrenbuckley/Setup-MSBuild@v1
+      uses: microsoft/setup-msbuild@v1
     - name: Compile Duke3D
       run: build_windows_x86.bat
       shell: cmd
