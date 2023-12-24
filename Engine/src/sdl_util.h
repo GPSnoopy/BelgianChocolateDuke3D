@@ -11,7 +11,7 @@
 #pragma once
 
 #include <assert.h>
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include "build.h"
 
 // This will output the proper SDL error strings in the event that a SDL call returns an error
